@@ -60,58 +60,98 @@
 
   <!-- HERO -->
   <section class="hero" id="home">
-    <div class="hero-top">
-      <h1 class="hero-headline reveal">What Is Our Success?</h1>
-      <a href="#services" class="hero-learn-more reveal" data-page="services">Learn More <span>&rarr;</span></a>
-    </div>
-    <div class="hero-bento">
-      <div class="hero-left reveal">
-        <div class="hero-image-wrap">
-          <img src="images/hero.png" alt="UXONIC creative workspace" class="hero-main-image" />
-          <div class="hero-overlay-text">
-            <h2>New Opportunities<br>For <span class="highlight-serif">Digital</span><br>Growth</h2>
-          </div>
-          <div class="hero-badges">
-            <div class="hero-badge-item"><span class="badge-emoji">🚀</span> Premium Design</div>
-            <div class="hero-badge-item"><span class="badge-year">2025/</span> New Projects</div>
-          </div>
-          <button class="hero-plus-btn" aria-label="Learn more"><i class="fas fa-plus"></i></button>
-          <div class="hero-stat-card">
-            <div class="stat-big-num">50+ <span class="stat-unit">projects</span></div>
-            <div class="stat-progress"><div class="stat-progress-bar"></div></div>
-            <p class="stat-sub">delivered successfully<br>by our expert team</p>
-          </div>
-          <div class="hero-scroll-btns">
-            <button class="scroll-arrow-btn" aria-label="Scroll down"><i class="fas fa-chevron-down"></i></button>
-            <button class="scroll-arrow-btn" aria-label="Scroll down"><i class="fas fa-chevron-down"></i></button>
-          </div>
-          <button class="scroll-circle-btn" id="scrollToServices" aria-label="Go to Services"><i class="fas fa-arrow-down"></i></button>
+    <div class="hero-bg-section">
+      <img src="images/hero-bg.png" alt="" class="hero-bg-image" aria-hidden="true" />
+      <div class="hero-bg-overlay"></div>
+      <div class="hero-content reveal">
+        <div class="hero-badge-pill"><span class="badge-new">New</span> Premium Digital Agency in 2025</div>
+        <h1 class="hero-headline">We Build Experiences<br>That <span class="highlight-serif">Actually</span> Convert</h1>
+        <p class="hero-subtitle">From stunning websites & apps to AI-powered automation — UXONIC transforms your vision into a premium digital reality that drives real growth.</p>
+        <div class="hero-cta-row">
+          <a href="#contact" class="btn-primary hero-btn" data-page="contact">Start Your Project <i class="fas fa-arrow-right"></i></a>
+          <a href="#portfolio" class="btn-secondary hero-btn" data-page="portfolio"><i class="fas fa-play"></i> View Our Work</a>
         </div>
       </div>
-      <div class="hero-right reveal">
-        <div class="hero-feature-card">
-          <div class="feature-dashes"><span></span><span></span><span></span><span></span><span></span></div>
-          <h3 class="feature-title">Innovations In<br>Digital Solutions!</h3>
-          <div class="feature-dashes"><span></span><span></span><span></span><span></span><span></span></div>
-          <div class="feature-cards-row">
-            <div class="feature-mini-card feature-mini-web">
-              <img src="images/web-dev.png" alt="Web development" class="mini-card-img" />
-              <div class="mini-card-content">
-                <h4>Stunning Websites<br>& Platforms</h4>
-                <a href="#services" class="mini-explore-btn" data-page="services">Explore <span class="mini-dot"></span></a>
-              </div>
-              <p class="mini-card-bottom">High Performance<br>& Fast Delivery</p>
+      <!-- Floating Glass Cards -->
+      <div class="hero-float-cards">
+        <div class="float-card float-card-main">
+          <div class="float-card-header">
+            <span class="fc-dot"></span><span class="fc-dot"></span><span class="fc-dot"></span>
+            <span class="fc-url">uxonic.in</span>
+          </div>
+          <div class="float-card-body">
+            <div class="fc-bar fc-bar-1"></div>
+            <div class="fc-bar fc-bar-2"></div>
+            <div class="fc-grid">
+              <div class="fc-block"></div>
+              <div class="fc-block"></div>
             </div>
-            <div class="feature-mini-card feature-mini-app">
-              <img src="images/app-dev.png" alt="App development" class="mini-card-img" />
-              <div class="mini-card-content">
-                <h4>Modern App<br>Development</h4>
-                <a href="#services" class="mini-explore-btn" data-page="services">More <span class="mini-dot"></span></a>
-              </div>
-              <p class="mini-card-bottom">Cross-Platform<br>Excellence In 2025</p>
-            </div>
+            <div class="fc-bar fc-bar-3"></div>
           </div>
         </div>
+        <div class="float-card float-card-stats">
+          <div class="fc-stat-icon"><i class="fas fa-chart-line"></i></div>
+          <div class="fc-stat-num">+247%</div>
+          <div class="fc-stat-label">Growth Rate</div>
+          <div class="fc-stat-bar"><div class="fc-stat-fill"></div></div>
+        </div>
+        <div class="float-card float-card-badge">
+          <div class="fc-badge-icon"><i class="fas fa-trophy"></i></div>
+          <div class="fc-badge-text">50+ Projects<br><span>Delivered Successfully</span></div>
+        </div>
+        <div class="float-card float-card-app">
+          <div class="fc-app-notch"></div>
+          <div class="fc-app-bar"></div>
+          <div class="fc-app-grid">
+            <div class="fc-app-icon"></div>
+            <div class="fc-app-icon"></div>
+            <div class="fc-app-icon"></div>
+            <div class="fc-app-icon"></div>
+          </div>
+          <div class="fc-app-bar fc-app-bar-2"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES MARQUEE STRIP -->
+  <section class="services-strip" id="servicesStrip">
+    <div class="services-strip-inner">
+      <div class="services-strip-track">
+        <!-- Set 1 -->
+        <div class="strip-item"><i class="fas fa-code"></i> Web Development</div>
+        <div class="strip-dot">✦</div>
+        <div class="strip-item"><i class="fas fa-mobile-screen-button"></i> App Development</div>
+        <div class="strip-dot">✦</div>
+        <div class="strip-item"><i class="fas fa-pen-ruler"></i> UI/UX Design</div>
+        <div class="strip-dot">✦</div>
+        <div class="strip-item"><i class="fas fa-bullhorn"></i> Digital Marketing</div>
+        <div class="strip-dot">✦</div>
+        <div class="strip-item"><i class="fas fa-robot"></i> AI Automation</div>
+        <div class="strip-dot">✦</div>
+        <div class="strip-item"><i class="fas fa-palette"></i> Brand Identity</div>
+        <div class="strip-dot">✦</div>
+        <div class="strip-item"><i class="fas fa-chart-line"></i> SEO & Analytics</div>
+        <div class="strip-dot">✦</div>
+        <div class="strip-item"><i class="fas fa-server"></i> Cloud Solutions</div>
+        <div class="strip-dot">✦</div>
+        <!-- Set 2 (duplicate for infinite scroll) -->
+        <div class="strip-item"><i class="fas fa-code"></i> Web Development</div>
+        <div class="strip-dot">✦</div>
+        <div class="strip-item"><i class="fas fa-mobile-screen-button"></i> App Development</div>
+        <div class="strip-dot">✦</div>
+        <div class="strip-item"><i class="fas fa-pen-ruler"></i> UI/UX Design</div>
+        <div class="strip-dot">✦</div>
+        <div class="strip-item"><i class="fas fa-bullhorn"></i> Digital Marketing</div>
+        <div class="strip-dot">✦</div>
+        <div class="strip-item"><i class="fas fa-robot"></i> AI Automation</div>
+        <div class="strip-dot">✦</div>
+        <div class="strip-item"><i class="fas fa-palette"></i> Brand Identity</div>
+        <div class="strip-dot">✦</div>
+        <div class="strip-item"><i class="fas fa-chart-line"></i> SEO & Analytics</div>
+        <div class="strip-dot">✦</div>
+        <div class="strip-item"><i class="fas fa-server"></i> Cloud Solutions</div>
+        <div class="strip-dot">✦</div>
       </div>
     </div>
   </section>
