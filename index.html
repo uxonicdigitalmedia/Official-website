@@ -61,56 +61,116 @@
   <!-- HERO -->
   <section class="hero" id="home">
     <div class="hero-bg-section">
-      <img src="images/hero-bg.png" alt="" class="hero-bg-image" aria-hidden="true" />
-      <div class="hero-bg-overlay"></div>
+
+      <!-- Warm gradient background — no photo needed -->
+      <div class="hero-gradient-bg"></div>
+      <!-- Glow orbs -->
+      <div class="hero-orb hero-orb-1"></div>
+      <div class="hero-orb hero-orb-2"></div>
+      <div class="hero-orb hero-orb-3"></div>
+
+      <!-- Top content -->
       <div class="hero-content reveal">
-        <div class="hero-badge-pill"><span class="badge-new">New</span> Premium Digital Agency in 2025</div>
-        <h1 class="hero-headline">We Build Experiences<br>That <span class="highlight-serif">Actually</span> Convert</h1>
-        <p class="hero-subtitle">From stunning websites & apps to AI-powered automation — UXONIC transforms your vision into a premium digital reality that drives real growth.</p>
+        <div class="hero-badge-pill">
+          <span class="badge-new">New</span> Premium Digital Agency in 2025
+        </div>
+        <h1 class="hero-headline">
+          We Build Digital<br>Experiences That
+          <span class="highlight-serif"> Actually</span> Convert
+        </h1>
+        <p class="hero-subtitle">From stunning websites &amp; apps to AI-powered automation — UXONIC transforms your vision into a premium digital reality that drives real growth.</p>
         <div class="hero-cta-row">
-          <a href="#contact" class="btn-primary hero-btn" data-page="contact">Start Your Project <i class="fas fa-arrow-right"></i></a>
-          <a href="#portfolio" class="btn-secondary hero-btn" data-page="portfolio"><i class="fas fa-play"></i> View Our Work</a>
+          <a href="#contact" class="hero-btn hero-btn-primary" data-page="contact">Start Your Project <i class="fas fa-arrow-right"></i></a>
+          <a href="#portfolio" class="hero-btn hero-btn-ghost" data-page="portfolio"><i class="fas fa-play"></i> View Our Work</a>
         </div>
       </div>
-      <!-- Floating Glass Cards -->
-      <div class="hero-float-cards">
-        <div class="float-card float-card-main">
-          <div class="float-card-header">
-            <span class="fc-dot"></span><span class="fc-dot"></span><span class="fc-dot"></span>
-            <span class="fc-url">uxonic.in</span>
+
+      <!-- Floating Cards Row -->
+      <div class="hero-cards-row">
+
+        <!-- Left card — Achievement -->
+        <div class="hero-glass-card hero-card-left reveal">
+          <div class="hgc-icon-wrap">
+            <i class="fas fa-trophy"></i>
           </div>
-          <div class="float-card-body">
-            <div class="fc-bar fc-bar-1"></div>
-            <div class="fc-bar fc-bar-2"></div>
-            <div class="fc-grid">
-              <div class="fc-block"></div>
-              <div class="fc-block"></div>
+          <div class="hgc-stat">50+</div>
+          <div class="hgc-label">Projects<br>Delivered</div>
+        </div>
+
+        <!-- Center — Browser mockup -->
+        <div class="hero-mockup-card reveal">
+          <div class="hmc-topbar">
+            <span class="hmc-dot"></span>
+            <span class="hmc-dot"></span>
+            <span class="hmc-dot"></span>
+            <span class="hmc-url">uxonic.in — Premium Agency</span>
+            <span class="hmc-badge">Live</span>
+          </div>
+          <div class="hmc-body">
+            <!-- Nav bar mockup -->
+            <div class="hmc-nav">
+              <div class="hmc-nav-logo">UXONIC</div>
+              <div class="hmc-nav-links">
+                <span></span><span></span><span></span><span></span>
+              </div>
+              <div class="hmc-nav-cta"></div>
             </div>
-            <div class="fc-bar fc-bar-3"></div>
+            <!-- Hero mockup inside -->
+            <div class="hmc-hero-bar"></div>
+            <div class="hmc-hero-text">
+              <div class="hmc-line hmc-line-h1"></div>
+              <div class="hmc-line hmc-line-h2"></div>
+              <div class="hmc-line hmc-line-sub"></div>
+            </div>
+            <!-- Cards row in mockup -->
+            <div class="hmc-cards">
+              <div class="hmc-mini-card">
+                <div class="hmc-mini-icon" style="background:rgba(255,109,41,0.2);color:#ff6d29"><i class="fas fa-code"></i></div>
+                <div class="hmc-mini-lines"><span></span><span></span></div>
+              </div>
+              <div class="hmc-mini-card">
+                <div class="hmc-mini-icon" style="background:rgba(99,102,241,0.2);color:#818cf8"><i class="fas fa-mobile-screen"></i></div>
+                <div class="hmc-mini-lines"><span></span><span></span></div>
+              </div>
+              <div class="hmc-mini-card">
+                <div class="hmc-mini-icon" style="background:rgba(16,185,129,0.2);color:#34d399"><i class="fas fa-robot"></i></div>
+                <div class="hmc-mini-lines"><span></span><span></span></div>
+              </div>
+            </div>
+            <!-- Growth bar -->
+            <div class="hmc-growth">
+              <span class="hmc-growth-label">Client Growth</span>
+              <div class="hmc-growth-track">
+                <div class="hmc-growth-fill"></div>
+              </div>
+              <span class="hmc-growth-num">+247%</span>
+            </div>
           </div>
         </div>
-        <div class="float-card float-card-stats">
-          <div class="fc-stat-icon"><i class="fas fa-chart-line"></i></div>
-          <div class="fc-stat-num">+247%</div>
-          <div class="fc-stat-label">Growth Rate</div>
-          <div class="fc-stat-bar"><div class="fc-stat-fill"></div></div>
-        </div>
-        <div class="float-card float-card-badge">
-          <div class="fc-badge-icon"><i class="fas fa-trophy"></i></div>
-          <div class="fc-badge-text">50+ Projects<br><span>Delivered Successfully</span></div>
-        </div>
-        <div class="float-card float-card-app">
-          <div class="fc-app-notch"></div>
-          <div class="fc-app-bar"></div>
-          <div class="fc-app-grid">
-            <div class="fc-app-icon"></div>
-            <div class="fc-app-icon"></div>
-            <div class="fc-app-icon"></div>
-            <div class="fc-app-icon"></div>
+
+        <!-- Right card — Goal metrics -->
+        <div class="hero-glass-card hero-card-right reveal">
+          <div class="hgc-title">This Month's<br>Delivery Goals</div>
+          <div class="hgc-metrics">
+            <div class="hgc-metric">
+              <div class="hgc-metric-ring" style="--pct:92%"><span>92%</span></div>
+              <div class="hgc-metric-label">On-Time</div>
+            </div>
+            <div class="hgc-metric">
+              <div class="hgc-metric-ring" style="--pct:100%;--clr:#34d399"><span>100%</span></div>
+              <div class="hgc-metric-label">Satisfied</div>
+            </div>
+            <div class="hgc-metric">
+              <div class="hgc-metric-ring" style="--pct:87%;--clr:#818cf8"><span>87%</span></div>
+              <div class="hgc-metric-label">Retained</div>
+            </div>
           </div>
-          <div class="fc-app-bar fc-app-bar-2"></div>
         </div>
-      </div>
+
+      </div><!-- end .hero-cards-row -->
+
+      <!-- Bottom fog blend into next section -->
+      <div class="hero-bottom-fog"></div>
     </div>
   </section>
 
