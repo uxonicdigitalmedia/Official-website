@@ -291,11 +291,12 @@ input, select, textarea { font-family: var(--sans); }
   z-index: 1;
   background: linear-gradient(
     180deg,
-    rgba(10,10,14,0.7) 0%,
-    rgba(10,10,14,0.35) 35%,
-    rgba(0,0,0,0.1) 55%,
-    rgba(10,10,14,0.6) 80%,
-    rgba(10,10,14,0.9) 100%
+    rgba(10,10,14,0.65) 0%,
+    rgba(10,10,14,0.25) 30%,
+    rgba(0,0,0,0.05) 50%,
+    rgba(10,10,14,0.55) 72%,
+    rgba(10,10,14,0.92) 88%,
+    #0a0a0e 100%
   );
 }
 
@@ -418,6 +419,17 @@ input, select, textarea { font-family: var(--sans); }
   max-width: 1100px;
   height: 260px;
   margin: 0 auto;
+  /* bottom fade so cards melt into the dark strip */
+}
+.hero-float-cards::after {
+  content: '';
+  position: absolute;
+  bottom: -2px; left: 0; right: 0;
+  height: 100px;
+  background: linear-gradient(180deg, transparent 0%, #0a0a0e 100%);
+  z-index: 10;
+  pointer-events: none;
+}
   padding: 0 24px;
 }
 .float-card {
@@ -606,33 +618,39 @@ input, select, textarea { font-family: var(--sans); }
 .services-strip {
   position: relative;
   z-index: 4;
-  margin-top: -52px;
+  margin-top: -2px;
   overflow: hidden;
+  background: #0a0a0e;
+}
+/* Blend edge: dark top fades into the strip */
+.services-strip::before {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 60px;
+  background: linear-gradient(180deg, transparent 0%, var(--bg) 100%);
+  z-index: 5;
+  pointer-events: none;
 }
 .services-strip-inner {
-  background: linear-gradient(135deg, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0.96) 50%, rgba(255,255,255,0.92) 100%);
-  backdrop-filter: blur(24px) saturate(1.4);
-  -webkit-backdrop-filter: blur(24px) saturate(1.4);
-  padding: 22px 0;
-  border-top: 1px solid rgba(255,109,41,0.12);
-  border-bottom: 1px solid rgba(0,0,0,0.05);
+  background: #0a0a0e;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  padding: 22px 0 30px;
+  border-top: none;
+  border-bottom: none;
   position: relative;
-  box-shadow: 0 8px 40px rgba(0,0,0,0.06);
+  box-shadow: none;
 }
 .services-strip-inner::before {
   content: '';
   position: absolute;
   top: 0; left: 0; right: 0;
   height: 1px;
-  background: linear-gradient(90deg, transparent 0%, rgba(255,109,41,0.3) 30%, rgba(255,109,41,0.15) 50%, rgba(255,109,41,0.3) 70%, transparent 100%);
+  background: linear-gradient(90deg, transparent 0%, rgba(255,109,41,0.25) 30%, rgba(255,109,41,0.12) 50%, rgba(255,109,41,0.25) 70%, transparent 100%);
 }
 .services-strip-inner::after {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 40%;
-  background: linear-gradient(180deg, rgba(255,255,255,0.5) 0%, transparent 100%);
-  pointer-events: none;
+  content: none;
 }
 .services-strip-track {
   display: flex;
@@ -647,7 +665,7 @@ input, select, textarea { font-family: var(--sans); }
   gap: 11px;
   font-size: 1.05rem;
   font-weight: 600;
-  color: var(--dark);
+  color: rgba(255,255,255,0.7);
   white-space: nowrap;
   padding: 0 26px;
   letter-spacing: 0.02em;
@@ -655,7 +673,7 @@ input, select, textarea { font-family: var(--sans); }
 .strip-item i {
   color: var(--primary);
   font-size: 0.95rem;
-  filter: drop-shadow(0 0 3px rgba(255,109,41,0.25));
+  filter: drop-shadow(0 0 4px rgba(255,109,41,0.4));
 }
 .strip-dot {
   color: var(--primary);
@@ -732,8 +750,19 @@ input, select, textarea { font-family: var(--sans); }
    ============================================ */
 
 /* ============================================
+   WHY US
    ============================================ */
-.why-us { background: var(--bg); }
+.why-us { background: var(--bg); position: relative; }
+/* Smooth blend from dark strip into this section */
+.why-us::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 80px;
+  background: linear-gradient(180deg, var(--bg) 0%, transparent 100%);
+  z-index: 0;
+  pointer-events: none;
+}
 .why-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 24px; margin-bottom: 64px; perspective: 1200px; }
 .why-card {
   background: var(--card);
