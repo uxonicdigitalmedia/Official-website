@@ -276,23 +276,40 @@ input, select, textarea { font-family: var(--sans); }
   justify-content: flex-start;
   overflow: hidden;
 }
-.hero-gradient-bg {
+.hero-gradient-bg { display: none; }
+.hero-bg-image {
   position: absolute;
   inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
   z-index: 0;
-  background: radial-gradient(ellipse 80% 60% at 65% 25%, #7a2800 0%, #3d1200 35%, #1a0800 60%, #0d0d0d 100%);
+  filter: brightness(0.55) saturate(1.2);
 }
-.hero-orb { position: absolute; border-radius: 50%; pointer-events: none; z-index: 1; }
-.hero-orb-1 { width: 600px; height: 600px; top: -200px; right: -80px; background: radial-gradient(circle, rgba(180,60,10,0.55) 0%, rgba(140,40,5,0.22) 40%, transparent 70%); animation: glowPulse 5s ease-in-out infinite; }
-.hero-orb-2 { width: 400px; height: 400px; top: 10%; left: -80px; background: radial-gradient(circle, rgba(255,109,41,0.1) 0%, transparent 70%); animation: glowPulse 7s ease-in-out infinite; animation-delay: 2s; }
-.hero-orb-3 { width: 300px; height: 300px; bottom: 20%; right: 15%; background: radial-gradient(circle, rgba(255,109,41,0.07) 0%, transparent 70%); animation: glowPulse 6s ease-in-out infinite; animation-delay: 1s; }
+.hero-bg-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    160deg,
+    rgba(10,8,6,0.55) 0%,
+    rgba(80,30,5,0.35) 25%,
+    rgba(10,8,6,0.2) 50%,
+    rgba(10,8,6,0.65) 78%,
+    #0d0b09 100%
+  );
+}
+.hero-orb { position: absolute; border-radius: 50%; pointer-events: none; z-index: 2; }
+.hero-orb-1 { width: 500px; height: 500px; top: -150px; right: -60px; background: radial-gradient(circle, rgba(200,70,10,0.3) 0%, rgba(140,40,5,0.12) 45%, transparent 70%); animation: glowPulse 5s ease-in-out infinite; }
+.hero-orb-2 { width: 350px; height: 350px; bottom: 25%; left: 5%; background: radial-gradient(circle, rgba(255,109,41,0.08) 0%, transparent 70%); animation: glowPulse 7s ease-in-out infinite; animation-delay: 2s; }
 
 /* Badge Pill */
 .hero-badge-pill { display: inline-flex; align-items: center; gap: 10px; padding: 6px 18px 6px 6px; border-radius: 100px; background: rgba(255,255,255,0.06); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); font-size: 0.83rem; font-weight: 500; color: rgba(255,255,255,0.7); margin-bottom: 28px; }
 .badge-new { display: inline-block; padding: 4px 12px; border-radius: 100px; background: #1c1c1e; color: rgba(255,255,255,0.85); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.04em; border: 1px solid rgba(255,255,255,0.1); }
 
 /* Hero text */
-.hero-content { position: relative; z-index: 2; text-align: center; max-width: 880px; padding: 150px 24px 52px; }
+.hero-content { position: relative; z-index: 3; text-align: center; max-width: 880px; padding: 150px 24px 52px; }
 .hero-headline { font-family: var(--serif); font-size: clamp(2.8rem,6.5vw,5rem); font-weight: 400; color: #fff; line-height: 1.08; margin-bottom: 22px; letter-spacing: -0.01em; }
 .highlight-serif { color: var(--primary); font-style: italic; }
 .hero-subtitle { font-size: clamp(1rem,1.6vw,1.1rem); color: rgba(255,255,255,0.55); line-height: 1.7; margin-bottom: 38px; max-width: 580px; margin-left: auto; margin-right: auto; }
@@ -363,7 +380,7 @@ input, select, textarea { font-family: var(--sans); }
 .hgc-metric-label { font-size: 0.62rem; color: rgba(255,255,255,0.4); text-align: center; }
 
 /* Bottom fog blend */
-.hero-bottom-fog { position: absolute; bottom: 0; left: 0; right: 0; height: 120px; background: linear-gradient(180deg, transparent 0%, #0d0d0d 100%); z-index: 4; pointer-events: none; }
+.hero-bottom-fog { position: absolute; bottom: 0; left: 0; right: 0; height: 140px; background: linear-gradient(180deg, transparent 0%, #0d0b09 100%); z-index: 4; pointer-events: none; }
 
 /* Responsive hero cards */
 @media (max-width: 900px) {
@@ -395,9 +412,9 @@ input, select, textarea { font-family: var(--sans); }
   z-index: 4;
   margin-top: -2px;
   overflow: hidden;
-  background: #0a0a0e;
+  background: #0d0b09;
 }
-/* Blend edge: dark top fades into the strip */
+/* Blend edge into next section */
 .services-strip::before {
   content: '';
   position: absolute;
@@ -408,7 +425,7 @@ input, select, textarea { font-family: var(--sans); }
   pointer-events: none;
 }
 .services-strip-inner {
-  background: #0a0a0e;
+  background: #0d0b09;
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
   padding: 22px 0 30px;
