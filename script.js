@@ -306,7 +306,7 @@ function initContactForm() {
   const form = existing.cloneNode(true);
   existing.parentNode.replaceChild(form, existing);
 
-  const FORMSPREE = 'https://formspree.io/f/xwvgwgob';
+  const FORMSPREE = 'https://formspree.io/f/xqervnga';
   const isValidEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
 
   /* ---- helpers ---- */
