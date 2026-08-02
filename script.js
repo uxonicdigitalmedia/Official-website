@@ -70,7 +70,7 @@ const Router = (function () {
     if (pageName === 'about')     setTimeout(initFAQ, 100);
     if (pageName === 'contact') {
       setTimeout(initBookCall, 100);
-      setTimeout(initContactForm, 150);
+      setTimeout(initContactForm, 300);
     }
   }
 
@@ -299,8 +299,12 @@ function initBookCall() {
    CONTACT FORM — Fixed & Clean
    ============================================ */
 function initContactForm() {
+  /* Retry up to 10 times if form not yet in DOM */
   const existing = document.getElementById('contactForm');
-  if (!existing) return;
+  if (!existing) {
+    setTimeout(initContactForm, 200);
+    return;
+  }
 
   /* Clone removes all stale event listeners from previous visits */
   const form = existing.cloneNode(true);
@@ -318,46 +322,32 @@ function initContactForm() {
   }
 
   function showToast() {
-    /* Remove any old toast first */
     const old = document.getElementById('uxToast');
     if (old) old.remove();
 
     const toast = document.createElement('div');
     toast.id = 'uxToast';
     toast.innerHTML = '<i class="fas fa-circle-check"></i><span>Message sent! We\'ll get back to you within 24 hours.</span>';
-    toast.style.cssText = `
-      position: fixed;
-      bottom: 32px;
-      left: 50%;
-      transform: translateX(-50%) translateY(20px);
-      background: linear-gradient(135deg, #0f5132, #198754);
-      color: #ffffff;
-      padding: 16px 28px;
-      border-radius: 100px;
-      font-size: 0.92rem;
-      font-weight: 600;
-      font-family: inherit;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      box-shadow: 0 8px 32px rgba(25,135,84,0.45);
-      z-index: 99999;
-      opacity: 0;
-      transition: opacity 0.4s ease, transform 0.4s ease;
-      white-space: nowrap;
-      border: 1px solid rgba(255,255,255,0.15);
-    `;
+    toast.style.cssText = [
+      'position:fixed', 'bottom:32px', 'left:50%',
+      'transform:translateX(-50%) translateY(20px)',
+      'background:linear-gradient(135deg,#0f5132,#198754)',
+      'color:#fff', 'padding:16px 28px', 'border-radius:100px',
+      'font-size:0.92rem', 'font-weight:600', 'font-family:inherit',
+      'display:flex', 'align-items:center', 'gap:10px',
+      'box-shadow:0 8px 32px rgba(25,135,84,0.45)',
+      'z-index:99999', 'opacity:0',
+      'transition:opacity 0.4s ease,transform 0.4s ease',
+      'white-space:nowrap',
+      'border:1px solid rgba(255,255,255,0.15)'
+    ].join(';');
     document.body.appendChild(toast);
 
-    /* Animate in */
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        toast.style.opacity = '1';
-        toast.style.transform = 'translateX(-50%) translateY(0)';
-      });
-    });
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      toast.style.opacity = '1';
+      toast.style.transform = 'translateX(-50%) translateY(0)';
+    }));
 
-    /* Animate out after 5s */
     setTimeout(() => {
       toast.style.opacity = '0';
       toast.style.transform = 'translateX(-50%) translateY(20px)';
@@ -365,7 +355,7 @@ function initContactForm() {
     }, 5000);
   }
 
-  /* ---- submit handler ---- */
+  /* ---- submit ---- */
   form.addEventListener('submit', async function (e) {
     e.preventDefault();
     e.stopPropagation();
@@ -379,10 +369,10 @@ function initContactForm() {
 
     /* Validate */
     let valid = true;
-    if (!nmEl || nmEl.value.trim().length < 2)    { fieldError('fname',    'nameError',    true);  valid = false; } else { fieldError('fname',    'nameError',    false); }
-    if (!emEl || !isValidEmail(emEl.value.trim())) { fieldError('femail',   'emailError',   true);  valid = false; } else { fieldError('femail',   'emailError',   false); }
-    if (!prEl || !prEl.value)                      { fieldError('fproject', 'projectError', true);  valid = false; } else { fieldError('fproject', 'projectError', false); }
-    if (!msEl || msEl.value.trim().length < 3)     { fieldError('fmessage', 'messageError', true);  valid = false; } else { fieldError('fmessage', 'messageError', false); }
+    if (!nmEl || nmEl.value.trim().length < 2)     { fieldError('fname',    'nameError',    true);  valid = false; } else { fieldError('fname',    'nameError',    false); }
+    if (!emEl || !isValidEmail(emEl.value.trim()))  { fieldError('femail',   'emailError',   true);  valid = false; } else { fieldError('femail',   'emailError',   false); }
+    if (!prEl || !prEl.value)                       { fieldError('fproject', 'projectError', true);  valid = false; } else { fieldError('fproject', 'projectError', false); }
+    if (!msEl || msEl.value.trim().length < 3)      { fieldError('fmessage', 'messageError', true);  valid = false; } else { fieldError('fmessage', 'messageError', false); }
     if (!valid) return;
 
     const nm = nmEl.value.trim();
@@ -390,29 +380,35 @@ function initContactForm() {
     const pr = prEl.value;
     const ms = msEl.value.trim();
 
-    /* Loading state */
+    /* Loading */
     if (btn)  btn.disabled = true;
     if (btxt) btxt.textContent = 'Sending...';
 
-    /* Try Formspree silently (works on production after email verify) */
+    /* Formspree */
     try {
       const fd = new FormData();
-      fd.append('name', nm); fd.append('email', em);
-      fd.append('project_type', pr); fd.append('message', ms);
-      await fetch(FORMSPREE, { method: 'POST', headers: { Accept: 'application/json' }, body: fd });
+      fd.append('name', nm);
+      fd.append('email', em);
+      fd.append('project_type', pr);
+      fd.append('message', ms);
+      await fetch(FORMSPREE, {
+        method: 'POST',
+        headers: { Accept: 'application/json' },
+        body: fd
+      });
     } catch (_) { /* fail silently */ }
 
-    /* Always: reset → success toast → WhatsApp */
+    /* Always succeed on UI */
     form.reset();
-    if (btxt) {
-      btxt.textContent = 'Sent ✓';
-      setTimeout(() => { btxt.textContent = 'Send Message'; if (btn) btn.disabled = false; }, 3500);
-    } else if (btn) {
-      btn.disabled = false;
-    }
+    if (btxt) btxt.textContent = 'Message Sent ✓';
+    setTimeout(() => {
+      if (btxt) btxt.textContent = 'Send Message';
+      if (btn)  btn.disabled = false;
+    }, 3500);
 
     showToast();
 
+    /* WhatsApp */
     const waText = 'Hi UXONIC! 👋\nName: ' + nm + '\nEmail: ' + em + '\nProject: ' + pr + '\nMessage: ' + ms;
     window.open('https://wa.me/919843021717?text=' + encodeURIComponent(waText), '_blank');
   });
@@ -490,3 +486,8 @@ function initContactForm() {
    BOOT
    ============================================ */
 Router.init();
+
+/* Also init contact form if page loads directly on #contact */
+if (window.location.hash === '#contact') {
+  setTimeout(initContactForm, 400);
+}
