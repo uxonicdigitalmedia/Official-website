@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Careers & Openings | UXONIC Digital Solutions</title>
+  <meta name="description" content="Join UXONIC Digital Solutions. View open internships and job opportunities. Apply now to grow your career with us."/>
+  <meta name="robots" content="index, follow"/>
+  <link rel="canonical" href="https://www.uxonicdigital.com/careers"/>
+  <link rel="icon" type="image/jpeg" href="/images/fav.jpeg"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800;900&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer"/>
+  <link rel="stylesheet" href="/internship.css"/>
+  <style>
+    /* ── Careers-specific overrides ── */
+    .careers-hero { padding: 140px 0 80px; min-height: auto; }
+    .careers-hero .int-hero-heading { font-size: clamp(2rem, 5vw, 3.6rem); }
+
+    /* Filter tabs */
+    .filter-tabs {
+      display: flex; gap: 8px; flex-wrap: wrap;
+      justify-content: center; margin-bottom: 40px;
+    }
+    .filter-tab {
+      padding: 9px 20px; border-radius: 100px;
+      font-size: 0.82rem; font-weight: 600; cursor: pointer;
+      border: 1.5px solid rgba(255,255,255,0.1);
+      background: transparent; color: #94A3B8;
+      font-family: 'Inter', sans-serif;
+      transition: all 0.25s ease;
+    }
+    .filter-tab:hover { border-color: rgba(212,175,55,0.3); color: #D4AF37; }
+    .filter-tab.active {
+      background: rgba(212,175,55,0.12);
+      border-color: rgba(212,175,55,0.4);
+      color: #D4AF37;
+    }
+
+    /* Opening cards */
+    .openings-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 22px;
+    }
+
+    .opening-card {
+      background: #0F172A;
+      border: 1.5px solid rgba(212,175,55,0.15);
+      border-radius: 20px;
+      padding: 28px 26px;
+      cursor: pointer;
+      transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+    .opening-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, #D4AF37, transparent);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .opening-card:hover {
+      border-color: rgba(212,175,55,0.4);
+      transform: translateY(-5px);
+      box-shadow: 0 14px 36px rgba(212,175,55,0.12);
+    }
+    .opening-card:hover::before { opacity: 1; }
+
+    .opening-card-top {
+      display: flex; align-items: flex-start;
+      justify-content: space-between; gap: 12px;
+    }
+    .opening-type-icon {
+      width: 48px; height: 48px; border-radius: 12px;
+      background: rgba(212,175,55,0.10);
+      border: 1px solid rgba(212,175,55,0.2);
+      display: flex; align-items: center; justify-content: center;
+      color: #D4AF37; font-size: 1.1rem; flex-shrink: 0;
+    }
+    .opening-type-icon.internship-icon {
+      background: rgba(96,165,250,0.10);
+      border-color: rgba(96,165,250,0.2);
+      color: #60a5fa;
+    }
+
+    .opening-badges { display: flex; gap: 6px; flex-wrap: wrap; }
+    .opening-badge {
+      padding: 3px 10px; border-radius: 100px;
+      font-size: 0.68rem; font-weight: 700;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .badge-type-internship { background:rgba(96,165,250,.12); color:#60a5fa; border:1px solid rgba(96,165,250,.25); }
+    .badge-type-full-time  { background:rgba(212,175,55,.12); color:#D4AF37;  border:1px solid rgba(212,175,55,.25); }
+    .badge-type-part-time  { background:rgba(74,222,128,.12); color:#4ade80;  border:1px solid rgba(74,222,128,.25); }
+    .badge-status-open     { background:rgba(74,222,128,.10); color:#4ade80;  border:1px solid rgba(74,222,128,.2);  }
+    .badge-status-closed   { background:rgba(248,113,113,.10);color:#f87171; border:1px solid rgba(248,113,113,.2); }
+
+    .opening-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 1.05rem; font-weight: 800;
+      color: #fff; letter-spacing: -0.01em;
+      line-height: 1.3;
+    }
+    .opening-meta {
+      display: flex; flex-wrap: wrap; gap: 12px;
+    }
+    .opening-meta-item {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 0.8rem; color: #94A3B8;
+    }
+    .opening-meta-item i { color: #D4AF37; font-size: 0.75rem; }
+
+    .opening-desc {
+      font-size: 0.875rem; color: #94A3B8;
+      line-height: 1.65; flex: 1;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .opening-card-footer {
+      display: flex; align-items: center;
+      justify-content: space-between; margin-top: auto;
+      padding-top: 14px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+    .opening-card-footer .apply-btn {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 9px 18px;
+      background: linear-gradient(135deg, #D4AF37, #C5A059);
+      color: #0A1128; font-weight: 700; font-size: 0.8rem;
+      border-radius: 100px; border: none; cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: all 0.25s ease;
+      text-decoration: none;
+    }
+    .opening-card-footer .apply-btn:hover {
+      background: linear-gradient(135deg, #E5C158, #D4AF37);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(212,175,55,0.35);
+    }
+    .opening-card-footer .posted-date {
+      font-size: 0.75rem; color: #64748B;
+    }
+
+    /* No openings */
+    .no-openings {
+      text-align: center; padding: 60px 24px;
+      color: #64748B; font-size: 0.9rem;
+    }
+    .no-openings i {
+      font-size: 2.2rem; color: #1e293b;
+      display: block; margin-bottom: 12px;
+    }
+
+    /* Loading skeleton */
+    .skeleton {
+      background: linear-gradient(90deg, rgba(255,255,255,0.04) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.04) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.4s infinite;
+      border-radius: 8px;
+    }
+    @keyframes shimmer {
+      0%   { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    @media (max-width: 600px) {
+      .openings-grid { grid-template-columns: 1fr; }
+      .careers-hero { padding: 110px 0 60px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Skip link -->
+  <a href="#openings" class="skip-link">Skip to job openings</a>
+
+  <!-- HEADER -->
+  <header class="int-header" id="careersHeader" role="banner">
+    <div class="int-header-inner">
+      <a href="/" class="int-logo" aria-label="UXONIC Digital Solutions">
+        <img src="/images/nav-logo.png" alt="UXONIC Logo" class="int-logo-img" width="44" height="44"/>
+        <span class="int-logo-text"><span class="int-logo-accent">U</span>XO<span class="int-logo-accent">N</span>IC</span>
+      </a>
+      <span class="int-header-label">
+        <i class="fas fa-briefcase" aria-hidden="true"></i> Careers
+      </span>
+      <a href="/" class="int-header-cta">
+        <i class="fas fa-arrow-left" aria-hidden="true"></i> Back to Site
+      </a>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="int-hero careers-hero" aria-labelledby="careersHeading">
+    <div class="int-hero-bg" aria-hidden="true">
+      <div class="int-hero-orb int-orb-1"></div>
+      <div class="int-hero-orb int-orb-2"></div>
+    </div>
+    <div class="int-container">
+      <div class="int-hero-content">
+        <div class="int-badge-pill int-reveal">
+          <span class="int-badge-dot" aria-hidden="true"></span>
+          We're Hiring · 2026
+        </div>
+        <div class="int-hero-logo-wrap int-reveal">
+          <img src="/images/nav-logo.png" alt="UXONIC" class="int-hero-logo" width="64" height="64" loading="eager"/>
+        </div>
+        <h1 class="int-hero-heading int-reveal" id="careersHeading">
+          JOIN OUR<br/>
+          <span class="int-gold">TEAM</span>
+        </h1>
+        <p class="int-hero-tagline int-reveal">
+          Innovate &nbsp;•&nbsp; Create &nbsp;•&nbsp; Grow
+        </p>
+        <p class="int-hero-desc int-reveal">
+          We're building something special at UXONIC Digital Solutions.
+          Find your role and grow with us.
+        </p>
+        <div class="int-hero-cta-row int-reveal">
+          <a href="#openings" class="int-btn-primary int-btn-lg">
+            <i class="fas fa-briefcase" aria-hidden="true"></i>
+            <span>View Openings</span>
+          </a>
+        </div>
+        <p class="int-brand-tagline int-reveal">INNOVATE &nbsp;•&nbsp; CREATE &nbsp;•&nbsp; ELEVATE</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- OPENINGS -->
+  <section class="int-section int-bg-alt" id="openings" aria-labelledby="openingsHeading">
+    <div class="int-container">
+
+      <div class="int-section-header int-reveal">
+        <span class="int-section-tag">
+          <i class="fas fa-briefcase" aria-hidden="true"></i>
+          Current Openings
+        </span>
+        <h2 class="int-section-title" id="openingsHeading">Open Positions</h2>
+        <p class="int-section-desc">
+          From internships to full-time roles — find the opportunity that fits you.
+        </p>
+      </div>
+
+      <!-- Filter tabs -->
+      <div class="filter-tabs int-reveal" role="group" aria-label="Filter openings by type">
+        <button class="filter-tab active" data-filter="all">All Openings</button>
+        <button class="filter-tab" data-filter="internship">Internships</button>
+        <button class="filter-tab" data-filter="full-time">Full-Time</button>
+        <button class="filter-tab" data-filter="part-time">Part-Time</button>
+      </div>
+
+      <!-- Cards grid -->
+      <div class="openings-grid int-reveal-stagger" id="openingsGrid">
+        <!-- Loaded via JS -->
+        <div class="opening-card" style="pointer-events:none;">
+          <div class="skeleton" style="height:48px;width:48px;border-radius:12px;"></div>
+          <div class="skeleton" style="height:20px;width:70%;"></div>
+          <div class="skeleton" style="height:14px;width:90%;"></div>
+          <div class="skeleton" style="height:14px;width:80%;"></div>
+        </div>
+        <div class="opening-card" style="pointer-events:none;">
+          <div class="skeleton" style="height:48px;width:48px;border-radius:12px;"></div>
+          <div class="skeleton" style="height:20px;width:60%;"></div>
+          <div class="skeleton" style="height:14px;width:85%;"></div>
+          <div class="skeleton" style="height:14px;width:75%;"></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- WHY JOIN US -->
+  <section class="int-section" aria-labelledby="whyHeading">
+    <div class="int-container">
+      <div class="int-section-header int-reveal">
+        <span class="int-section-tag"><i class="fas fa-star"></i> Why UXONIC</span>
+        <h2 class="int-section-title" id="whyHeading">WHY JOIN US?</h2>
+      </div>
+      <div class="int-benefits-grid int-reveal-stagger">
+        <div class="int-benefit-card">
+          <div class="int-benefit-icon"><i class="fas fa-rocket"></i></div>
+          <h3>Real Impact</h3>
+          <p>Work on live client projects from day one. Your contributions matter.</p>
+        </div>
+        <div class="int-benefit-card">
+          <div class="int-benefit-icon"><i class="fas fa-user-tie"></i></div>
+          <h3>Mentorship</h3>
+          <p>Direct guidance from experienced professionals throughout your journey.</p>
+        </div>
+        <div class="int-benefit-card">
+          <div class="int-benefit-icon"><i class="fas fa-certificate"></i></div>
+          <h3>Recognition</h3>
+          <p>Earn completion certificates and performance recognition for your work.</p>
+        </div>
+        <div class="int-benefit-card">
+          <div class="int-benefit-icon"><i class="fas fa-door-open"></i></div>
+          <h3>Career Growth</h3>
+          <p>Top performers get considered for full-time roles at UXONIC.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="int-footer" role="contentinfo">
+    <div class="int-container">
+      <div class="int-footer-inner">
+        <div class="int-footer-brand">
+          <a href="/" class="int-footer-logo-link">
+            <img src="/images/nav-logo.png" alt="UXONIC" class="int-footer-logo-img" width="36" height="36"/>
+            <span class="int-footer-logo-text"><span class="int-logo-accent">U</span>XO<span class="int-logo-accent">N</span>IC</span>
+          </a>
+          <p class="int-footer-tagline">INNOVATE &nbsp;•&nbsp; CREATE &nbsp;•&nbsp; ELEVATE</p>
+          <p class="int-footer-company">UXONIC Digital Solutions</p>
+        </div>
+        <div class="int-footer-link-col">
+          <a href="/" class="int-footer-website" target="_blank" rel="noopener">
+            <i class="fas fa-globe"></i> www.uxonicdigital.com
+          </a>
+        </div>
+      </div>
+      <div class="int-footer-bottom">
+        <p>&copy; 2026 UXONIC Digital Solutions. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module">
+    /* ── Config ──────────────────────────────────────── */
+    const SUPABASE_URL = 'https://nvzfcvsfsvwafmhclgnb.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_IofXYG63lRLjhLarkM6tzQ_ZxpCluSy'; // anon/publishable key
+
+    /* ── Sticky header ───────────────────────────────── */
+    const header = document.getElementById('careersHeader');
+    window.addEventListener('scroll', () => {
+      header.classList.toggle('scrolled', window.scrollY > 40);
+    }, { passive: true });
+
+    /* ── Scroll reveal ───────────────────────────────── */
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      const els = document.querySelectorAll('.int-reveal, .int-reveal-left, .int-reveal-right, .int-reveal-stagger');
+      const obs = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          if (!e.isIntersecting) return;
+          e.target.classList.add('active');
+          obs.unobserve(e.target);
+        });
+      }, { threshold: 0.08, rootMargin: '0px 0px -32px 0px' });
+      els.forEach(el => obs.observe(el));
+    }
+
+    /* ── Smooth scroll ───────────────────────────────── */
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        const t = document.querySelector(a.getAttribute('href'));
+        if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+      });
+    });
+
+    /* ── Helpers ─────────────────────────────────────── */
+    function esc(s) {
+      return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+    function timeAgo(d) {
+      const diff = Math.floor((Date.now() - new Date(d)) / 86400000);
+      if (diff === 0) return 'Today';
+      if (diff === 1) return 'Yesterday';
+      if (diff < 30)  return diff + ' days ago';
+      return new Date(d).toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' });
+    }
+
+    /* ── Fetch active jobs from Supabase ─────────────── */
+    let allOpenings = [];
+    let currentFilter = 'all';
+
+    async function fetchOpenings() {
+      let dbJobs = [];
+      let errMsg = '';
+      try {
+        const apiRes = await fetch('/api/jobs?t=' + Date.now(), { cache: 'no-store' });
+        if (apiRes.ok) {
+          const payload = await apiRes.json();
+          if (payload?.success && Array.isArray(payload.jobs)) dbJobs = payload.jobs;
+          else errMsg = payload?.message || 'API returned no jobs';
+        } else {
+          errMsg = 'API error ' + apiRes.status + ' — open site via http://127.0.0.1:5501';
+        }
+      } catch (e) {
+        errMsg = 'Cannot reach /api/jobs. Run: npm run dev → http://127.0.0.1:5501/careers';
+      }
+
+      if (!dbJobs.length) {
+        try {
+          const res = await fetch(
+            `${SUPABASE_URL}/rest/v1/job_postings?status=eq.active&select=*&order=posted_at.desc`,
+            { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }, cache: 'no-store' }
+          );
+          if (res.ok) dbJobs = await res.json();
+        } catch (e) {
+          console.warn('Supabase fallback failed:', e.message);
+        }
+      }
+
+      allOpenings = Array.isArray(dbJobs) ? dbJobs : [];
+      if (!allOpenings.length && errMsg) {
+        const grid = document.getElementById('openingsGrid');
+        if (grid) {
+          grid.innerHTML = `<div class="no-openings" style="grid-column:1/-1;">
+            <i class="fas fa-triangle-exclamation"></i>
+            No openings loaded.<br/><span style="font-size:.8rem;opacity:.8">${esc(errMsg)}</span>
+          </div>`;
+          return;
+        }
+      }
+      renderOpenings(allOpenings);
+    }
+
+    /* ── Render cards ────────────────────────────────── */
+    function renderOpenings(items) {
+      const grid = document.getElementById('openingsGrid');
+      const filtered = currentFilter === 'all'
+        ? items
+        : items.filter(j => j.job_type === currentFilter);
+
+      if (!filtered.length) {
+        grid.innerHTML = `
+          <div class="no-openings" style="grid-column:1/-1;">
+            <i class="fas fa-briefcase"></i>
+            No ${currentFilter === 'all' ? '' : currentFilter + ' '}openings right now.
+            <br/>Check back soon — or post a job from the Admin panel.
+          </div>`;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(job => {
+        const typeClass  = job.job_type === 'internship' ? 'internship-icon' : '';
+        const typeIcon   = job.job_type === 'internship' ? 'fa-graduation-cap'
+                         : job.job_type === 'full-time'  ? 'fa-briefcase'
+                         : 'fa-clock';
+        const typeBadge  = `badge-type-${esc(job.job_type)}`;
+        const applyLink  = job.apply_url
+          || (`internship.html?job=${encodeURIComponent(job.id)}&title=${encodeURIComponent(job.title || '')}`);
+
+        return `
+          <a href="${esc(applyLink)}" class="opening-card" aria-label="Apply for ${esc(job.title)}">
+            <div class="opening-card-top">
+              <div class="opening-type-icon ${typeClass}">
+                <i class="fas ${typeIcon}"></i>
+              </div>
+              <div class="opening-badges">
+                <span class="opening-badge ${typeBadge}">${esc(job.job_type.replace('-',' '))}</span>
+                <span class="opening-badge badge-status-${job.status === 'active' ? 'open' : 'closed'}">${job.status === 'active' ? 'Open' : 'Closed'}</span>
+              </div>
+            </div>
+
+            <div class="opening-title">${esc(job.title)}</div>
+
+            <div class="opening-meta">
+              ${job.location ? `<span class="opening-meta-item"><i class="fas fa-location-dot"></i>${esc(job.location)}</span>` : ''}
+              ${job.experience ? `<span class="opening-meta-item"><i class="fas fa-clock"></i>${esc(job.experience)}</span>` : ''}
+              ${job.salary ? `<span class="opening-meta-item"><i class="fas fa-indian-rupee-sign"></i>${esc(job.salary)}</span>` : ''}
+              ${job.department ? `<span class="opening-meta-item"><i class="fas fa-building"></i>${esc(job.department)}</span>` : ''}
+            </div>
+
+            ${job.description ? `<p class="opening-desc">${esc(job.description)}</p>` : ''}
+
+            <div class="opening-card-footer">
+              <span class="posted-date">
+                <i class="fas fa-calendar-day" style="color:#D4AF37;margin-right:4px;"></i>
+                ${job.posted_at ? timeAgo(job.posted_at) : 'Active'}
+              </span>
+              <span class="apply-btn">
+                Apply Now <i class="fas fa-arrow-right"></i>
+              </span>
+            </div>
+          </a>`;
+      }).join('');
+    }
+
+    /* ── Filter tabs ─────────────────────────────────── */
+    document.querySelectorAll('.filter-tab').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentFilter = btn.dataset.filter;
+        renderOpenings(allOpenings);
+      });
+    });
+
+    /* ── Boot ────────────────────────────────────────── */
+    fetchOpenings();
+  </script>
+
+</body>
+</html>

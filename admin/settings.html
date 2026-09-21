@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Settings — UXONIC Admin</title>
+  <meta name="robots" content="noindex,nofollow"/>
+  <link rel="icon" type="image/jpeg" href="/images/fav.jpeg"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous"/>
+  <link rel="stylesheet" href="/admin/assets/admin.css"/>
+</head>
+<body>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <img src="/images/nav-logo.png" alt="UXONIC" class="sidebar-logo-img"/>
+    <div><span class="sidebar-logo-text"><span>U</span>XO<span>N</span>IC</span><span class="sidebar-badge">Admin Panel</span></div>
+  </div>
+  <nav class="sidebar-nav">
+    <span class="sidebar-section-label">Main</span>
+    <a href="/admin/dashboard" class="nav-item" data-page="dashboard"><i class="fas fa-chart-pie"></i> Dashboard</a>
+    <span class="sidebar-section-label">Recruitment</span>
+    <a href="/admin/applications" class="nav-item" data-page="applications"><i class="fas fa-file-user"></i> Applications</a>
+    <a href="/admin/jobs" class="nav-item" data-page="jobs"><i class="fas fa-briefcase"></i> Job Postings</a>
+    <span class="sidebar-section-label">Website</span>
+    <a href="/admin/content" class="nav-item" data-page="content"><i class="fas fa-pen-to-square"></i> Website Content</a>
+    <a href="/admin/contacts" class="nav-item" data-page="contacts"><i class="fas fa-envelope"></i> Messages</a>
+    <span class="sidebar-section-label">Account</span>
+    <a href="/admin/settings" class="nav-item" data-page="settings"><i class="fas fa-gear"></i> Settings</a>
+    <a href="/" target="_blank" class="nav-item"><i class="fas fa-arrow-up-right-from-square"></i> View Website</a>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="sidebar-user">
+      <div class="sidebar-user-avatar" id="sidebarUserAvatar">A</div>
+      <div class="sidebar-user-info">
+        <div class="sidebar-user-name" id="sidebarUserName">Admin</div>
+        <div class="sidebar-user-role" id="sidebarUserRole">superadmin</div>
+      </div>
+      <a href="#" data-action="logout" class="sidebar-logout"><i class="fas fa-right-from-bracket"></i></a>
+    </div>
+  </div>
+</aside>
+
+<div class="main-content">
+  <header class="topbar">
+    <button class="hamburger-btn" id="hamburgerBtn"><i class="fas fa-bars"></i></button>
+    <div><div class="topbar-title">Settings</div></div>
+    <div class="topbar-spacer"></div>
+    <div class="topbar-time" id="adminClock"></div>
+    <a href="#" data-action="logout" class="btn btn-ghost btn-sm"><i class="fas fa-right-from-bracket"></i> Logout</a>
+  </header>
+
+  <main class="page-body">
+
+    <div id="alertBox"></div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start;">
+
+      <!-- Account info -->
+      <div class="table-card">
+        <div class="table-card-header"><div class="table-card-title">Account Information</div></div>
+        <div style="padding:24px;">
+          <div class="detail-grid">
+            <div class="detail-item"><div class="detail-key">Full Name</div><div class="detail-val" id="infoName">—</div></div>
+            <div class="detail-item"><div class="detail-key">Email</div><div class="detail-val" id="infoEmail">—</div></div>
+            <div class="detail-item"><div class="detail-key">Role</div><div class="detail-val"><span class="badge badge-active" id="infoRole">—</span></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Env vars reference -->
+      <div class="table-card">
+        <div class="table-card-header"><div class="table-card-title">Vercel Environment Variables</div></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Variable</th><th>Required</th></tr></thead>
+            <tbody>
+              <tr><td class="bold">SUPABASE_URL</td><td><span class="badge badge-active">Yes</span></td></tr>
+              <tr><td class="bold">SUPABASE_SERVICE_ROLE_KEY</td><td><span class="badge badge-active">Yes</span></td></tr>
+              <tr><td class="bold">ADMIN_JWT_SECRET</td><td><span class="badge badge-active">Yes</span></td></tr>
+              <tr><td class="bold">ADMIN_EMAIL</td><td><span class="badge badge-active">Yes</span></td></tr>
+              <tr><td class="bold">RESEND_API_KEY</td><td><span class="badge badge-active">Yes</span></td></tr>
+              <tr><td class="bold">ALLOWED_ORIGIN</td><td><span class="badge badge-active">Yes</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── JOIN OUR TEAM SECTION SETTINGS ────────────────── -->
+    <div class="table-card mt-3">
+      <div class="table-card-header">
+        <div class="table-card-title">
+          <i class="fas fa-users" style="color:var(--gold);margin-right:8px;"></i>
+          Join Our Team — Section Settings
+        </div>
+        <span style="font-size:.78rem;color:var(--text-muted);">Changes reflect on homepage</span>
+      </div>
+      <div style="padding:28px;">
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+
+          <!-- Image preview + URL -->
+          <div>
+            <div class="form-group" style="margin-bottom:20px;">
+              <label class="form-label">Section Image</label>
+              <div style="border:1.5px solid rgba(212,175,55,0.2);border-radius:12px;overflow:hidden;margin-bottom:12px;background:var(--bg-dark);height:180px;">
+                <img id="previewImg" src="/images/ceo.png" alt="Section image preview"
+                  style="width:100%;height:180px;object-fit:cover;object-position:top;display:block;"/>
+              </div>
+              <div style="display:flex;gap:8px;">
+                <input type="text" id="imgUrlInput" class="form-input"
+                  placeholder="e.g. images/ceo.png or https://..." style="flex:1;"/>
+                <button class="btn btn-ghost btn-sm" id="previewBtn">
+                  <i class="fas fa-eye"></i> Preview
+                </button>
+              </div>
+              <p class="form-hint mt-1">Enter a relative path (images/ceo.png) or full URL. Image must be accessible.</p>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Show Section</label>
+              <select id="visibleSelect" class="form-select">
+                <option value="true">Visible — Show on homepage</option>
+                <option value="false">Hidden — Hide from homepage</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Text settings -->
+          <div>
+            <div class="form-group">
+              <label class="form-label">Section Heading</label>
+              <input type="text" id="headingInput" class="form-input" placeholder="Join Our Team"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Description Text</label>
+              <textarea id="subtextInput" class="form-textarea" rows="5"
+                placeholder="We're looking for passionate..."></textarea>
+            </div>
+          </div>
+
+        </div>
+
+        <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:8px;padding-top:16px;border-top:1px solid var(--border);">
+          <button class="btn btn-ghost" id="resetBtn"><i class="fas fa-rotate-left"></i> Reset</button>
+          <button class="btn btn-primary" id="saveSettingsBtn">
+            <i class="fas fa-save"></i> Save Changes
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── SQL SETUP CHECKLIST ───────────────────────────── -->
+    <div class="table-card mt-3">
+      <div class="table-card-header"><div class="table-card-title">Supabase Setup Checklist</div></div>
+      <div style="padding:20px 24px;display:flex;flex-direction:column;gap:10px;">
+        <div style="display:flex;align-items:center;gap:10px;font-size:.85rem;">
+          <i class="fas fa-circle-check" style="color:var(--green);"></i>
+          <span>internship_applications table</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:.85rem;">
+          <i class="fas fa-circle-check" style="color:var(--green);"></i>
+          <span>job_postings table</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:.85rem;">
+          <i class="fas fa-circle-check" style="color:var(--green);"></i>
+          <span>contact_submissions table</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:.85rem;">
+          <i class="fas fa-circle-check" style="color:var(--green);"></i>
+          <span>admin_otps table</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:.85rem;" id="settingsCheck">
+          <i class="fas fa-circle-xmark" style="color:var(--red);"></i>
+          <span>site_settings table — run <code style="background:rgba(255,255,255,.06);padding:2px 6px;border-radius:4px;">site_settings.sql</code> in Supabase SQL Editor</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:.85rem;">
+          <i class="fas fa-circle-check" style="color:var(--green);"></i>
+          <span>resumes storage bucket (private)</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:.85rem;">
+          <i class="fas fa-circle-check" style="color:var(--green);"></i>
+          <span>careers_policy.sql applied</span>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script type="module">
+import { initLayout, API, Auth, toast } from '/admin/admin.js';
+initLayout('settings');
+
+const admin = Auth.getInfo();
+document.getElementById('infoName').textContent  = admin.full_name || '—';
+document.getElementById('infoEmail').textContent = admin.email     || '—';
+document.getElementById('infoRole').textContent  = admin.role      || '—';
+
+// ── Load current settings ─────────────────────────────
+let originalSettings = {};
+
+async function loadSettings() {
+  const data = await API.get('/settings');
+  if (!data?.success) return;
+
+  const s = data.settings || {};
+  originalSettings = { ...s };
+
+  document.getElementById('imgUrlInput').value    = s.join_team_image    || 'images/ceo.png';
+  document.getElementById('headingInput').value   = s.join_team_heading  || 'Join Our Team';
+  document.getElementById('subtextInput').value   = s.join_team_subtext  || '';
+  document.getElementById('visibleSelect').value  = s.join_team_visible  || 'true';
+
+  // Preview image
+  updatePreview(s.join_team_image || 'images/ceo.png');
+
+  // Update checklist — settings table exists
+  const check = document.getElementById('settingsCheck');
+  if (check) {
+    check.innerHTML = `<i class="fas fa-circle-check" style="color:var(--green);"></i>
+      <span>site_settings table ✅</span>`;
+  }
+}
+
+function updatePreview(url) {
+  const img = document.getElementById('previewImg');
+  const src = url.startsWith('http') ? url : '/' + url.replace(/^\//, '');
+  img.src = src;
+  img.onerror = () => { img.src = '/images/nav-logo.png'; };
+}
+
+// Preview button
+document.getElementById('previewBtn').addEventListener('click', () => {
+  updatePreview(document.getElementById('imgUrlInput').value.trim());
+});
+
+// Live preview on input
+document.getElementById('imgUrlInput').addEventListener('blur', () => {
+  updatePreview(document.getElementById('imgUrlInput').value.trim());
+});
+
+// Save settings
+document.getElementById('saveSettingsBtn').addEventListener('click', async () => {
+  const btn = document.getElementById('saveSettingsBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving…';
+
+  const updates = [
+    { key: 'join_team_image',   value: document.getElementById('imgUrlInput').value.trim()   },
+    { key: 'join_team_heading', value: document.getElementById('headingInput').value.trim()  },
+    { key: 'join_team_subtext', value: document.getElementById('subtextInput').value.trim()  },
+    { key: 'join_team_visible', value: document.getElementById('visibleSelect').value        },
+  ];
+
+  const settings = {};
+  updates.forEach(u => { settings[u.key] = u.value; });
+  const r = await API.put('/settings', { settings });
+
+  btn.disabled = false;
+  btn.innerHTML = '<i class="fas fa-save"></i> Save Changes';
+
+  if (r?.success) {
+    toast('Settings saved! Changes will reflect on the homepage.');
+  } else {
+    toast(r?.message || 'Failed to save settings. Check Supabase connection.', 'error');
+  }
+});
+
+// Reset
+document.getElementById('resetBtn').addEventListener('click', () => {
+  document.getElementById('imgUrlInput').value    = originalSettings.join_team_image    || 'images/ceo.png';
+  document.getElementById('headingInput').value   = originalSettings.join_team_heading  || 'Join Our Team';
+  document.getElementById('subtextInput').value   = originalSettings.join_team_subtext  || '';
+  document.getElementById('visibleSelect').value  = originalSettings.join_team_visible  || 'true';
+  updatePreview(originalSettings.join_team_image || 'images/ceo.png');
+  toast('Reset to last saved values.', 'warning');
+});
+
+loadSettings();
+</script>
+</body>
+</html>

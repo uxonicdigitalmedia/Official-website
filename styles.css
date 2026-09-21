@@ -262,10 +262,16 @@ input, select, textarea { font-family: inherit; font-size: inherit; }
 .reveal-stagger.active > *:nth-child(6) { transition-delay: 0.55s; opacity: 1; transform: translateY(0); }
 
 /* Page transitions */
-.page { display: none; }
-.page-active { display: block; animation: pageFadeIn 0.5s ease forwards; }
-.page-enter { display: block; opacity: 0; }
-@keyframes pageFadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.page { display: none; opacity: 0; }
+.page.page-active {
+  display: block;
+  opacity: 1;
+  animation: pageFadeIn 0.45s ease forwards;
+}
+@keyframes pageFadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
 
 /* ----------------------------------------
    HEADER / NAVBAR — Sleek Dark Glass Pill Style
@@ -2681,6 +2687,260 @@ input, select, textarea { font-family: inherit; font-size: inherit; }
 /* ============================================
    HOME CTA BANNER — Premium Dark (Override)
    ============================================ */
+
+/* ----------------------------------------
+   JOIN OUR TEAM SECTION
+   ---------------------------------------- */
+.join-team-section {
+  background: var(--bg-alt, #0E1A33);
+  padding: 96px 0;
+  position: relative;
+  overflow: hidden;
+}
+.join-team-section::before {
+  content: '';
+  position: absolute;
+  top: -160px; right: -160px;
+  width: 480px; height: 480px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(212,175,55,0.05) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.join-team-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: center;
+}
+.join-team-inner--solo {
+  grid-template-columns: 1fr;
+  max-width: 640px;
+  margin: 0 auto;
+  gap: 0;
+}
+.join-team-inner--solo .join-team-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+}
+.join-team-inner--solo .section-tag {
+  justify-content: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+.join-team-inner--solo .section-title,
+.join-team-inner--solo .section-desc {
+  text-align: center;
+  max-width: 560px;
+}
+.join-team-inner--solo .join-team-perks {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: max-content;
+  max-width: 100%;
+  margin: 8px auto 32px;
+  text-align: left;
+}
+.join-team-inner--solo .join-team-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 0 auto;
+  width: auto;
+}
+
+.join-team-content .section-title { margin-bottom: 16px; }
+.join-team-content .section-desc  { margin-bottom: 28px; }
+
+.join-team-perks {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 32px;
+}
+.join-team-perks li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.92rem;
+  color: var(--text-body);
+}
+.join-team-perks li i {
+  color: var(--green-dark);
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+
+.join-team-btn {
+  font-size: 0.92rem;
+  padding: 14px 28px;
+}
+
+/* Role cards (right column) */
+.join-team-roles {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Founder image card */
+.join-team-image-card {
+  position: relative;
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1.5px solid rgba(212,175,55,0.2);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+  margin-bottom: 2px;
+}
+.join-team-img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  object-position: top center;
+  display: block;
+  transition: transform 0.5s ease;
+}
+.join-team-image-card:hover .join-team-img {
+  transform: scale(1.04);
+}
+.join-team-img-overlay {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  padding: 20px 18px 16px;
+  background: linear-gradient(to top, rgba(6,10,18,0.95) 0%, rgba(6,10,18,0.6) 60%, transparent 100%);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 8px;
+}
+.join-team-img-label {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.join-team-img-name {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.01em;
+}
+.join-team-img-title {
+  font-size: 0.75rem;
+  color: var(--gold-primary, #D4AF37);
+  font-weight: 500;
+}
+.join-team-img-tag {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  background: rgba(212,175,55,0.15);
+  border: 1px solid rgba(212,175,55,0.3);
+  border-radius: 100px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--gold-primary, #D4AF37);
+  white-space: nowrap;
+}
+.join-team-img-tag i { font-size: 0.7rem; }
+
+.join-role-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--bg-dark-card, #0F172A);
+  border: 1.5px solid rgba(212,175,55,0.15);
+  border-radius: 16px;
+  padding: 20px 22px;
+  transition: border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+.join-role-card:hover {
+  border-color: rgba(212,175,55,0.35);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 28px rgba(212,175,55,0.1);
+}
+
+.join-role-icon {
+  width: 46px; height: 46px;
+  border-radius: 12px;
+  background: rgba(212,175,55,0.10);
+  border: 1px solid rgba(212,175,55,0.2);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--green-dark);
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.join-role-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 5px;
+  letter-spacing: -0.01em;
+}
+
+.join-role-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 100px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.join-role-badge.internship {
+  background: rgba(96,165,250,0.12);
+  color: #60a5fa;
+  border: 1px solid rgba(96,165,250,0.25);
+}
+.join-role-badge.fulltime {
+  background: rgba(212,175,55,0.12);
+  color: #D4AF37;
+  border: 1px solid rgba(212,175,55,0.25);
+}
+
+.join-role-cta-card {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  background: rgba(212,175,55,0.05);
+  border-color: rgba(212,175,55,0.2);
+}
+.join-role-cta-card i {
+  font-size: 1.2rem;
+  color: var(--green-dark);
+  margin-bottom: 2px;
+}
+.join-role-cta-card p {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+.join-see-all {
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: var(--green-dark);
+  text-decoration: none;
+  letter-spacing: 0.02em;
+  transition: opacity 0.2s;
+}
+.join-see-all:hover { opacity: 0.75; }
+
+@media (max-width: 900px) {
+  .join-team-inner { grid-template-columns: 1fr; gap: 40px; }
+}
+@media (max-width: 600px) {
+  .join-team-section { padding: 64px 0; }
+  .join-team-btn { width: 100%; justify-content: center; }
+}
+
 .home-cta-banner {
   background: var(--bg-primary);
   padding: 80px 0 100px;

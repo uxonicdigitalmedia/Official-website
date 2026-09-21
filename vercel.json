@@ -1,0 +1,40 @@
+{
+  "version": 2,
+  "buildCommand": null,
+  "outputDirectory": ".",
+  "functions": {
+    "api/**/*.js": {
+      "runtime": "nodejs20.x"
+    }
+  },
+  "rewrites": [
+    { "source": "/admin",          "destination": "/admin/index.html" },
+    { "source": "/admin/",         "destination": "/admin/index.html" },
+    { "source": "/admin/dashboard","destination": "/admin/dashboard.html" },
+    { "source": "/admin/applications","destination": "/admin/applications.html" },
+    { "source": "/admin/jobs",     "destination": "/admin/jobs.html" },
+    { "source": "/admin/contacts", "destination": "/admin/contacts.html" },
+    { "source": "/admin/content",  "destination": "/admin/content.html" },
+    { "source": "/admin/settings", "destination": "/admin/settings.html" },
+    { "source": "/internship",     "destination": "/internship.html" },
+    { "source": "/careers",        "destination": "/careers.html" }
+  ],
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        { "key": "Access-Control-Allow-Origin",  "value": "*" },
+        { "key": "Access-Control-Allow-Methods", "value": "GET,POST,PUT,DELETE,OPTIONS" },
+        { "key": "Access-Control-Allow-Headers", "value": "Content-Type,Authorization,X-Admin-Token" }
+      ]
+    },
+    {
+      "source": "/admin/(.*)",
+      "headers": [
+        { "key": "X-Frame-Options",        "value": "DENY" },
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "Referrer-Policy",        "value": "strict-origin-when-cross-origin" }
+      ]
+    }
+  ]
+}

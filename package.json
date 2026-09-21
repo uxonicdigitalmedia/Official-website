@@ -1,0 +1,20 @@
+{
+  "name": "uxonic-digital-solutions",
+  "version": "1.0.0",
+  "description": "UXONIC Digital Solutions — Website + Admin Panel",
+  "type": "module",
+  "engines": {
+    "node": ">=20.x"
+  },
+  "scripts": {
+    "dev": "node local-server.mjs",
+    "start": "node local-server.mjs"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.43.4",
+    "bcryptjs": "^2.4.3",
+    "formidable": "^3.5.1",
+    "jsonwebtoken": "^9.0.2",
+    "resend": "^6.28.1"
+  }
+}

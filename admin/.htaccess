@@ -1,0 +1,14 @@
+# UXONIC Admin — Security headers
+Options -Indexes
+
+# Prevent direct access to config and auth files
+<FilesMatch "^(config|auth)\.php$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# Protect partials directory
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^partials/ - [F,L]
+</IfModule>

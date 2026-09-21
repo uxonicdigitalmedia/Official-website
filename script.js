@@ -8,12 +8,13 @@
   overlay.className = 'page-load-overlay';
   overlay.innerHTML = '<span class="load-logo">UXONIC</span>';
   document.body.prepend(overlay);
-  window.addEventListener('load', () => {
-    setTimeout(() => {
-      overlay.classList.add('fade-out');
-      setTimeout(() => overlay.remove(), 650);
-    }, 700);
-  });
+  const hide = () => {
+    overlay.classList.add('fade-out');
+    setTimeout(() => overlay.remove(), 650);
+  };
+  window.addEventListener('load', () => setTimeout(hide, 400));
+  // Safety: never leave overlay stuck if load hangs
+  setTimeout(hide, 2500);
 })();
 
 /* ============================================
@@ -38,18 +39,16 @@ const Router = (function () {
     if (!targetPage) return;
 
     allPages.forEach(p => {
-      p.classList.remove('page-active', 'page-enter');
+      p.classList.remove('page-active');
       p.style.display = 'none';
+      p.style.opacity = '';
     });
 
     targetPage.style.display = 'block';
-    requestAnimationFrame(() => {
-      targetPage.classList.add('page-enter');
-      requestAnimationFrame(() => {
-        targetPage.classList.remove('page-enter');
-        targetPage.classList.add('page-active');
-      });
-    });
+    targetPage.style.opacity = '1';
+    // Force reflow so fade animation restarts cleanly
+    void targetPage.offsetWidth;
+    targetPage.classList.add('page-active');
 
     currentPage = pageName;
 
@@ -62,7 +61,7 @@ const Router = (function () {
     }
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    setTimeout(() => triggerReveals(targetPage), 80);
+    setTimeout(() => triggerReveals(targetPage), 60);
     setTimeout(() => initCountersInEl(targetPage), 100);
 
     if (pageName === 'home')      setTimeout(initTestimonials, 200);
@@ -76,11 +75,15 @@ const Router = (function () {
 
   function init() {
     document.addEventListener('click', function (e) {
-      const anchor = e.target.closest('[data-page]');
-      if (!anchor) return;
-      const page = anchor.dataset.page;
+      // Only the clicked link/button — never parent .page[data-page] wrappers
+      // (that bug blocked "View Openings" → careers)
+      const link = e.target.closest('a, button');
+      if (!link) return;
+      if (link.hasAttribute('data-external')) return;
+      const page = link.dataset.page;
       if (!page || !PAGES.includes(page)) return;
       e.preventDefault();
+      e.stopPropagation();
       showPage(page);
       const hamburger = document.getElementById('hamburger');
       const nav = document.getElementById('nav');
@@ -137,17 +140,32 @@ function triggerReveals(container) {
   const reveals = container.querySelectorAll(sel);
   if (!reveals.length) return;
   reveals.forEach(el => el.classList.remove('active'));
+
+  const activate = (el, delay) => {
+    setTimeout(() => el.classList.add('active'), delay || 0);
+  };
+
+  // Immediately show anything already in / near the viewport (fixes blank hero)
+  reveals.forEach((el, idx) => {
+    const rect = el.getBoundingClientRect();
+    const inView = rect.top < window.innerHeight * 0.95 && rect.bottom > 0;
+    if (inView) activate(el, Math.min(idx * 80, 400));
+  });
+
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         const siblings = Array.from(entry.target.parentElement.querySelectorAll(sel));
         const idx = siblings.indexOf(entry.target);
-        setTimeout(() => entry.target.classList.add('active'), idx * 120);
+        activate(entry.target, idx * 120);
         observer.unobserve(entry.target);
       }
     });
   }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
-  reveals.forEach(el => observer.observe(el));
+
+  reveals.forEach(el => {
+    if (!el.classList.contains('active')) observer.observe(el);
+  });
 }
 
 /* ============================================
@@ -296,24 +314,21 @@ function initBookCall() {
 }
 
 /* ============================================
-   CONTACT FORM — Fixed & Clean
+   CONTACT FORM — Supabase via /api/contact
    ============================================ */
 function initContactForm() {
-  /* Retry up to 10 times if form not yet in DOM */
   const existing = document.getElementById('contactForm');
   if (!existing) {
     setTimeout(initContactForm, 200);
     return;
   }
 
-  /* Clone removes all stale event listeners from previous visits */
-  const form = existing.cloneNode(true);
-  existing.parentNode.replaceChild(form, existing);
+  if (existing._bound) return;
+  existing._bound = true;
 
-  const FORMSPREE = 'https://formspree.io/f/xqervnga';
+  const form = existing;
   const isValidEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
 
-  /* ---- helpers ---- */
   function fieldError(inputId, errId, show) {
     const inp = form.querySelector('#' + inputId);
     const err = form.querySelector('#' + errId);
@@ -321,21 +336,23 @@ function initContactForm() {
     if (err) err.classList.toggle('visible', show);
   }
 
-  function showToast() {
+  function showToast(ok) {
     const old = document.getElementById('uxToast');
     if (old) old.remove();
 
     const toast = document.createElement('div');
     toast.id = 'uxToast';
-    toast.innerHTML = '<i class="fas fa-circle-check"></i><span>Message sent! We\'ll get back to you within 24 hours.</span>';
+    toast.innerHTML = ok
+      ? '<i class="fas fa-circle-check"></i><span>Message sent! We\'ll get back to you within 24 hours.</span>'
+      : '<i class="fas fa-circle-exclamation"></i><span>Could not send. Please try WhatsApp.</span>';
     toast.style.cssText = [
       'position:fixed', 'bottom:32px', 'left:50%',
       'transform:translateX(-50%) translateY(20px)',
-      'background:linear-gradient(135deg,#0f5132,#198754)',
+      ok ? 'background:linear-gradient(135deg,#0f5132,#198754)' : 'background:linear-gradient(135deg,#7f1d1d,#b91c1c)',
       'color:#fff', 'padding:16px 28px', 'border-radius:100px',
       'font-size:0.92rem', 'font-weight:600', 'font-family:inherit',
       'display:flex', 'align-items:center', 'gap:10px',
-      'box-shadow:0 8px 32px rgba(25,135,84,0.45)',
+      'box-shadow:0 8px 32px rgba(0,0,0,0.35)',
       'z-index:99999', 'opacity:0',
       'transition:opacity 0.4s ease,transform 0.4s ease',
       'white-space:nowrap',
@@ -355,7 +372,6 @@ function initContactForm() {
     }, 5000);
   }
 
-  /* ---- submit ---- */
   form.addEventListener('submit', async function (e) {
     e.preventDefault();
     e.stopPropagation();
@@ -367,7 +383,6 @@ function initContactForm() {
     const btn  = form.querySelector('.form-submit');
     const btxt = btn && btn.querySelector('.btn-text');
 
-    /* Validate */
     let valid = true;
     if (!nmEl || nmEl.value.trim().length < 2)     { fieldError('fname',    'nameError',    true);  valid = false; } else { fieldError('fname',    'nameError',    false); }
     if (!emEl || !isValidEmail(emEl.value.trim()))  { fieldError('femail',   'emailError',   true);  valid = false; } else { fieldError('femail',   'emailError',   false); }
@@ -380,40 +395,39 @@ function initContactForm() {
     const pr = prEl.value;
     const ms = msEl.value.trim();
 
-    /* Loading */
     if (btn)  btn.disabled = true;
     if (btxt) btxt.textContent = 'Sending...';
 
-    /* Formspree */
+    let ok = false;
     try {
-      const fd = new FormData();
-      fd.append('name', nm);
-      fd.append('email', em);
-      fd.append('project_type', pr);
-      fd.append('message', ms);
-      await fetch(FORMSPREE, {
+      const res = await fetch('/api/contact', {
         method: 'POST',
-        headers: { Accept: 'application/json' },
-        body: fd
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({ name: nm, email: em, project_type: pr, message: ms }),
       });
-    } catch (_) { /* fail silently */ }
+      const data = await res.json().catch(() => ({}));
+      ok = res.ok && data.success !== false;
+    } catch (_) {
+      ok = false;
+    }
 
-    /* Always succeed on UI */
-    form.reset();
-    if (btxt) btxt.textContent = 'Message Sent ✓';
+    if (ok) {
+      form.reset();
+      if (btxt) btxt.textContent = 'Message Sent ✓';
+      showToast(true);
+      const waText = 'Hi UXONIC! 👋\nName: ' + nm + '\nEmail: ' + em + '\nProject: ' + pr + '\nMessage: ' + ms;
+      window.open('https://wa.me/919843021717?text=' + encodeURIComponent(waText), '_blank');
+    } else {
+      if (btxt) btxt.textContent = 'Try Again';
+      showToast(false);
+    }
+
     setTimeout(() => {
       if (btxt) btxt.textContent = 'Send Message';
       if (btn)  btn.disabled = false;
     }, 3500);
-
-    showToast();
-
-    /* WhatsApp */
-    const waText = 'Hi UXONIC! 👋\nName: ' + nm + '\nEmail: ' + em + '\nProject: ' + pr + '\nMessage: ' + ms;
-    window.open('https://wa.me/919843021717?text=' + encodeURIComponent(waText), '_blank');
   });
 
-  /* ---- blur validation ---- */
   ['fname', 'femail', 'fproject', 'fmessage'].forEach(function (id) {
     const el = form.querySelector('#' + id);
     if (!el) return;
@@ -469,15 +483,19 @@ function initContactForm() {
 })();
 
 /* ============================================
-   SMOOTH SCROLL
+   SMOOTH SCROLL — only for in-page anchors WITHOUT data-page
    ============================================ */
 (function initSmoothScrollLinks() {
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
+      if (this.hasAttribute('data-page')) return; // Router handles these
       const targetId = this.getAttribute('href');
-      if (targetId === '#') return;
+      if (!targetId || targetId === '#') return;
       const target = document.querySelector(targetId);
-      if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     });
   });
 })();
@@ -487,7 +505,6 @@ function initContactForm() {
    ============================================ */
 Router.init();
 
-/* Also init contact form if page loads directly on #contact */
 if (window.location.hash === '#contact') {
   setTimeout(initContactForm, 400);
 }

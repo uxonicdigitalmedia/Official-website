@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Website Content — UXONIC Admin</title>
+  <meta name="robots" content="noindex,nofollow"/>
+  <link rel="icon" type="image/jpeg" href="/images/fav.jpeg"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous"/>
+  <link rel="stylesheet" href="/admin/assets/admin.css"/>
+</head>
+<body>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <img src="/images/nav-logo.png" alt="UXONIC" class="sidebar-logo-img"/>
+    <div><span class="sidebar-logo-text"><span>U</span>XO<span>N</span>IC</span><span class="sidebar-badge">Admin Panel</span></div>
+  </div>
+  <nav class="sidebar-nav">
+    <span class="sidebar-section-label">Main</span>
+    <a href="/admin/dashboard" class="nav-item" data-page="dashboard"><i class="fas fa-chart-pie"></i> Dashboard</a>
+    <span class="sidebar-section-label">Recruitment</span>
+    <a href="/admin/applications" class="nav-item" data-page="applications"><i class="fas fa-file-user"></i> Applications</a>
+    <a href="/admin/jobs" class="nav-item" data-page="jobs"><i class="fas fa-briefcase"></i> Job Postings</a>
+    <span class="sidebar-section-label">Website</span>
+    <a href="/admin/content" class="nav-item" data-page="content"><i class="fas fa-pen-to-square"></i> Website Content</a>
+    <a href="/admin/contacts" class="nav-item" data-page="contacts"><i class="fas fa-envelope"></i> Messages</a>
+    <span class="sidebar-section-label">Account</span>
+    <a href="/admin/settings" class="nav-item" data-page="settings"><i class="fas fa-gear"></i> Settings</a>
+    <a href="/" target="_blank" class="nav-item"><i class="fas fa-arrow-up-right-from-square"></i> View Website</a>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="sidebar-user">
+      <div class="sidebar-user-avatar" id="sidebarUserAvatar">A</div>
+      <div class="sidebar-user-info">
+        <div class="sidebar-user-name" id="sidebarUserName">Admin</div>
+        <div class="sidebar-user-role" id="sidebarUserRole">superadmin</div>
+      </div>
+      <a href="#" data-action="logout" class="sidebar-logout"><i class="fas fa-right-from-bracket"></i></a>
+    </div>
+  </div>
+</aside>
+
+<div class="main-content">
+  <header class="topbar">
+    <button class="hamburger-btn" id="hamburgerBtn"><i class="fas fa-bars"></i></button>
+    <div><div class="topbar-title">Website Content</div></div>
+    <div class="topbar-spacer"></div>
+    <div class="topbar-time" id="adminClock"></div>
+    <a href="#" data-action="logout" class="btn btn-ghost btn-sm"><i class="fas fa-right-from-bracket"></i> Logout</a>
+  </header>
+
+  <main class="page-body">
+    <div id="alertBox"></div>
+    <p style="color:var(--text-muted);font-size:.9rem;margin:0 0 20px;">
+      Edit homepage hero, contact details, and Join Our Team. Saved values are stored in Supabase and shown on the live site.
+    </p>
+
+    <!-- HERO -->
+    <div class="table-card mb-3">
+      <div class="table-card-header">
+        <div class="table-card-title"><i class="fas fa-house" style="color:var(--gold);margin-right:8px;"></i> Home — Hero Section</div>
+      </div>
+      <div style="padding:24px;display:grid;gap:16px;">
+        <div class="form-group">
+          <label class="form-label">Badge text</label>
+          <input type="text" id="hero_badge" class="form-input" placeholder="Premium Digital Agency in 2025"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Headline (HTML allowed)</label>
+          <textarea id="hero_headline" class="form-textarea" rows="3" placeholder="We Build Digital..."></textarea>
+          <p class="form-hint">You can use &lt;br&gt; and &lt;span class="highlight-serif"&gt;…&lt;/span&gt;</p>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Subtitle</label>
+          <textarea id="hero_subtitle" class="form-textarea" rows="3"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTACT -->
+    <div class="table-card mb-3">
+      <div class="table-card-header">
+        <div class="table-card-title"><i class="fas fa-address-card" style="color:var(--gold);margin-right:8px;"></i> Contact Details</div>
+      </div>
+      <div style="padding:24px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;">
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input type="email" id="contact_email" class="form-input"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Phone (display)</label>
+          <input type="text" id="contact_phone" class="form-input" placeholder="+91 9843021717"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">WhatsApp number</label>
+          <input type="text" id="whatsapp_number" class="form-input" placeholder="919843021717"/>
+          <p class="form-hint">Digits only with country code</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- JOIN TEAM -->
+    <div class="table-card mb-3">
+      <div class="table-card-header">
+        <div class="table-card-title"><i class="fas fa-users" style="color:var(--gold);margin-right:8px;"></i> Join Our Team</div>
+      </div>
+      <div style="padding:24px;display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+        <div>
+          <div class="form-group">
+            <label class="form-label">Section image</label>
+            <div style="border:1.5px solid rgba(212,175,55,0.2);border-radius:12px;overflow:hidden;margin-bottom:12px;background:var(--bg-dark);height:160px;">
+              <img id="previewImg" src="/images/ceo.png" alt="preview" style="width:100%;height:160px;object-fit:cover;object-position:top;display:block;"/>
+            </div>
+            <input type="text" id="join_team_image" class="form-input" placeholder="images/ceo.png or https://…"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Show section</label>
+            <select id="join_team_visible" class="form-select">
+              <option value="true">Visible</option>
+              <option value="false">Hidden</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <div class="form-group">
+            <label class="form-label">Heading</label>
+            <input type="text" id="join_team_heading" class="form-input"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Description</label>
+            <textarea id="join_team_subtext" class="form-textarea" rows="5"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;justify-content:flex-end;gap:10px;margin-bottom:40px;">
+      <button class="btn btn-ghost" id="reloadBtn"><i class="fas fa-rotate"></i> Reload</button>
+      <button class="btn btn-primary" id="saveBtn"><i class="fas fa-save"></i> Save All to Supabase</button>
+    </div>
+  </main>
+</div>
+
+<script type="module">
+import { initLayout, API, toast } from '/admin/admin.js';
+initLayout('content');
+
+const KEYS = [
+  'hero_badge','hero_headline','hero_subtitle',
+  'contact_email','contact_phone','whatsapp_number',
+  'join_team_image','join_team_heading','join_team_subtext','join_team_visible',
+];
+
+function updatePreview(url) {
+  const img = document.getElementById('previewImg');
+  if (!url) return;
+  img.src = url.startsWith('http') ? url : '/' + url.replace(/^\//, '');
+  img.onerror = () => { img.src = '/images/nav-logo.png'; };
+}
+
+async function load() {
+  const data = await API.get('/settings');
+  if (!data?.success) {
+    toast(data?.message || 'Failed to load settings from Supabase', 'error');
+    return;
+  }
+  const s = data.settings || {};
+  KEYS.forEach(k => {
+    const el = document.getElementById(k);
+    if (el) el.value = s[k] ?? '';
+  });
+  updatePreview(s.join_team_image || 'images/ceo.png');
+}
+
+document.getElementById('join_team_image').addEventListener('blur', e => updatePreview(e.target.value.trim()));
+
+document.getElementById('saveBtn').addEventListener('click', async () => {
+  const btn = document.getElementById('saveBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving…';
+
+  const settings = {};
+  KEYS.forEach(k => {
+    const el = document.getElementById(k);
+    if (el) settings[k] = el.value.trim();
+  });
+
+  const r = await API.put('/settings', { settings });
+  btn.disabled = false;
+  btn.innerHTML = '<i class="fas fa-save"></i> Save All to Supabase';
+
+  if (r?.success) toast('Saved to Supabase. Homepage will reflect changes.');
+  else toast(r?.message || 'Save failed. Check Vercel env + Supabase.', 'error');
+});
+
+document.getElementById('reloadBtn').addEventListener('click', load);
+load();
+</script>
+</body>
+</html>

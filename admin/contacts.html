@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Contact Messages — UXONIC Admin</title>
+  <meta name="robots" content="noindex,nofollow"/>
+  <link rel="icon" type="image/jpeg" href="/images/fav.jpeg"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous"/>
+  <link rel="stylesheet" href="/admin/assets/admin.css"/>
+</head>
+<body>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <img src="/images/nav-logo.png" alt="UXONIC" class="sidebar-logo-img"/>
+    <div><span class="sidebar-logo-text"><span>U</span>XO<span>N</span>IC</span><span class="sidebar-badge">Admin Panel</span></div>
+  </div>
+  <nav class="sidebar-nav">
+    <span class="sidebar-section-label">Main</span>
+    <a href="/admin/dashboard" class="nav-item" data-page="dashboard"><i class="fas fa-chart-pie"></i> Dashboard</a>
+    <span class="sidebar-section-label">Recruitment</span>
+    <a href="/admin/applications" class="nav-item" data-page="applications"><i class="fas fa-file-user"></i> Applications</a>
+    <a href="/admin/jobs" class="nav-item" data-page="jobs"><i class="fas fa-briefcase"></i> Job Postings</a>
+    <span class="sidebar-section-label">Website</span>
+    <a href="/admin/content" class="nav-item" data-page="content"><i class="fas fa-pen-to-square"></i> Website Content</a>
+    <a href="/admin/contacts" class="nav-item" data-page="contacts"><i class="fas fa-envelope"></i> Messages</a>
+    <span class="sidebar-section-label">Account</span>
+    <a href="/admin/settings" class="nav-item" data-page="settings"><i class="fas fa-gear"></i> Settings</a>
+    <a href="/" target="_blank" class="nav-item"><i class="fas fa-arrow-up-right-from-square"></i> View Website</a>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="sidebar-user">
+      <div class="sidebar-user-avatar" id="sidebarUserAvatar">A</div>
+      <div class="sidebar-user-info">
+        <div class="sidebar-user-name" id="sidebarUserName">Admin</div>
+        <div class="sidebar-user-role" id="sidebarUserRole">superadmin</div>
+      </div>
+      <a href="#" data-action="logout" class="sidebar-logout"><i class="fas fa-right-from-bracket"></i></a>
+    </div>
+  </div>
+</aside>
+
+<div class="main-content">
+  <header class="topbar">
+    <button class="hamburger-btn" id="hamburgerBtn"><i class="fas fa-bars"></i></button>
+    <div><div class="topbar-title">Contact Messages</div></div>
+    <div class="topbar-spacer"></div>
+    <div class="topbar-time" id="adminClock"></div>
+    <a href="#" data-action="logout" class="btn btn-ghost btn-sm"><i class="fas fa-right-from-bracket"></i> Logout</a>
+  </header>
+
+  <main class="page-body">
+    <div class="table-card">
+      <div class="table-card-header">
+        <div class="table-card-title">Messages <span id="unreadBadge" style="display:none;background:var(--red);color:#fff;font-size:.65rem;font-weight:700;padding:2px 8px;border-radius:100px;margin-left:6px;"></span></div>
+        <div class="table-card-actions">
+          <button class="btn btn-ghost btn-sm" id="markAllReadBtn"><i class="fas fa-check-double"></i> Mark All Read</button>
+        </div>
+      </div>
+
+      <div class="filter-bar">
+        <span class="filter-label">Show:</span>
+        <select id="filterRead" class="form-select" style="width:auto;min-width:120px;padding:7px 12px;font-size:.82rem;">
+          <option value="">All</option>
+          <option value="0">Unread</option>
+          <option value="1">Read</option>
+        </select>
+        <input type="text" id="filterSearch" class="form-input" placeholder="Search name, email, message…" style="width:220px;padding:7px 12px;font-size:.82rem;"/>
+        <button class="btn btn-ghost btn-sm" id="searchBtn"><i class="fas fa-search"></i></button>
+        <button class="btn btn-ghost btn-sm" id="clearBtn" style="display:none;">Clear</button>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>#</th><th>Name</th><th>Email</th><th>Project</th><th>Preview</th><th>Status</th><th>Time</th><th>Actions</th></tr></thead>
+          <tbody id="contactsBody"><tr><td colspan="8" class="table-empty"><i class="fas fa-spinner fa-spin"></i> Loading…</td></tr></tbody>
+        </table>
+      </div>
+
+      <div class="pagination" id="pagination" style="display:none;">
+        <div class="pagination-info" id="pageInfo"></div>
+        <div class="pagination-btns" id="pageBtns"></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- DETAIL MODAL -->
+<div class="modal-overlay" id="msgModal">
+  <div class="modal" style="max-width:580px;">
+    <div class="modal-header">
+      <div class="modal-title" id="msgModalTitle">Message</div>
+      <button class="modal-close" id="msgModalClose">&times;</button>
+    </div>
+    <div class="detail-grid" id="msgDetails"></div>
+    <div style="margin-top:16px;padding:14px 16px;background:rgba(212,175,55,.06);border:1px solid rgba(212,175,55,.2);border-radius:var(--radius-md);">
+      <p style="font-size:.76rem;color:var(--text-muted);margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;">Quick Reply</p>
+      <a id="replyLink" href="#" class="btn btn-primary btn-sm"><i class="fas fa-reply"></i> Reply via Email</a>
+    </div>
+    <div style="margin-top:16px;">
+      <label class="form-label" style="margin-bottom:7px;">Admin Notes</label>
+      <textarea id="msgNotes" class="notes-area" placeholder="Private notes…"></textarea>
+      <div style="display:flex;justify-content:space-between;margin-top:10px;gap:8px;flex-wrap:wrap;">
+        <button class="btn btn-danger btn-sm" id="deleteMsgBtn"><i class="fas fa-trash"></i> Delete</button>
+        <button class="btn btn-primary btn-sm" id="saveMsgNotesBtn"><i class="fas fa-save"></i> Save Notes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { initLayout, API, e, timeAgo, fmtDate, toast, Modal, confirm_dialog } from '/admin/admin.js';
+initLayout('contacts');
+
+let currentPage = 1, totalPages = 1, currentMsgId = null;
+let filterRead = '', filterSearch = '';
+
+async function loadContacts() {
+  const tbody = document.getElementById('contactsBody');
+  tbody.innerHTML = `<tr><td colspan="8" class="table-empty"><i class="fas fa-spinner fa-spin"></i> Loading…</td></tr>`;
+
+  const p = { page: currentPage, per_page: 25 };
+  if (filterRead !== '') p.read = filterRead;
+  if (filterSearch)     p.search = filterSearch;
+
+  const data = await API.get('/contacts', p);
+  const contacts = data?.contacts || [];
+  const total    = data?.total || 0;
+  totalPages = Math.max(1, Math.ceil(total / 25));
+
+  // Unread badge
+  const unread = contacts.filter(c => !c.is_read).length;
+  const ub = document.getElementById('unreadBadge');
+  if (unread > 0 && !filterRead) { ub.textContent = unread + ' unread'; ub.style.display = ''; }
+  else ub.style.display = 'none';
+
+  document.getElementById('clearBtn').style.display = (filterRead!==''||filterSearch) ? '' : 'none';
+
+  if (!contacts.length) { tbody.innerHTML = `<tr><td colspan="8" class="table-empty"><i class="fas fa-envelope-open" style="display:block;font-size:1.6rem;margin-bottom:8px;color:var(--text-light);"></i>No messages found.</td></tr>`; return; }
+
+  tbody.innerHTML = contacts.map(c => `
+    <tr ${!c.is_read?'style="background:rgba(96,165,250,.03);"':''}>
+      <td class="muted">${c.id}</td>
+      <td class="bold" ${!c.is_read?'style="color:#fff;"':''}>${e(c.full_name)}</td>
+      <td class="muted truncate">${e(c.email)}</td>
+      <td class="muted">${e(c.project_type||'—')}</td>
+      <td style="max-width:200px;"><span style="font-size:.8rem;color:var(--text-muted);">${e((c.message||'').slice(0,70))}…</span></td>
+      <td><span class="badge ${c.is_read?'badge-read':'badge-unread'}">${c.is_read?'Read':'Unread'}</span></td>
+      <td class="muted">${timeAgo(c.submitted_at)}</td>
+      <td><div style="display:flex;gap:6px;">
+        <button class="btn btn-ghost btn-sm" onclick="openMsg(${c.id})">View</button>
+        <button class="btn btn-ghost btn-sm" onclick="toggleRead(${c.id},${c.is_read})" title="${c.is_read?'Mark unread':'Mark read'}">
+          <i class="fas ${c.is_read?'fa-envelope':'fa-envelope-open'}"></i>
+        </button>
+      </div></td>
+    </tr>`).join('');
+
+  // Pagination
+  const pg = document.getElementById('pagination');
+  if (totalPages > 1) {
+    pg.style.display = '';
+    document.getElementById('pageInfo').textContent = `Showing ${(currentPage-1)*25+1}–${Math.min(currentPage*25,total)} of ${total}`;
+    document.getElementById('pageBtns').innerHTML = Array.from({length:totalPages},(_,i)=>
+      `<button class="page-btn ${i+1===currentPage?'active':''}" onclick="goPage(${i+1})">${i+1}</button>`
+    ).join('');
+  } else pg.style.display = 'none';
+}
+
+window.goPage = (p) => { currentPage = p; loadContacts(); };
+
+window.openMsg = async (id) => {
+  currentMsgId = id;
+  document.getElementById('msgDetails').innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:20px;"><i class="fas fa-spinner fa-spin"></i></div>`;
+  Modal.open('msgModal');
+
+  const data = await API.get('/contacts', { id });
+  const c = data?.contact; if (!c) { toast('Failed to load.','error'); Modal.close('msgModal'); return; }
+
+  document.getElementById('msgModalTitle').textContent = `Message from ${c.full_name}`;
+  document.getElementById('msgNotes').value = c.admin_notes || '';
+  document.getElementById('replyLink').href = `mailto:${c.email}?subject=${encodeURIComponent('Re: Your enquiry with UXONIC Digital Solutions')}`;
+
+  document.getElementById('msgDetails').innerHTML = [
+    ['Name', e(c.full_name)], ['Email', `<a href="mailto:${e(c.email)}">${e(c.email)}</a>`],
+    ['Project Type', e(c.project_type||'—')], ['Received', fmtDate(c.submitted_at)],
+  ].map(([k,v])=>`<div class="detail-item"><div class="detail-key">${k}</div><div class="detail-val">${v}</div></div>`).join('')
+  + `<div class="detail-item full"><div class="detail-key">Message</div><div class="detail-val" style="white-space:pre-wrap;background:rgba(255,255,255,.03);padding:14px;border-radius:8px;border:1px solid var(--border);line-height:1.7;">${e(c.message)}</div></div>`;
+
+  loadContacts();
+};
+
+window.toggleRead = async (id, isRead) => {
+  const r = await API.put('/contacts?id='+id, { is_read: !isRead });
+  if (r?.success) { toast(`Marked as ${!isRead?'read':'unread'}.`); loadContacts(); }
+  else toast(r?.message||'Failed.','error');
+};
+
+document.getElementById('markAllReadBtn').addEventListener('click', async () => {
+  const r = await API.put('/contacts', { mark_all_read: true });
+  if (r?.success) { toast('All marked as read.'); loadContacts(); }
+  else toast(r?.message||'Failed.','error');
+});
+
+document.getElementById('saveMsgNotesBtn').addEventListener('click', async () => {
+  const r = await API.put('/contacts?id='+currentMsgId, { admin_notes: document.getElementById('msgNotes').value });
+  if (r?.success) toast('Notes saved.');
+  else toast(r?.message||'Failed.','error');
+});
+
+document.getElementById('deleteMsgBtn').addEventListener('click', async () => {
+  if (!confirm_dialog('Delete this message?')) return;
+  const r = await API.deleteQ('/contacts', { id: currentMsgId });
+  if (r?.success) { toast('Deleted.','warning'); Modal.close('msgModal'); loadContacts(); }
+  else toast(r?.message||'Failed.','error');
+});
+
+document.getElementById('msgModalClose').addEventListener('click', () => Modal.close('msgModal'));
+document.getElementById('filterRead').addEventListener('change', () => { filterRead=document.getElementById('filterRead').value; currentPage=1; loadContacts(); });
+document.getElementById('searchBtn').addEventListener('click', () => { filterSearch=document.getElementById('filterSearch').value.trim(); currentPage=1; loadContacts(); });
+document.getElementById('filterSearch').addEventListener('keydown', ev => { if(ev.key==='Enter'){filterSearch=ev.target.value.trim();currentPage=1;loadContacts();} });
+document.getElementById('clearBtn').addEventListener('click', () => { filterRead=''; filterSearch=''; document.getElementById('filterRead').value=''; document.getElementById('filterSearch').value=''; currentPage=1; loadContacts(); });
+
+loadContacts();
+</script>
+</body>
+</html>

@@ -1,3 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /internship
+Disallow: /internship.html
 Sitemap: https://uxonicdigital.com/sitemap.xml

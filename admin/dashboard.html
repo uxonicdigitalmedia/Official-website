@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Dashboard — UXONIC Admin</title>
+  <meta name="robots" content="noindex,nofollow"/>
+  <link rel="icon" type="image/jpeg" href="/images/fav.jpeg"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous"/>
+  <link rel="stylesheet" href="/admin/assets/admin.css"/>
+</head>
+<body>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <img src="/images/nav-logo.png" alt="UXONIC" class="sidebar-logo-img"/>
+    <div><span class="sidebar-logo-text"><span>U</span>XO<span>N</span>IC</span><span class="sidebar-badge">Admin Panel</span></div>
+  </div>
+  <nav class="sidebar-nav">
+    <span class="sidebar-section-label">Main</span>
+    <a href="/admin/dashboard" class="nav-item" data-page="dashboard"><i class="fas fa-chart-pie"></i> Dashboard</a>
+    <span class="sidebar-section-label">Recruitment</span>
+    <a href="/admin/applications" class="nav-item" data-page="applications"><i class="fas fa-file-user"></i> Applications <span class="nav-badge" id="navNewApps" style="display:none;"></span></a>
+    <a href="/admin/jobs" class="nav-item" data-page="jobs"><i class="fas fa-briefcase"></i> Job Postings</a>
+    <span class="sidebar-section-label">Website</span>
+    <a href="/admin/content" class="nav-item" data-page="content"><i class="fas fa-pen-to-square"></i> Website Content</a>
+    <a href="/admin/contacts" class="nav-item" data-page="contacts"><i class="fas fa-envelope"></i> Messages <span class="nav-badge red" id="navUnread" style="display:none;"></span></a>
+    <span class="sidebar-section-label">Account</span>
+    <a href="/admin/settings" class="nav-item" data-page="settings"><i class="fas fa-gear"></i> Settings</a>
+    <a href="/" target="_blank" class="nav-item"><i class="fas fa-arrow-up-right-from-square"></i> View Website</a>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="sidebar-user">
+      <div class="sidebar-user-avatar" id="sidebarUserAvatar">A</div>
+      <div class="sidebar-user-info">
+        <div class="sidebar-user-name" id="sidebarUserName">Admin</div>
+        <div class="sidebar-user-role" id="sidebarUserRole">superadmin</div>
+      </div>
+      <a href="#" data-action="logout" class="sidebar-logout" title="Logout"><i class="fas fa-right-from-bracket"></i></a>
+    </div>
+  </div>
+</aside>
+
+<div class="main-content">
+  <header class="topbar">
+    <button class="hamburger-btn" id="hamburgerBtn"><i class="fas fa-bars"></i></button>
+    <div><div class="topbar-title">Dashboard</div></div>
+    <div class="topbar-spacer"></div>
+    <div class="topbar-time" id="adminClock"></div>
+    <a href="#" data-action="logout" class="btn btn-ghost btn-sm"><i class="fas fa-right-from-bracket"></i> Logout</a>
+  </header>
+
+  <main class="page-body">
+
+    <!-- STAT CARDS -->
+    <div class="stats-grid" id="statsGrid">
+      <!-- Skeleton -->
+      <div class="stat-card"><div class="stat-card-top"><div class="stat-icon"><i class="fas fa-file-user"></i></div></div><div class="stat-value" id="sTotal">—</div><div class="stat-label">Total Applications</div></div>
+      <div class="stat-card"><div class="stat-card-top"><div class="stat-icon blue"><i class="fas fa-bell"></i></div><div class="stat-trend" id="sTodayTrend"></div></div><div class="stat-value" id="sNew">—</div><div class="stat-label">New Applications</div></div>
+      <div class="stat-card"><div class="stat-card-top"><div class="stat-icon green"><i class="fas fa-star"></i></div></div><div class="stat-value" id="sShortlisted">—</div><div class="stat-label">Shortlisted</div></div>
+      <div class="stat-card"><div class="stat-card-top"><div class="stat-icon"><i class="fas fa-briefcase"></i></div></div><div class="stat-value" id="sJobsActive">—</div><div class="stat-label">Active Job Postings</div></div>
+      <div class="stat-card"><div class="stat-card-top"><div class="stat-icon red"><i class="fas fa-envelope"></i></div><div class="stat-trend" id="sUnreadTrend"></div></div><div class="stat-value" id="sContacts">—</div><div class="stat-label">Contact Messages</div></div>
+      <div class="stat-card"><div class="stat-card-top"><div class="stat-icon"><i class="fas fa-chart-bar"></i></div></div><div class="stat-value" id="sJobsTotal">—</div><div class="stat-label">Total Job Posts</div></div>
+    </div>
+
+    <!-- HOW ADMIN CONTROLS THE SITE -->
+    <div class="table-card mb-3">
+      <div class="table-card-header">
+        <div class="table-card-title"><i class="fas fa-sitemap" style="color:var(--gold);margin-right:8px;"></i> How to run the website from Admin</div>
+      </div>
+      <div style="padding:20px 24px;display:grid;grid-template-columns:1fr 1fr;gap:14px;font-size:.86rem;line-height:1.55;">
+        <div style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:12px;padding:14px 16px;">
+          <div style="font-weight:700;color:var(--gold);margin-bottom:6px;">1. Job Postings → Careers page</div>
+          <div style="color:var(--text-muted);">Admin → <a href="/admin/jobs" style="color:var(--gold);">Job Postings</a> → New Job → set Status = <strong>Active</strong> → Save. It appears on <a href="/careers.html" target="_blank" style="color:var(--gold);">Careers</a> instantly.</div>
+        </div>
+        <div style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:12px;padding:14px 16px;">
+          <div style="font-weight:700;color:var(--gold);margin-bottom:6px;">2. Applications + email alert</div>
+          <div style="color:var(--text-muted);">When someone applies, it saves to Supabase and an email goes to <strong>uxonicdigitalmedia@gmail.com</strong>. Review in <a href="/admin/applications" style="color:var(--gold);">Applications</a>.</div>
+        </div>
+        <div style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:12px;padding:14px 16px;">
+          <div style="font-weight:700;color:var(--gold);margin-bottom:6px;">3. Website Content</div>
+          <div style="color:var(--text-muted);"><a href="/admin/content" style="color:var(--gold);">Website Content</a> edits homepage hero, contact details, Join Our Team. Saved in Supabase → live site.</div>
+        </div>
+        <div style="background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:12px;padding:14px 16px;">
+          <div style="font-weight:700;color:var(--gold);margin-bottom:6px;">4. Contact messages</div>
+          <div style="color:var(--text-muted);">Homepage Contact form → Supabase + email notify → <a href="/admin/contacts" style="color:var(--gold);">Messages</a>.</div>
+        </div>
+      </div>
+      <div style="padding:0 24px 18px;font-size:.8rem;color:var(--text-muted);">
+        Local URL: always use <code style="background:rgba(255,255,255,.06);padding:2px 6px;border-radius:4px;">http://127.0.0.1:5501</code> with <code style="background:rgba(255,255,255,.06);padding:2px 6px;border-radius:4px;">npm run dev</code> — not Live Server.
+      </div>
+    </div>
+
+    <!-- QUICK ACTIONS -->
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:28px;">
+      <a href="/admin/applications" class="btn btn-primary"><i class="fas fa-file-user"></i> View Applications</a>
+      <a href="/admin/jobs?new=1"   class="btn btn-ghost"><i class="fas fa-plus"></i> Post a Job</a>
+      <a href="/admin/content"      class="btn btn-ghost"><i class="fas fa-pen-to-square"></i> Edit Website</a>
+      <a href="/admin/contacts"     class="btn btn-ghost" id="msgBtn"><i class="fas fa-envelope"></i> View Messages</a>
+    </div>
+
+    <!-- HOW TO USE -->
+    <div class="table-card mb-3">
+      <div class="table-card-header">
+        <div class="table-card-title"><i class="fas fa-map" style="color:var(--gold);margin-right:8px;"></i> How to control the website from Admin</div>
+      </div>
+      <div style="padding:20px 24px;display:grid;grid-template-columns:1fr 1fr;gap:14px 28px;font-size:.86rem;line-height:1.55;">
+        <div>
+          <div style="font-weight:700;color:var(--text-white);margin-bottom:6px;">1. Job Postings → Careers page</div>
+          <div style="color:var(--text-muted);">Admin → <strong>Job Postings</strong> → New Job → set Status to <strong>Active</strong> → Save. It appears on <code>/careers</code> immediately.</div>
+        </div>
+        <div>
+          <div style="font-weight:700;color:var(--text-white);margin-bottom:6px;">2. Applications + email alert</div>
+          <div style="color:var(--text-muted);">When someone applies, it saves in Supabase and emails <strong>uxonicdigitalmedia@gmail.com</strong>. Review in Admin → Applications.</div>
+        </div>
+        <div>
+          <div style="font-weight:700;color:var(--text-white);margin-bottom:6px;">3. Website Content (Home)</div>
+          <div style="color:var(--text-muted);">Admin → <strong>Website Content</strong>: edit hero text, contact email/phone, Join Our Team section. Changes show on homepage.</div>
+        </div>
+        <div>
+          <div style="font-weight:700;color:var(--text-white);margin-bottom:6px;">4. Contact Messages</div>
+          <div style="color:var(--text-muted);">Homepage Contact form → Supabase + email alert. Read replies in Admin → Messages.</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:2fr 1fr;gap:20px;align-items:start;">
+
+      <!-- RECENT APPLICATIONS -->
+      <div class="table-card">
+        <div class="table-card-header">
+          <div class="table-card-title">Recent Applications</div>
+          <a href="/admin/applications" class="btn btn-ghost btn-sm">View All →</a>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>#</th><th>Name</th><th>Location</th><th>Status</th><th>Applied</th><th></th></tr></thead>
+            <tbody id="recentAppsBody"><tr><td colspan="6" class="table-empty">Loading…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN -->
+      <div style="display:flex;flex-direction:column;gap:20px;">
+
+        <!-- STATUS BREAKDOWN -->
+        <div class="table-card">
+          <div class="table-card-header"><div class="table-card-title">By Status</div></div>
+          <div style="padding:18px 22px;" id="statusBreakdown">
+            <div style="color:var(--text-muted);font-size:.83rem;">Loading…</div>
+          </div>
+        </div>
+
+        <!-- RECENT MESSAGES -->
+        <div class="table-card">
+          <div class="table-card-header"><div class="table-card-title">Messages</div><a href="/admin/contacts" class="btn btn-ghost btn-sm">All →</a></div>
+          <div id="recentMsgs"><div style="padding:20px;color:var(--text-muted);font-size:.83rem;">Loading…</div></div>
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script type="module">
+import { initLayout, API, e, timeAgo, statusBadge } from '/admin/admin.js';
+initLayout('dashboard');
+
+async function load() {
+  const data = await API.get('/stats');
+  if (!data?.success) return;
+
+  const { applications: a, jobs: j, contacts: c } = data.stats;
+
+  document.getElementById('sTotal').textContent       = a.total;
+  document.getElementById('sNew').textContent         = a.new;
+  document.getElementById('sShortlisted').textContent = a.shortlisted;
+  document.getElementById('sJobsActive').textContent  = j.active;
+  document.getElementById('sContacts').textContent    = c.total;
+  document.getElementById('sJobsTotal').textContent   = j.total;
+  document.getElementById('sTodayTrend').textContent  = `+${a.today} today`;
+  document.getElementById('sUnreadTrend').textContent = `${c.unread} unread`;
+
+  // Nav badges
+  if (a.new > 0) { const el=document.getElementById('navNewApps'); el.textContent=a.new; el.style.display=''; }
+  if (c.unread>0){ const el=document.getElementById('navUnread');   el.textContent=c.unread; el.style.display=''; }
+  if (c.unread>0){ document.getElementById('msgBtn').innerHTML=`<i class="fas fa-envelope"></i> Messages <span style="background:var(--red);color:#fff;font-size:.65rem;font-weight:700;padding:2px 7px;border-radius:100px;margin-left:4px;">${c.unread}</span>`; }
+
+  // Status breakdown bars
+  const colors = { new:'var(--blue)', reviewing:'var(--yellow)', shortlisted:'var(--green)', rejected:'var(--red)', hired:'var(--gold)' };
+  const breakdown = document.getElementById('statusBreakdown');
+  breakdown.innerHTML = Object.entries(a.byStatus).map(([st, cnt]) => {
+    const pct = a.total > 0 ? Math.round((cnt/a.total)*100) : 0;
+    return `<div style="margin-bottom:12px;">
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
+        <span style="font-size:.8rem;font-weight:600;color:var(--text-body);text-transform:capitalize;">${e(st)}</span>
+        <span style="font-size:.8rem;font-weight:700;color:var(--text-white);">${cnt}</span>
+      </div>
+      <div style="height:5px;background:rgba(255,255,255,.06);border-radius:100px;overflow:hidden;">
+        <div style="height:100%;width:${pct}%;background:${colors[st]||'var(--text-muted)'};border-radius:100px;transition:width .6s ease;"></div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Recent applications
+  const appsData = await API.get('/applications', { per_page: 6 });
+  const apps = appsData?.applications || [];
+  document.getElementById('recentAppsBody').innerHTML = apps.length
+    ? apps.map(app => `<tr>
+        <td class="muted">${app.id}</td>
+        <td><div class="bold">${e(app.full_name)}</div><div style="font-size:.74rem;color:var(--text-muted);">${e(app.email)}</div></td>
+        <td>${e(app.location)}</td>
+        <td>${statusBadge(app.status)}</td>
+        <td class="muted">${timeAgo(app.submitted_at)}</td>
+        <td><a href="/admin/applications?view=${app.id}" class="btn btn-ghost btn-sm">View</a></td>
+      </tr>`).join('')
+    : `<tr><td colspan="6" class="table-empty">No applications yet.</td></tr>`;
+
+  // Recent messages
+  const msgData = await API.get('/contacts', { per_page: 4 });
+  const msgs = msgData?.contacts || [];
+  document.getElementById('recentMsgs').innerHTML = msgs.length
+    ? msgs.map(m => `<div style="display:flex;align-items:center;gap:12px;padding:12px 18px;border-bottom:1px solid var(--border);">
+        <div style="width:8px;height:8px;border-radius:50%;flex-shrink:0;background:${!m.is_read?'var(--blue)':'rgba(255,255,255,.15)'};"></div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-size:.84rem;font-weight:600;color:var(--text-white);">${e(m.full_name)}</div>
+          <div style="font-size:.74rem;color:var(--text-muted);">${e(m.project_type||'General enquiry')}</div>
+        </div>
+        <div style="font-size:.72rem;color:var(--text-light);white-space:nowrap;">${timeAgo(m.submitted_at)}</div>
+      </div>`).join('')
+    : `<div style="padding:20px;color:var(--text-muted);font-size:.83rem;text-align:center;">No messages yet.</div>`;
+}
+
+load();
+</script>
+</body>
+</html>

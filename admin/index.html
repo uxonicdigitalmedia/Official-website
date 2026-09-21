@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Admin Login — UXONIC Digital Solutions</title>
+  <meta name="robots" content="noindex,nofollow"/>
+  <link rel="icon" type="image/jpeg" href="/images/fav.jpeg"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous"/>
+  <link rel="stylesheet" href="/admin/assets/admin.css"/>
+  <style>
+    .otp-inputs { display:flex; gap:10px; justify-content:center; margin:24px 0; }
+    .otp-digit {
+      width:52px; height:60px;
+      text-align:center; font-size:1.6rem; font-weight:700;
+      background:rgba(255,255,255,0.05);
+      border:2px solid rgba(255,255,255,0.1);
+      border-radius:12px; color:#fff;
+      outline:none; caret-color:var(--gold);
+      transition:border-color .2s,box-shadow .2s;
+      font-family:'Inter',sans-serif;
+    }
+    .otp-digit:focus {
+      border-color:var(--gold);
+      box-shadow:0 0 0 3px rgba(212,175,55,0.18);
+    }
+    .otp-digit.filled { border-color:rgba(212,175,55,0.45); }
+
+    .step { display:none; }
+    .step.active { display:block; }
+
+    .resend-row { text-align:center; margin-top:14px; }
+    .resend-btn {
+      background:none; border:none; color:var(--gold);
+      font-size:.84rem; font-weight:600; cursor:pointer;
+      font-family:inherit; text-decoration:underline;
+      text-underline-offset:3px;
+    }
+    .resend-btn:disabled { color:var(--text-muted); text-decoration:none; cursor:not-allowed; }
+    .resend-timer { font-size:.82rem; color:var(--text-muted); }
+
+    .email-display {
+      display:flex; align-items:center; gap:10px;
+      background:rgba(212,175,55,0.07);
+      border:1px solid rgba(212,175,55,0.2);
+      border-radius:10px; padding:11px 14px;
+      font-size:.88rem; color:var(--text-body);
+      margin-bottom:6px;
+    }
+    .email-display i { color:var(--gold); }
+    .change-email { font-size:.78rem; color:var(--gold); cursor:pointer; margin-left:auto; font-weight:600; text-decoration:underline; text-underline-offset:3px; background:none; border:none; font-family:inherit; }
+  </style>
+</head>
+<body>
+<div class="login-page">
+  <div class="login-card">
+
+    <!-- Logo -->
+    <div class="login-logo">
+      <img src="/images/nav-logo.png" alt="UXONIC" class="login-logo-img"/>
+      <div class="login-logo-text"><span>U</span>XO<span>N</span>IC</div>
+    </div>
+    <div class="login-subtitle">Admin Panel &nbsp;·&nbsp; Secure Login</div>
+
+    <!-- Alert -->
+    <div id="loginAlert" class="alert alert-error" style="display:none;"></div>
+    <div id="loginSuccess" class="alert alert-success" style="display:none;"></div>
+
+    <!-- ── STEP 1: Enter Email ── -->
+    <div class="step active" id="step1">
+      <p style="font-size:.85rem;color:var(--text-muted);margin-bottom:20px;line-height:1.6;">
+        Enter your admin email address. We'll send you a one-time password (OTP) to verify your identity.
+      </p>
+      <form id="emailForm" novalidate>
+        <div class="form-group">
+          <label class="form-label" for="adminEmail">Admin Email Address</label>
+          <div class="input-icon-wrap">
+            <i class="fas fa-envelope input-icon"></i>
+            <input
+              type="email" id="adminEmail" class="form-input"
+              placeholder="uxonicdigitalmedia@gmail.com"
+              value="uxonicdigitalmedia@gmail.com"
+              autocomplete="email" required
+            />
+          </div>
+        </div>
+        <button type="submit" class="login-btn" id="sendOtpBtn">
+          <i class="fas fa-paper-plane"></i>&nbsp; Send OTP
+        </button>
+      </form>
+    </div>
+
+    <!-- ── STEP 2: Enter OTP ── -->
+    <div class="step" id="step2">
+      <p style="font-size:.85rem;color:var(--text-muted);margin-bottom:14px;line-height:1.6;">
+        Enter the 6-digit OTP sent to:
+      </p>
+      <div class="email-display">
+        <i class="fas fa-envelope"></i>
+        <span id="emailDisplayText">uxonicdigitalmedia@gmail.com</span>
+        <button class="change-email" id="changeEmailBtn" type="button">Change</button>
+      </div>
+
+      <!-- 6 digit OTP boxes -->
+      <div class="otp-inputs" id="otpInputs">
+        <input class="otp-digit" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="one-time-code" aria-label="OTP digit 1"/>
+        <input class="otp-digit" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="OTP digit 2"/>
+        <input class="otp-digit" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="OTP digit 3"/>
+        <input class="otp-digit" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="OTP digit 4"/>
+        <input class="otp-digit" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="OTP digit 5"/>
+        <input class="otp-digit" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="OTP digit 6"/>
+      </div>
+
+      <button class="login-btn" id="verifyOtpBtn" disabled>
+        <i class="fas fa-right-to-bracket"></i>&nbsp; Verify &amp; Login
+      </button>
+
+      <!-- Resend -->
+      <div class="resend-row">
+        <button class="resend-btn" id="resendBtn" disabled>Resend OTP</button>
+        <span class="resend-timer" id="resendTimer"></span>
+      </div>
+
+      <p style="font-size:.75rem;color:var(--text-muted);text-align:center;margin-top:12px;">
+        OTP expires in 10 minutes
+      </p>
+    </div>
+
+    <p style="margin-top:22px;font-size:.72rem;text-align:center;color:var(--text-light);">
+      <a href="/" style="color:var(--gold);">← Back to Website</a>
+    </p>
+
+  </div>
+</div>
+
+<script type="module">
+  // Redirect if already logged in
+  if (localStorage.getItem('uxonic_admin_token')) {
+    window.location.href = '/admin/dashboard';
+  }
+
+  const step1       = document.getElementById('step1');
+  const step2       = document.getElementById('step2');
+  const alertEl     = document.getElementById('loginAlert');
+  const successEl   = document.getElementById('loginSuccess');
+  const emailForm   = document.getElementById('emailForm');
+  const emailInput  = document.getElementById('adminEmail');
+  const sendBtn     = document.getElementById('sendOtpBtn');
+  const verifyBtn   = document.getElementById('verifyOtpBtn');
+  const resendBtn   = document.getElementById('resendBtn');
+  const timerEl     = document.getElementById('resendTimer');
+  const emailDisp   = document.getElementById('emailDisplayText');
+  const changeEmail = document.getElementById('changeEmailBtn');
+  const otpDigits   = Array.from(document.querySelectorAll('.otp-digit'));
+
+  let currentEmail  = '';
+  let resendSeconds = 0;
+  let resendInterval = null;
+
+  function showAlert(msg, type = 'error') {
+    alertEl.style.display   = type === 'error'   ? 'flex' : 'none';
+    successEl.style.display  = type === 'success' ? 'flex' : 'none';
+    if (type === 'error')   { alertEl.innerHTML   = `<i class="fas fa-circle-exclamation"></i> ${msg}`; }
+    if (type === 'success') { successEl.innerHTML = `<i class="fas fa-circle-check"></i> ${msg}`; }
+  }
+  function hideAlerts() { alertEl.style.display='none'; successEl.style.display='none'; }
+
+  function showStep(n) {
+    step1.classList.toggle('active', n === 1);
+    step2.classList.toggle('active', n === 2);
+    hideAlerts();
+    if (n === 2) otpDigits[0].focus();
+  }
+
+  // ── Resend timer ──────────────────────────────────────────────
+  function startResendTimer(seconds = 60) {
+    resendSeconds = seconds;
+    resendBtn.disabled = true;
+    clearInterval(resendInterval);
+    resendInterval = setInterval(() => {
+      resendSeconds--;
+      if (resendSeconds <= 0) {
+        clearInterval(resendInterval);
+        resendBtn.disabled = false;
+        timerEl.textContent = '';
+      } else {
+        timerEl.textContent = ` (${resendSeconds}s)`;
+      }
+    }, 1000);
+    timerEl.textContent = ` (${resendSeconds}s)`;
+  }
+
+  // ── OTP digit inputs ─────────────────────────────────────────
+  otpDigits.forEach((input, idx) => {
+    input.addEventListener('input', (e) => {
+      const val = e.target.value.replace(/\D/g,'');
+      e.target.value = val ? val[0] : '';
+      e.target.classList.toggle('filled', !!val);
+      if (val && idx < 5) otpDigits[idx+1].focus();
+      checkOtpComplete();
+    });
+
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Backspace' && !input.value && idx > 0) {
+        otpDigits[idx-1].value = '';
+        otpDigits[idx-1].classList.remove('filled');
+        otpDigits[idx-1].focus();
+        checkOtpComplete();
+      }
+    });
+
+    // Handle paste
+    input.addEventListener('paste', (e) => {
+      e.preventDefault();
+      const pasted = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g,'');
+      pasted.split('').slice(0,6).forEach((char, i) => {
+        if (otpDigits[i]) {
+          otpDigits[i].value = char;
+          otpDigits[i].classList.add('filled');
+        }
+      });
+      const nextEmpty = otpDigits.findIndex(d => !d.value);
+      (otpDigits[nextEmpty] || otpDigits[5]).focus();
+      checkOtpComplete();
+    });
+  });
+
+  function getOtpValue() { return otpDigits.map(d => d.value).join(''); }
+  function checkOtpComplete() { verifyBtn.disabled = getOtpValue().length < 6; }
+  function clearOtp() { otpDigits.forEach(d => { d.value=''; d.classList.remove('filled'); }); verifyBtn.disabled = true; }
+
+  // ── Send OTP ──────────────────────────────────────────────────
+  emailForm.addEventListener('submit', async (ev) => {
+    ev.preventDefault();
+    hideAlerts();
+    currentEmail = emailInput.value.trim();
+    if (!currentEmail) return;
+
+    sendBtn.disabled  = true;
+    sendBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>&nbsp; Sending…';
+
+    try {
+      const res  = await fetch('/api/admin/send-otp', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ email: currentEmail }),
+      });
+      let data = {};
+      try { data = await res.json(); } catch { data = {}; }
+
+      if (!res.ok) {
+        showAlert(data.message || (`Server error (${res.status}). Is local-server running on this port?`));
+      } else if (data.success) {
+        emailDisp.textContent = currentEmail;
+        showStep(2);
+        startResendTimer(60);
+        showAlert('OTP sent! Check your email (and Spam).', 'success');
+      } else {
+        showAlert(data.message || 'Failed to send OTP.');
+      }
+    } catch (err) {
+      showAlert('Network error — open http://127.0.0.1:5501/admin and run: npm run dev');
+      console.error('send-otp failed:', err);
+    }
+
+    sendBtn.disabled  = false;
+    sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i>&nbsp; Send OTP';
+  });
+
+  // ── Resend OTP ────────────────────────────────────────────────
+  resendBtn.addEventListener('click', async () => {
+    hideAlerts();
+    resendBtn.disabled = true;
+    clearOtp();
+
+    try {
+      const res  = await fetch('/api/admin/send-otp', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ email: currentEmail }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        startResendTimer(60);
+        showAlert('New OTP sent!', 'success');
+      } else {
+        showAlert(data.message || 'Failed to resend OTP.');
+        resendBtn.disabled = false;
+      }
+    } catch {
+      showAlert('Network error. Please try again.');
+      resendBtn.disabled = false;
+    }
+  });
+
+  // ── Verify OTP ────────────────────────────────────────────────
+  verifyBtn.addEventListener('click', async () => {
+    hideAlerts();
+    const otp = getOtpValue();
+    if (otp.length < 6) return;
+
+    verifyBtn.disabled  = true;
+    verifyBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>&nbsp; Verifying…';
+
+    try {
+      const res  = await fetch('/api/admin/verify-otp', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ email: currentEmail, otp }),
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        localStorage.setItem('uxonic_admin_token', data.token);
+        localStorage.setItem('uxonic_admin_info',  JSON.stringify(data.admin));
+        showAlert('Login successful! Redirecting…', 'success');
+        setTimeout(() => { window.location.href = '/admin/dashboard'; }, 800);
+      } else {
+        showAlert(data.message || 'Invalid OTP. Please try again.');
+        clearOtp();
+        otpDigits[0].focus();
+        verifyBtn.disabled  = false;
+        verifyBtn.innerHTML = '<i class="fas fa-right-to-bracket"></i>&nbsp; Verify &amp; Login';
+      }
+    } catch {
+      showAlert('Network error. Please try again.');
+      verifyBtn.disabled  = false;
+      verifyBtn.innerHTML = '<i class="fas fa-right-to-bracket"></i>&nbsp; Verify &amp; Login';
+    }
+  });
+
+  // ── Change email ──────────────────────────────────────────────
+  changeEmail.addEventListener('click', () => {
+    clearOtp();
+    clearInterval(resendInterval);
+    showStep(1);
+  });
+</script>
+</body>
+</html>

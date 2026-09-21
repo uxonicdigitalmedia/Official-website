@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Applications — UXONIC Admin</title>
+  <meta name="robots" content="noindex,nofollow"/>
+  <link rel="icon" type="image/jpeg" href="/images/fav.jpeg"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous"/>
+  <link rel="stylesheet" href="/admin/assets/admin.css"/>
+</head>
+<body>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <img src="/images/nav-logo.png" alt="UXONIC" class="sidebar-logo-img"/>
+    <div><span class="sidebar-logo-text"><span>U</span>XO<span>N</span>IC</span><span class="sidebar-badge">Admin Panel</span></div>
+  </div>
+  <nav class="sidebar-nav">
+    <span class="sidebar-section-label">Main</span>
+    <a href="/admin/dashboard" class="nav-item" data-page="dashboard"><i class="fas fa-chart-pie"></i> Dashboard</a>
+    <span class="sidebar-section-label">Recruitment</span>
+    <a href="/admin/applications" class="nav-item" data-page="applications"><i class="fas fa-file-user"></i> Applications</a>
+    <a href="/admin/jobs" class="nav-item" data-page="jobs"><i class="fas fa-briefcase"></i> Job Postings</a>
+    <span class="sidebar-section-label">Website</span>
+    <a href="/admin/content" class="nav-item" data-page="content"><i class="fas fa-pen-to-square"></i> Website Content</a>
+    <a href="/admin/contacts" class="nav-item" data-page="contacts"><i class="fas fa-envelope"></i> Messages</a>
+    <span class="sidebar-section-label">Account</span>
+    <a href="/admin/settings" class="nav-item" data-page="settings"><i class="fas fa-gear"></i> Settings</a>
+    <a href="/" target="_blank" class="nav-item"><i class="fas fa-arrow-up-right-from-square"></i> View Website</a>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="sidebar-user">
+      <div class="sidebar-user-avatar" id="sidebarUserAvatar">A</div>
+      <div class="sidebar-user-info">
+        <div class="sidebar-user-name" id="sidebarUserName">Admin</div>
+        <div class="sidebar-user-role" id="sidebarUserRole">superadmin</div>
+      </div>
+      <a href="#" data-action="logout" class="sidebar-logout"><i class="fas fa-right-from-bracket"></i></a>
+    </div>
+  </div>
+</aside>
+
+<div class="main-content">
+  <header class="topbar">
+    <button class="hamburger-btn" id="hamburgerBtn"><i class="fas fa-bars"></i></button>
+    <div><div class="topbar-title">Internship Applications</div></div>
+    <div class="topbar-spacer"></div>
+    <div class="topbar-time" id="adminClock"></div>
+    <a href="#" data-action="logout" class="btn btn-ghost btn-sm"><i class="fas fa-right-from-bracket"></i> Logout</a>
+  </header>
+
+  <main class="page-body">
+
+    <!-- FILTER BAR -->
+    <div class="table-card">
+      <div class="table-card-header">
+        <div class="table-card-title">All Applications <span id="totalCount" style="color:var(--text-muted);font-weight:400;font-size:.82rem;"></span></div>
+        <div class="table-card-actions">
+          <button class="btn btn-ghost btn-sm" id="exportBtn"><i class="fas fa-download"></i> Export CSV</button>
+        </div>
+      </div>
+
+      <div class="filter-bar">
+        <span class="filter-label">Filter:</span>
+        <select id="filterStatus" class="form-select" style="width:auto;min-width:130px;padding:7px 12px;font-size:.82rem;">
+          <option value="">All Status</option>
+          <option value="new">New</option>
+          <option value="reviewing">Reviewing</option>
+          <option value="shortlisted">Shortlisted</option>
+          <option value="rejected">Rejected</option>
+          <option value="hired">Hired</option>
+        </select>
+        <input type="text" id="filterSearch" class="form-input" placeholder="Search name, email, location…" style="width:220px;padding:7px 12px;font-size:.82rem;"/>
+        <button class="btn btn-ghost btn-sm" id="searchBtn"><i class="fas fa-search"></i></button>
+        <button class="btn btn-ghost btn-sm" id="clearBtn" style="display:none;">Clear</button>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>#</th><th>Name</th><th>Email</th><th>Mobile</th><th>Location</th><th>Sales Exp</th><th>Grad Year</th><th>Status</th><th>Applied</th><th>Action</th></tr></thead>
+          <tbody id="appsBody"><tr><td colspan="10" class="table-empty"><i class="fas fa-spinner fa-spin" style="margin-right:8px;"></i>Loading…</td></tr></tbody>
+        </table>
+      </div>
+
+      <div class="pagination" id="pagination" style="display:none;">
+        <div class="pagination-info" id="pageInfo"></div>
+        <div class="pagination-btns" id="pageBtns"></div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- DETAIL MODAL -->
+<div class="modal-overlay" id="appModal">
+  <div class="modal" style="max-width:680px;">
+    <div class="modal-header">
+      <div class="modal-title" id="modalTitle">Application Detail</div>
+      <button class="modal-close" id="modalClose">&times;</button>
+    </div>
+
+    <!-- Status bar -->
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border);">
+      <span style="font-size:.78rem;font-weight:600;color:var(--text-muted);">Status:</span>
+      <select id="modalStatus" class="form-select" style="width:auto;min-width:140px;padding:7px 12px;font-size:.85rem;">
+        <option value="new">New</option>
+        <option value="reviewing">Reviewing</option>
+        <option value="shortlisted">Shortlisted</option>
+        <option value="rejected">Rejected</option>
+        <option value="hired">Hired</option>
+      </select>
+      <button class="btn btn-primary btn-sm" id="updateStatusBtn">Update</button>
+      <span id="currentBadge"></span>
+    </div>
+
+    <div class="detail-grid" id="modalDetails"></div>
+
+    <!-- Resume -->
+    <div id="resumeSection" style="margin-top:18px;"></div>
+
+    <!-- Notes -->
+    <div style="margin-top:18px;">
+      <label class="form-label" style="margin-bottom:7px;">Admin Notes</label>
+      <textarea id="modalNotes" class="notes-area" placeholder="Private notes about this applicant…"></textarea>
+      <div style="display:flex;justify-content:space-between;margin-top:10px;gap:8px;flex-wrap:wrap;">
+        <button class="btn btn-danger btn-sm" id="deleteAppBtn"><i class="fas fa-trash"></i> Delete</button>
+        <button class="btn btn-primary btn-sm" id="saveNotesBtn"><i class="fas fa-save"></i> Save Notes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { initLayout, API, e, timeAgo, fmtDate, statusBadge, toast, Modal, confirm_dialog } from '/admin/admin.js';
+initLayout('applications');
+
+const params   = new URLSearchParams(location.search);
+let currentPage = 1, totalPages = 1, currentAppId = null;
+let filterStatus = params.get('status') || '';
+let filterSearch = params.get('search') || '';
+
+if (filterStatus) document.getElementById('filterStatus').value = filterStatus;
+if (filterSearch) document.getElementById('filterSearch').value = filterSearch;
+
+async function loadApps() {
+  const body = document.getElementById('appsBody');
+  body.innerHTML = `<tr><td colspan="10" class="table-empty"><i class="fas fa-spinner fa-spin" style="margin-right:8px;"></i>Loading…</td></tr>`;
+
+  const p = { page: currentPage, per_page: 20 };
+  if (filterStatus) p.status = filterStatus;
+  if (filterSearch) p.search = filterSearch;
+
+  const data = await API.get('/applications', p);
+  if (!data?.success) { body.innerHTML = `<tr><td colspan="10" class="table-empty">Failed to load.</td></tr>`; return; }
+
+  const apps  = data.applications || [];
+  const total = data.total || 0;
+  totalPages  = Math.max(1, Math.ceil(total / 20));
+
+  document.getElementById('totalCount').textContent = `(${total})`;
+  document.getElementById('clearBtn').style.display = (filterStatus||filterSearch) ? '' : 'none';
+
+  if (!apps.length) { body.innerHTML = `<tr><td colspan="10" class="table-empty"><i class="fas fa-inbox" style="display:block;font-size:1.6rem;margin-bottom:8px;color:var(--text-light);"></i>No applications found.</td></tr>`; }
+  else body.innerHTML = apps.map(a => `
+    <tr>
+      <td class="muted">${a.id}</td>
+      <td class="bold">${e(a.full_name)}</td>
+      <td class="muted truncate">${e(a.email)}</td>
+      <td class="muted">${e(a.mobile)}</td>
+      <td>${e(a.location)}</td>
+      <td>${e(a.sales_exp)}</td>
+      <td class="muted">${e(a.grad_year||'—')}</td>
+      <td>${statusBadge(a.status)}</td>
+      <td class="muted">${timeAgo(a.submitted_at)}</td>
+      <td><button class="btn btn-ghost btn-sm" onclick="openApp(${a.id})">View</button></td>
+    </tr>`).join('');
+
+  // Pagination
+  const pg = document.getElementById('pagination');
+  const pi = document.getElementById('pageInfo');
+  const pb = document.getElementById('pageBtns');
+  if (totalPages > 1) {
+    pg.style.display = '';
+    pi.textContent = `Showing ${(currentPage-1)*20+1}–${Math.min(currentPage*20,total)} of ${total}`;
+    pb.innerHTML = Array.from({length:totalPages},(_,i)=>
+      `<button class="page-btn ${i+1===currentPage?'active':''}" onclick="goPage(${i+1})">${i+1}</button>`
+    ).join('');
+  } else { pg.style.display = 'none'; }
+}
+
+window.goPage = (p) => { currentPage = p; loadApps(); };
+
+window.openApp = async (id) => {
+  currentAppId = id;
+  document.getElementById('modalDetails').innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:20px;color:var(--text-muted);"><i class="fas fa-spinner fa-spin"></i> Loading…</div>`;
+  document.getElementById('resumeSection').innerHTML = '';
+  document.getElementById('modalNotes').value = '';
+  Modal.open('appModal');
+
+  const data = await API.get('/applications', { id });
+  if (!data?.success) { toast('Failed to load application.','error'); Modal.close('appModal'); return; }
+
+  const a = data.application;
+  document.getElementById('modalTitle').textContent = `Application #${a.id} — ${a.full_name}`;
+  document.getElementById('modalStatus').value = a.status;
+  document.getElementById('currentBadge').innerHTML = statusBadge(a.status);
+  document.getElementById('modalNotes').value = a.admin_notes || '';
+
+  const details = [
+    ['Full Name', a.full_name], ['Email', `<a href="mailto:${e(a.email)}">${e(a.email)}</a>`],
+    ['Mobile', `<a href="tel:${e(a.mobile)}">${e(a.mobile)}</a>`], ['Location', a.location],
+    ['College', a.college||'—'], ['Degree', a.degree||'—'],
+    ['Grad Year', a.grad_year||'—'], ['Sales Exp', a.sales_exp],
+    ['Applied', fmtDate(a.submitted_at)], ['IP Address', a.ip_address||'—'],
+  ];
+  if (a.linkedin) details.push(['LinkedIn', `<a href="${e(a.linkedin)}" target="_blank" rel="noopener">${e(a.linkedin)}</a>`]);
+
+  document.getElementById('modalDetails').innerHTML = details.map(([k,v]) =>
+    `<div class="detail-item"><div class="detail-key">${e(k)}</div><div class="detail-val">${v}</div></div>`
+  ).join('') + (a.why_uxonic ? `
+    <div class="detail-item full">
+      <div class="detail-key">Why UXONIC</div>
+      <div class="detail-val" style="white-space:pre-wrap;background:rgba(255,255,255,.03);padding:12px;border-radius:8px;border:1px solid var(--border);">${e(a.why_uxonic)}</div>
+    </div>` : '');
+
+  if (data.application.resumeUrl) {
+    document.getElementById('resumeSection').innerHTML = `
+      <div style="padding:14px 18px;background:rgba(212,175,55,.07);border:1px solid rgba(212,175,55,.2);border-radius:var(--radius-md);display:flex;align-items:center;gap:12px;">
+        <i class="fas fa-file-pdf" style="color:#f87171;font-size:1.3rem;"></i>
+        <div style="flex:1;"><div style="font-size:.85rem;font-weight:600;color:var(--text-white);">${e(a.resume_name||'Resume')}</div></div>
+        <a href="${data.application.resumeUrl}" target="_blank" class="btn btn-primary btn-sm"><i class="fas fa-download"></i> Download</a>
+      </div>`;
+  } else {
+    document.getElementById('resumeSection').innerHTML = `<div style="padding:12px 16px;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:var(--radius-md);font-size:.83rem;color:var(--text-muted);"><i class="fas fa-info-circle"></i> No resume uploaded.</div>`;
+  }
+};
+
+// Update status
+document.getElementById('updateStatusBtn').addEventListener('click', async () => {
+  const status = document.getElementById('modalStatus').value;
+  const r = await API.put('/applications', { id: currentAppId, status });
+  if (r?.success) { toast('Status updated.'); document.getElementById('currentBadge').innerHTML = statusBadge(status); loadApps(); }
+  else toast(r?.message||'Failed.','error');
+});
+
+// Save notes
+document.getElementById('saveNotesBtn').addEventListener('click', async () => {
+  const notes = document.getElementById('modalNotes').value;
+  const r = await API.put('/applications', { id: currentAppId, admin_notes: notes });
+  if (r?.success) toast('Notes saved.');
+  else toast(r?.message||'Failed.','error');
+});
+
+// Delete
+document.getElementById('deleteAppBtn').addEventListener('click', async () => {
+  if (!confirm_dialog('Delete this application permanently?')) return;
+  const r = await API.deleteQ('/applications', { id: currentAppId });
+  if (r?.success) { toast('Deleted.','warning'); Modal.close('appModal'); loadApps(); }
+  else toast(r?.message||'Failed.','error');
+});
+
+// Modal close
+document.getElementById('modalClose').addEventListener('click', () => Modal.close('appModal'));
+
+// Filters
+document.getElementById('filterStatus').addEventListener('change', () => { filterStatus=document.getElementById('filterStatus').value; currentPage=1; loadApps(); });
+document.getElementById('searchBtn').addEventListener('click', () => { filterSearch=document.getElementById('filterSearch').value.trim(); currentPage=1; loadApps(); });
+document.getElementById('filterSearch').addEventListener('keydown', ev => { if(ev.key==='Enter'){filterSearch=ev.target.value.trim();currentPage=1;loadApps();} });
+document.getElementById('clearBtn').addEventListener('click', () => { filterStatus=''; filterSearch=''; document.getElementById('filterStatus').value=''; document.getElementById('filterSearch').value=''; currentPage=1; loadApps(); });
+
+// CSV export
+document.getElementById('exportBtn').addEventListener('click', async () => {
+  const p = {}; if(filterStatus) p.status=filterStatus; if(filterSearch) p.search=filterSearch;
+  p.per_page = 1000; p.page = 1;
+  const data = await API.get('/applications', p);
+  const apps = data?.applications || [];
+  if (!apps.length) { toast('No applications to export.','warning'); return; }
+  const headers = ['ID','Name','Email','Mobile','Location','College','Degree','Grad Year','Sales Exp','LinkedIn','Status','Applied'];
+  const rows = apps.map(a => [a.id,a.full_name,a.email,a.mobile,a.location,a.college||'',a.degree||'',a.grad_year||'',a.sales_exp,a.linkedin||'',a.status,a.submitted_at]);
+  const csv = [headers,...rows].map(r => r.map(v => `"${String(v||'').replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob = new Blob([csv], {type:'text/csv'});
+  const url  = URL.createObjectURL(blob);
+  const a_   = document.createElement('a'); a_.href=url; a_.download=`applications_${new Date().toISOString().slice(0,10)}.csv`; a_.click();
+  URL.revokeObjectURL(url);
+});
+
+// Open from URL param
+if (params.get('view')) openApp(parseInt(params.get('view')));
+
+loadApps();
+</script>
+</body>
+</html>

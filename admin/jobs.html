@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Job Postings — UXONIC Admin</title>
+  <meta name="robots" content="noindex,nofollow"/>
+  <link rel="icon" type="image/jpeg" href="/images/fav.jpeg"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous"/>
+  <link rel="stylesheet" href="/admin/assets/admin.css"/>
+</head>
+<body>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <img src="/images/nav-logo.png" alt="UXONIC" class="sidebar-logo-img"/>
+    <div><span class="sidebar-logo-text"><span>U</span>XO<span>N</span>IC</span><span class="sidebar-badge">Admin Panel</span></div>
+  </div>
+  <nav class="sidebar-nav">
+    <span class="sidebar-section-label">Main</span>
+    <a href="/admin/dashboard" class="nav-item" data-page="dashboard"><i class="fas fa-chart-pie"></i> Dashboard</a>
+    <span class="sidebar-section-label">Recruitment</span>
+    <a href="/admin/applications" class="nav-item" data-page="applications"><i class="fas fa-file-user"></i> Applications</a>
+    <a href="/admin/jobs" class="nav-item" data-page="jobs"><i class="fas fa-briefcase"></i> Job Postings</a>
+    <span class="sidebar-section-label">Website</span>
+    <a href="/admin/content" class="nav-item" data-page="content"><i class="fas fa-pen-to-square"></i> Website Content</a>
+    <a href="/admin/contacts" class="nav-item" data-page="contacts"><i class="fas fa-envelope"></i> Messages</a>
+    <span class="sidebar-section-label">Account</span>
+    <a href="/admin/settings" class="nav-item" data-page="settings"><i class="fas fa-gear"></i> Settings</a>
+    <a href="/" target="_blank" class="nav-item"><i class="fas fa-arrow-up-right-from-square"></i> View Website</a>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="sidebar-user">
+      <div class="sidebar-user-avatar" id="sidebarUserAvatar">A</div>
+      <div class="sidebar-user-info">
+        <div class="sidebar-user-name" id="sidebarUserName">Admin</div>
+        <div class="sidebar-user-role" id="sidebarUserRole">superadmin</div>
+      </div>
+      <a href="#" data-action="logout" class="sidebar-logout"><i class="fas fa-right-from-bracket"></i></a>
+    </div>
+  </div>
+</aside>
+
+<div class="main-content">
+  <header class="topbar">
+    <button class="hamburger-btn" id="hamburgerBtn"><i class="fas fa-bars"></i></button>
+    <div><div class="topbar-title">Job Postings</div></div>
+    <div class="topbar-spacer"></div>
+    <div class="topbar-time" id="adminClock"></div>
+    <a href="#" data-action="logout" class="btn btn-ghost btn-sm"><i class="fas fa-right-from-bracket"></i> Logout</a>
+  </header>
+
+  <main class="page-body">
+
+    <!-- JOB FORM -->
+    <div class="table-card mb-3" id="formCard" style="display:none;">
+      <div class="table-card-header">
+        <div class="table-card-title" id="formTitle">Create New Job</div>
+        <button class="btn btn-ghost btn-sm" id="cancelFormBtn">← Cancel</button>
+      </div>
+      <div style="padding:24px 28px;">
+        <form id="jobForm">
+          <input type="hidden" id="jobId"/>
+
+          <!-- Opening category — Internship vs Job -->
+          <div class="form-group" style="margin-bottom:22px;">
+            <label class="form-label">Opening Category *</label>
+            <p class="form-hint" style="margin-bottom:10px;">Careers page-ல Internship / Job filter இத பயன்படுத்தும்</p>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;" id="categoryPick">
+              <label style="cursor:pointer;border:1.5px solid rgba(212,175,55,.25);border-radius:14px;padding:16px 18px;display:flex;gap:12px;align-items:flex-start;background:rgba(212,175,55,.04);">
+                <input type="radio" name="openingCategory" value="job" checked style="margin-top:3px;accent-color:#D4AF37;"/>
+                <span>
+                  <strong style="display:block;color:var(--text-white);font-size:.95rem;">Job (Full-time / Part-time)</strong>
+                  <span style="font-size:.78rem;color:var(--text-muted);">Paid role — shows under Job filters on Careers</span>
+                </span>
+              </label>
+              <label style="cursor:pointer;border:1.5px solid rgba(96,165,250,.3);border-radius:14px;padding:16px 18px;display:flex;gap:12px;align-items:flex-start;background:rgba(96,165,250,.05);">
+                <input type="radio" name="openingCategory" value="internship" style="margin-top:3px;accent-color:#60a5fa;"/>
+                <span>
+                  <strong style="display:block;color:var(--text-white);font-size:.95rem;">Internship</strong>
+                  <span style="font-size:.78rem;color:var(--text-muted);">Student / fresher role — shows under Internship filter</span>
+                </span>
+              </label>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+            <div class="form-group" style="grid-column:1/-1;">
+              <label class="form-label">Title *</label>
+              <input type="text" id="fTitle" class="form-input" required placeholder="e.g. Sales Executive / Sales Intern"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Department</label>
+              <input type="text" id="fDept" class="form-input" placeholder="e.g. Sales & Marketing"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Location</label>
+              <input type="text" id="fLocation" class="form-input" placeholder="Remote / Tamil Nadu" value="Remote / Tamil Nadu"/>
+            </div>
+            <div class="form-group" id="jobTypeWrap">
+              <label class="form-label">Job Type</label>
+              <select id="fType" class="form-select">
+                <option value="full-time">Full-Time Job</option>
+                <option value="part-time">Part-Time Job</option>
+                <option value="contract">Contract</option>
+                <option value="freelance">Freelance</option>
+                <option value="internship">Internship</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Experience</label>
+              <input type="text" id="fExp" class="form-input" placeholder="e.g. Fresher / 0–1 years"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Salary / Stipend</label>
+              <input type="text" id="fSalary" class="form-input" placeholder="e.g. ₹15,000/month or Unpaid"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Publish Status</label>
+              <select id="fStatus" class="form-select">
+                <option value="active" selected>Active — show on Careers now</option>
+                <option value="draft">Draft — hide from Careers</option>
+                <option value="closed">Closed</option>
+              </select>
+              <p class="form-hint">Must be <strong>Active</strong> to appear on Careers page.</p>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Expires On</label>
+              <input type="date" id="fExpires" class="form-input"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Skills (comma-separated)</label>
+              <input type="text" id="fSkills" class="form-input" placeholder="Communication, Sales, CRM"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">External Apply URL</label>
+              <input type="url" id="fApplyUrl" class="form-input" placeholder="Leave blank for built-in apply form"/>
+              <p class="form-hint">Blank = site apply form → you get email + Admin Applications.</p>
+            </div>
+            <div class="form-group" style="grid-column:1/-1;">
+              <label class="form-label">Description</label>
+              <textarea id="fDesc" class="form-textarea" rows="4" placeholder="Describe the role…"></textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Requirements (one per line)</label>
+              <textarea id="fReqs" class="form-textarea" rows="4" placeholder="Bachelor's degree&#10;Good communication skills"></textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Responsibilities (one per line)</label>
+              <textarea id="fResps" class="form-textarea" rows="4" placeholder="Identify potential clients&#10;Present UXONIC services"></textarea>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:8px;align-items:center;">
+            <a href="/careers.html" target="_blank" class="btn btn-ghost btn-sm" id="previewCareersBtn"><i class="fas fa-eye"></i> Open Careers</a>
+            <button type="button" class="btn btn-ghost" id="cancelFormBtn2">Cancel</button>
+            <button type="submit" class="btn btn-primary" id="saveJobBtn"><i class="fas fa-save"></i> Save &amp; Publish</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- JOB LIST -->
+    <div class="table-card">
+      <div class="table-card-header">
+        <div class="table-card-title">All Job Postings <span id="jobCount" style="color:var(--text-muted);font-weight:400;font-size:.82rem;"></span></div>
+        <div class="table-card-actions">
+          <select id="filterJobStatus" class="form-select" style="width:auto;min-width:120px;padding:7px 12px;font-size:.82rem;">
+            <option value="">All Status</option>
+            <option value="active">Active</option>
+            <option value="draft">Draft</option>
+            <option value="closed">Closed</option>
+          </select>
+        <button class="btn btn-primary btn-sm" id="newJobBtn"><i class="fas fa-plus"></i> New Opening</button>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>#</th><th>Title</th><th>Type</th><th>Location</th><th>Salary</th><th>Status</th><th>Posted</th><th>Expires</th><th>Actions</th></tr></thead>
+          <tbody id="jobsBody"><tr><td colspan="9" class="table-empty"><i class="fas fa-spinner fa-spin"></i> Loading…</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script type="module">
+import { initLayout, API, e, statusBadge, toast, confirm_dialog } from '/admin/admin.js';
+initLayout('jobs');
+
+const formCard = document.getElementById('formCard');
+const jobForm  = document.getElementById('jobForm');
+let editingId  = null;
+
+function setCategory(cat) {
+  const radios = document.querySelectorAll('input[name="openingCategory"]');
+  radios.forEach(r => { r.checked = r.value === cat; });
+  const typeSel = document.getElementById('fType');
+  if (cat === 'internship') {
+    typeSel.value = 'internship';
+  } else if (typeSel.value === 'internship') {
+    typeSel.value = 'full-time';
+  }
+}
+
+function syncCategoryFromType(jobType) {
+  setCategory(jobType === 'internship' ? 'internship' : 'job');
+  document.getElementById('fType').value = jobType || 'full-time';
+}
+
+document.querySelectorAll('input[name="openingCategory"]').forEach(r => {
+  r.addEventListener('change', () => setCategory(r.value));
+});
+
+document.getElementById('fType').addEventListener('change', () => {
+  syncCategoryFromType(document.getElementById('fType').value);
+});
+
+function showForm(title = 'Create New Opening') {
+  document.getElementById('formTitle').textContent = title;
+  formCard.style.display = '';
+  formCard.scrollIntoView({ behavior: 'smooth' });
+}
+
+function hideForm() {
+  formCard.style.display = 'none';
+  jobForm.reset();
+  editingId = null;
+  document.getElementById('jobId').value = '';
+  setCategory('job');
+  document.getElementById('fStatus').value = 'active';
+}
+
+document.getElementById('newJobBtn').addEventListener('click', () => {
+  hideForm();
+  setCategory('job');
+  document.getElementById('fStatus').value = 'active';
+  showForm('Create New Opening');
+});
+document.getElementById('cancelFormBtn').addEventListener('click',  hideForm);
+document.getElementById('cancelFormBtn2').addEventListener('click', hideForm);
+
+// Open on ?new=1
+if (new URLSearchParams(location.search).get('new')) {
+  showForm('Create New Opening');
+  setCategory('job');
+  document.getElementById('fStatus').value = 'active';
+}
+
+async function loadJobs() {
+  const status = document.getElementById('filterJobStatus').value;
+  const p = status ? { status } : {};
+  const data = await API.get('/jobs', p);
+  const jobs = data?.jobs || [];
+  document.getElementById('jobCount').textContent = `(${jobs.length})`;
+
+  const tbody = document.getElementById('jobsBody');
+  if (!jobs.length) {
+    tbody.innerHTML = `<tr><td colspan="9" class="table-empty"><i class="fas fa-briefcase" style="display:block;font-size:1.6rem;margin-bottom:8px;color:var(--text-light);"></i>No openings yet. <a href="#" id="createFirst" style="color:var(--gold);">Create one →</a></td></tr>`;
+    document.getElementById('createFirst')?.addEventListener('click', ev => { ev.preventDefault(); showForm(); });
+    return;
+  }
+
+  tbody.innerHTML = jobs.map(j => {
+    const typeLabel = j.job_type === 'internship' ? 'Internship' : (j.job_type || 'job').replace('-', ' ');
+    const typeColor = j.job_type === 'internship' ? 'badge-reviewing' : 'badge-draft';
+    return `<tr>
+    <td class="muted">${j.id}</td>
+    <td><div class="bold">${e(j.title)}</div>${j.department?`<div style="font-size:.74rem;color:var(--text-muted);">${e(j.department)}</div>`:''}</td>
+    <td><span class="badge ${typeColor}" style="text-transform:capitalize;">${e(typeLabel)}</span></td>
+    <td class="muted">${e(j.location)}</td>
+    <td class="muted">${e(j.salary||'—')}</td>
+    <td>${statusBadge(j.status)}</td>
+    <td class="muted">${j.posted_at ? new Date(j.posted_at).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}) : '—'}</td>
+    <td class="muted">${j.expires_at ? new Date(j.expires_at).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}) : '—'}</td>
+    <td><div style="display:flex;gap:6px;">
+      <button class="btn btn-ghost btn-sm" onclick="editJob(${j.id})"><i class="fas fa-pen"></i></button>
+      <button class="btn btn-ghost btn-sm" onclick="toggleJob(${j.id},'${j.status}')" title="${j.status==='active'?'Close':'Activate'}"><i class="fas ${j.status==='active'?'fa-eye-slash':'fa-eye'}"></i></button>
+      <button class="btn btn-danger btn-sm" onclick="deleteJob(${j.id})"><i class="fas fa-trash"></i></button>
+    </div></td>
+  </tr>`;
+  }).join('');
+}
+
+window.editJob = async (id) => {
+  const data = await API.get('/jobs', { id });
+  const j = data?.job; if (!j) return;
+  editingId = id;
+  document.getElementById('jobId').value = id;
+  document.getElementById('fTitle').value     = j.title||'';
+  document.getElementById('fDept').value      = j.department||'';
+  document.getElementById('fLocation').value  = j.location||'';
+  syncCategoryFromType(j.job_type||'full-time');
+  document.getElementById('fExp').value       = j.experience||'';
+  document.getElementById('fSalary').value    = j.salary||'';
+  document.getElementById('fStatus').value    = j.status||'draft';
+  document.getElementById('fExpires').value   = j.expires_at||'';
+  document.getElementById('fSkills').value    = j.skills||'';
+  document.getElementById('fApplyUrl').value  = j.apply_url||'';
+  document.getElementById('fDesc').value      = j.description||'';
+  document.getElementById('fReqs').value      = j.requirements||'';
+  document.getElementById('fResps').value     = j.responsibilities||'';
+  showForm('Edit Opening');
+};
+
+window.toggleJob = async (id, status) => {
+  const newStatus = status === 'active' ? 'closed' : 'active';
+  const r = await API.put('/jobs?id='+id, { status: newStatus });
+  if (r?.success) { toast(`Status → ${newStatus}. ${newStatus==='active'?'Now visible on Careers.':'Hidden from Careers.'}`); loadJobs(); }
+  else toast(r?.message||'Failed.','error');
+};
+
+window.deleteJob = async (id) => {
+  if (!confirm_dialog('Delete this opening?')) return;
+  const r = await API.deleteQ('/jobs', { id });
+  if (r?.success) { toast('Deleted.','warning'); loadJobs(); }
+  else toast(r?.message||'Failed.','error');
+};
+
+jobForm.addEventListener('submit', async (ev) => {
+  ev.preventDefault();
+  const btn = document.getElementById('saveJobBtn');
+  btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving…';
+
+  const category = document.querySelector('input[name="openingCategory"]:checked')?.value || 'job';
+  let jobType = document.getElementById('fType').value;
+  if (category === 'internship') jobType = 'internship';
+  else if (jobType === 'internship') jobType = 'full-time';
+
+  const payload = {
+    title:            document.getElementById('fTitle').value.trim(),
+    department:       document.getElementById('fDept').value.trim(),
+    location:         document.getElementById('fLocation').value.trim(),
+    job_type:         jobType,
+    experience:       document.getElementById('fExp').value.trim(),
+    salary:           document.getElementById('fSalary').value.trim(),
+    status:           document.getElementById('fStatus').value,
+    expires_at:       document.getElementById('fExpires').value || null,
+    skills:           document.getElementById('fSkills').value.trim(),
+    apply_url:        document.getElementById('fApplyUrl').value.trim(),
+    description:      document.getElementById('fDesc').value.trim(),
+    requirements:     document.getElementById('fReqs').value.trim(),
+    responsibilities: document.getElementById('fResps').value.trim(),
+  };
+
+  let r;
+  if (editingId) r = await API.put('/jobs?id='+editingId, payload);
+  else           r = await API.post('/jobs', payload);
+
+  btn.disabled = false; btn.innerHTML = '<i class="fas fa-save"></i> Save &amp; Publish';
+
+  if (r?.success) {
+    const live = payload.status === 'active';
+    toast(live
+      ? `${category === 'internship' ? 'Internship' : 'Job'} published — visible on Careers.`
+      : 'Saved as draft (not on Careers yet).');
+    hideForm();
+    loadJobs();
+    if (live) setTimeout(() => window.open('/careers.html?v=' + Date.now(), '_blank'), 600);
+  } else {
+    toast(r?.message||'Failed to save.','error');
+  }
+});
+
+document.getElementById('filterJobStatus').addEventListener('change', loadJobs);
+loadJobs();
+</script>
+</body>
+</html>
