@@ -2,7 +2,7 @@
 // Handles main website contact form submission
 import { getSupabase } from './_lib/supabase.js';
 import { handleOptions, json } from './_lib/cors.js';
-import { sendEmail, contactNotifyHtml, getAdminEmail } from './_lib/email.js';
+import { sendEmail, contactNotifyHtml, contactConfirmationHtml, getAdminEmail } from './_lib/email.js';
 
 const rateLimitMap = new Map();
 function rateLimit(ip, max = 3, windowMs = 3600000) {
@@ -65,16 +65,46 @@ export default async function handler(req, res) {
     return json(res, 500, { success: false, message: 'Server error. Please try again.' }, req);
   }
 
-  sendEmail({
-    to: getAdminEmail(),
-    subject: `New contact: ${fullName}${projectType ? ' — ' + projectType : ''}`,
-    html: contactNotifyHtml({
-      full_name: fullName,
-      email,
-      project_type: projectType,
-      message,
+  // ── Send Email Notifications ─────────────────────────────────
+  const adminEmail = getAdminEmail();
+  const emailTasks = [
+    // 1. Notify Admin (uxonicdigitalmedia@gmail.com)
+    sendEmail({
+      to: adminEmail,
+      subject: `New Contact Inquiry: ${fullName}${projectType ? ' — ' + projectType : ''}`,
+      html: contactNotifyHtml({
+        full_name: fullName,
+        email,
+        project_type: projectType,
+        message,
+      }),
+      reply_to: email, // Admin can reply directly to the client
     }),
-  }).catch(err => console.error('Contact notify failed:', err));
+  ];
+
+  // 2. Thank you confirmation to Client
+  if (email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    emailTasks.push(
+      sendEmail({
+        to: email,
+        subject: `Thank you for contacting UXONIC Digital Solutions`,
+        html: contactConfirmationHtml({
+          full_name: fullName,
+          project_type: projectType,
+          message,
+        }),
+        reply_to: adminEmail, // Client replies to official admin email
+      })
+    );
+  }
+
+  // Await in serverless function so Vercel doesn't terminate early
+  const emailResults = await Promise.allSettled(emailTasks);
+  emailResults.forEach((res, i) => {
+    if (res.status === 'rejected' || (res.value && !res.value.ok)) {
+      console.warn(`Contact email ${i === 0 ? 'Admin Notify' : 'Client Confirmation'} status:`, res.reason || res.value?.error);
+    }
+  });
 
   return json(res, 200, { success: true, message: "Message received. We'll get back to you within 24 hours." }, req);
 }

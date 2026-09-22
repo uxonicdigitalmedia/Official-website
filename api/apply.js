@@ -5,7 +5,7 @@ import fs from 'fs';
 import path from 'path';
 import { getSupabase } from './_lib/supabase.js';
 import { handleOptions, json } from './_lib/cors.js';
-import { sendEmail, applicationNotifyHtml, getAdminEmail } from './_lib/email.js';
+import { sendEmail, applicationNotifyHtml, applicationConfirmationHtml, getAdminEmail } from './_lib/email.js';
 
 export const config = { api: { bodyParser: false } }; // formidable needs raw stream
 
@@ -154,26 +154,56 @@ export default async function handler(req, res) {
     return json(res, 500, { success: false, message: 'Submission failed. Please try again.' }, req);
   }
 
-  // Notify admin by email (non-blocking for applicant success)
-  sendEmail({
-    to: getAdminEmail(),
-    subject: `New application: ${fullName}${jobTitle ? ' — ' + jobTitle : ''}`,
-    html: applicationNotifyHtml({
-      id: data.id,
-      full_name: fullName,
-      email,
-      mobile,
-      location,
-      job_title: jobTitle || 'Internship / General Apply',
-      college: g('college'),
-      degree: g('degree'),
-      grad_year: gradYear,
-      sales_exp: salesExp,
-      linkedin,
-      why_uxonic: whyText,
-      resume_name: resumeName,
+  // ── Send Email Notifications ─────────────────────────────────
+  const adminEmail = getAdminEmail();
+  const emailTasks = [
+    // 1. Notify Admin (uxonicdigitalmedia@gmail.com)
+    sendEmail({
+      to: adminEmail,
+      subject: `New Application: ${fullName}${jobTitle ? ' — ' + jobTitle : ''}`,
+      html: applicationNotifyHtml({
+        id: data.id,
+        full_name: fullName,
+        email,
+        mobile,
+        location,
+        job_title: jobTitle || 'Internship / General Apply',
+        college: g('college'),
+        degree: g('degree'),
+        grad_year: gradYear,
+        sales_exp: salesExp,
+        linkedin,
+        why_uxonic: whyText,
+        resume_name: resumeName,
+      }),
+      reply_to: email, // Admin can click reply to email the candidate directly
     }),
-  }).catch(err => console.error('Notify email failed:', err));
+  ];
+
+  // 2. Thank you confirmation to Applicant
+  if (email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    emailTasks.push(
+      sendEmail({
+        to: email,
+        subject: `Application Received — ${jobTitle || 'UXONIC Digital Solutions'}`,
+        html: applicationConfirmationHtml({
+          id: data.id,
+          full_name: fullName,
+          job_title: jobTitle || 'Internship / General Apply',
+          mobile,
+        }),
+        reply_to: adminEmail, // Candidate replies to official admin email
+      })
+    );
+  }
+
+  // Await in serverless function so Vercel doesn't terminate early
+  const emailResults = await Promise.allSettled(emailTasks);
+  emailResults.forEach((res, i) => {
+    if (res.status === 'rejected' || (res.value && !res.value.ok)) {
+      console.warn(`Apply email ${i === 0 ? 'Admin Notify' : 'Applicant Confirmation'} status:`, res.reason || res.value?.error);
+    }
+  });
 
   return json(res, 200, {
     success: true,
