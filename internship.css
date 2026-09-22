@@ -714,6 +714,10 @@ input, select, textarea { font-family: inherit; font-size: inherit; }
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
+.int-highlight-value.int-highlight-value-sm {
+  font-size: clamp(1.15rem, 2vw, 1.55rem);
+  line-height: 1.2;
+}
 
 .int-highlight-sub {
   font-size: 0.8rem;
