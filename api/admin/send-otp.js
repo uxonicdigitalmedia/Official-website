@@ -26,49 +26,54 @@ export default async function handler(req, res) {
   if (handleOptions(req, res)) return;
   if (req.method !== 'POST') return json(res, 405, { success: false, message: 'Method not allowed.' }, req);
 
-  const ip = getIp(req);
-  if (rateLimit(ip)) return json(res, 429, { success: false, message: 'Too many OTP requests. Wait 10 minutes.' }, req);
+  try {
+    const ip = getIp(req);
+    if (rateLimit(ip)) return json(res, 429, { success: false, message: 'Too many OTP requests. Wait 10 minutes.' }, req);
 
-  const { email } = req.body || {};
+    const { email } = req.body || {};
 
-  if (!email || email.trim().toLowerCase() !== ADMIN_EMAIL.toLowerCase()) {
-    return json(res, 200, { success: true, message: 'If this email is authorised, an OTP has been sent.' }, req);
+    if (!email || email.trim().toLowerCase() !== ADMIN_EMAIL.toLowerCase()) {
+      return json(res, 200, { success: true, message: 'If this email is authorised, an OTP has been sent.' }, req);
+    }
+
+    const otp     = String(crypto.randomInt(100000, 999999));
+    const otpHash = crypto.createHash('sha256').update(otp).digest('hex');
+    const expires = new Date(Date.now() + 10 * 60 * 1000);
+
+    const sb = getSupabase();
+
+    await sb.from('admin_otps')
+      .update({ used: true })
+      .eq('email', ADMIN_EMAIL)
+      .eq('used', false);
+
+    const { error: dbErr } = await sb.from('admin_otps').insert({
+      email:      ADMIN_EMAIL,
+      otp_hash:   otpHash,
+      expires_at: expires.toISOString(),
+      used:       false,
+    });
+
+    if (dbErr) {
+      console.error('OTP DB error:', dbErr);
+      return json(res, 500, { success: false, message: dbErr.message || 'Database error: Failed to save OTP. Check if admin_otps table exists.' }, req);
+    }
+
+    const sent = await sendEmail({
+      to: ADMIN_EMAIL,
+      subject: `${otp} is your UXONIC Admin OTP`,
+      html: otpEmailHtml(otp),
+      text: `Your UXONIC Admin OTP is ${otp}. It expires in 10 minutes.`,
+    });
+
+    if (!sent.ok) {
+      return json(res, 500, { success: false, message: sent.error || 'Failed to send OTP email via Resend.' }, req);
+    }
+
+    console.log(`OTP emailed to ${ADMIN_EMAIL} (resend id: ${sent.id})`);
+    return json(res, 200, { success: true, message: 'OTP sent to your registered email.' }, req);
+  } catch (err) {
+    console.error('send-otp exception:', err);
+    return json(res, 500, { success: false, message: err.message || 'Server error occurred while sending OTP.' }, req);
   }
-
-  const otp     = String(crypto.randomInt(100000, 999999));
-  const otpHash = crypto.createHash('sha256').update(otp).digest('hex');
-  const expires = new Date(Date.now() + 10 * 60 * 1000);
-
-  const sb = getSupabase();
-
-  await sb.from('admin_otps')
-    .update({ used: true })
-    .eq('email', ADMIN_EMAIL)
-    .eq('used', false);
-
-  const { error: dbErr } = await sb.from('admin_otps').insert({
-    email:      ADMIN_EMAIL,
-    otp_hash:   otpHash,
-    expires_at: expires.toISOString(),
-    used:       false,
-  });
-
-  if (dbErr) {
-    console.error('OTP DB error:', dbErr);
-    return json(res, 500, { success: false, message: 'Failed to generate OTP. Try again.' }, req);
-  }
-
-  const sent = await sendEmail({
-    to: ADMIN_EMAIL,
-    subject: `${otp} is your UXONIC Admin OTP`,
-    html: otpEmailHtml(otp),
-    text: `Your UXONIC Admin OTP is ${otp}. It expires in 10 minutes.`,
-  });
-
-  if (!sent.ok) {
-    return json(res, 500, { success: false, message: 'Failed to send OTP email. Try again.' }, req);
-  }
-
-  console.log(`OTP emailed to ${ADMIN_EMAIL} (resend id: ${sent.id})`);
-  return json(res, 200, { success: true, message: 'OTP sent to your registered email.' }, req);
 }

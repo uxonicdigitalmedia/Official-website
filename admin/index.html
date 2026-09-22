@@ -252,7 +252,7 @@
       try { data = await res.json(); } catch { data = {}; }
 
       if (!res.ok) {
-        showAlert(data.message || (`Server error (${res.status}). Is local-server running on this port?`));
+        showAlert(data.message || (`Server error (${res.status}). Check server logs.`));
       } else if (data.success) {
         emailDisp.textContent = currentEmail;
         showStep(2);
@@ -262,7 +262,7 @@
         showAlert(data.message || 'Failed to send OTP.');
       }
     } catch (err) {
-      showAlert('Network error — open http://127.0.0.1:5501/admin and run: npm run dev');
+      showAlert('Network error — unable to reach the server. Please check your connection.');
       console.error('send-otp failed:', err);
     }
 
