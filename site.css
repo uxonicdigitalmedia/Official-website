@@ -168,6 +168,9 @@ em { font-style: normal; }
 .logo { display: inline-flex; align-items: center; gap: 10px; }
 .logo-mark { width: 40px; height: 40px; object-fit: contain; flex-shrink: 0; }
 .logo { gap: 8px; }
+/* U and N in brand lime; thin ink outline keeps them readable on the light header */
+.logo-text .acc { color: var(--lime); -webkit-text-stroke: 0.6px var(--ink); paint-order: stroke fill; }
+.footer .logo-text .acc { -webkit-text-stroke: 0; }
 .logo-text { font-family: var(--font-head); font-weight: 700; font-size: 18px; letter-spacing: 0.12em; color: var(--ink); }
 
 .nav-list { display: flex; gap: 4px; padding: 5px; border-radius: var(--pill); background: rgba(255, 255, 255, 0.7); border: 1px solid var(--border); }
