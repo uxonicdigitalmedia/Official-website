@@ -12,7 +12,16 @@
     { "source": "/admin/content",  "destination": "/admin/content.html" },
     { "source": "/admin/settings", "destination": "/admin/settings.html" },
     { "source": "/internship",     "destination": "/internship.html" },
-    { "source": "/careers",        "destination": "/careers.html" }
+    { "source": "/careers",        "destination": "/careers.html" },
+    { "source": "/erp",            "destination": "/erp/index.html" },
+    { "source": "/erp/",           "destination": "/erp/index.html" },
+    { "source": "/erp/login",      "destination": "/erp/login.html" },
+    { "source": "/erp/me",         "destination": "/erp/me.html" },
+    { "source": "/erp/client",     "destination": "/erp/client.html" },
+    { "source": "/api/cron/daily", "destination": "/api/erp?r=cron" }
+  ],
+  "crons": [
+    { "path": "/api/cron/daily", "schedule": "30 3 * * *" }
   ],
   "headers": [
     {

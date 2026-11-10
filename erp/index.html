@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UXONIC ERP</title>
+  <meta name="robots" content="noindex,nofollow" />
+  <link rel="icon" type="image/jpeg" href="/images/fav.jpeg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="/erp/erp.css?v=2" />
+  <script>
+    // Not signed in (ERP login or admin-panel login) → ERP login page
+    try { if (!localStorage.getItem('uxonic_erp_token') && !localStorage.getItem('uxonic_admin_token')) location.replace('/erp/login'); }
+    catch (e) { location.replace('/erp/login'); }
+  </script>
+</head>
+<body>
+  <div class="scrim" id="scrim"></div>
+
+  <aside class="side" id="side">
+    <a class="brand" href="#/dashboard">
+      <span class="brand-chip"><img src="/images/nav-logo-sm.png" alt="" /></span>
+      <span><b>UXONIC</b><small>ERP</small></span>
+    </a>
+    <nav class="side-nav">
+      <span class="side-label">Overview</span>
+      <a href="#/dashboard" data-nav="dashboard" data-need="dashboard"><i class="fas fa-chart-pie"></i> Dashboard</a>
+      <a href="#/reports" data-nav="reports" data-need="reports"><i class="fas fa-chart-line"></i> Reports &amp; P&amp;L</a>
+      <span class="side-label" data-group="people">People</span>
+      <a href="#/employees" data-nav="employees" data-need="employees"><i class="fas fa-users"></i> Employees</a>
+      <a href="#/attendance" data-nav="attendance" data-need="attendance"><i class="fas fa-calendar-check"></i> Attendance</a>
+      <a href="#/timesheets" data-nav="timesheets" data-need="timesheets"><i class="fas fa-clock"></i> Timesheets</a>
+      <a href="#/leaves" data-nav="leaves" data-need="leaves"><i class="fas fa-umbrella-beach"></i> Leave <span class="nav-count" id="navLeaves"></span></a>
+      <a href="#/payroll" data-nav="payroll" data-need="payroll"><i class="fas fa-money-check-dollar"></i> Payroll</a>
+      <a href="#/advances" data-nav="advances" data-need="advances"><i class="fas fa-hand-holding-dollar"></i> Advances</a>
+      <span class="side-label" data-group="work">Work</span>
+      <a href="#/products" data-nav="products" data-need="products"><i class="fas fa-cubes"></i> Products &amp; Apps</a>
+      <a href="#/tasks" data-nav="tasks" data-need="tasks"><i class="fas fa-list-check"></i> Tasks</a>
+      <span class="side-label" data-group="sales">Sales &amp; accounts</span>
+      <a href="#/clients" data-nav="clients" data-need="clients"><i class="fas fa-handshake"></i> Clients</a>
+      <a href="#/quotes" data-nav="quotes" data-need="quotes"><i class="fas fa-file-signature"></i> Quotations</a>
+      <a href="#/invoices" data-nav="invoices" data-need="invoices"><i class="fas fa-file-invoice"></i> Invoices</a>
+      <a href="#/recurring" data-nav="recurring" data-need="recurring"><i class="fas fa-repeat"></i> Recurring billing</a>
+      <a href="#/expenses" data-nav="expenses" data-need="expenses"><i class="fas fa-receipt"></i> Expenses</a>
+      <a href="#/gst" data-nav="gst" data-need="gst"><i class="fas fa-landmark"></i> GST report</a>
+      <span class="side-label" data-group="system">System</span>
+      <a href="#/settings" data-nav="settings" data-need="users"><i class="fas fa-gear"></i> Company settings</a>
+      <a href="#/users" data-nav="users" data-need="users"><i class="fas fa-user-shield"></i> Team &amp; roles</a>
+      <a href="#/audit" data-nav="audit" data-need="audit"><i class="fas fa-clock-rotate-left"></i> Audit log</a>
+      <a href="/admin/dashboard" data-need="users"><i class="fas fa-arrow-left"></i> Website admin</a>
+    </nav>
+    <div class="side-foot">
+      <span class="avatar" id="who-av">A</span>
+      <div><b id="who-name">Admin</b><small id="who-role">Signed in</small></div>
+      <button class="icon-btn" id="logout" title="Log out" aria-label="Log out"><i class="fas fa-right-from-bracket"></i></button>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="top">
+      <button class="icon-btn menu-btn" id="menuBtn" aria-label="Open menu"><i class="fas fa-bars"></i></button>
+      <div class="crumb" id="crumb">Dashboard</div>
+      <div class="top-spacer"></div>
+      <a class="btn btn-primary btn-sm" href="#/invoices/new" id="topNew" data-need="invoices"><i class="fas fa-plus"></i> <span>New invoice</span></a>
+    </header>
+    <main class="view" id="view"></main>
+  </div>
+
+  <script type="module" src="/erp/js/app.js?v=2"></script>
+</body>
+</html>

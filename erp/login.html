@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign in · UXONIC ERP</title>
+  <meta name="robots" content="noindex,nofollow" />
+  <link rel="icon" type="image/jpeg" href="/images/fav.jpeg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="/erp/erp.css?v=2" />
+</head>
+<body class="auth-page">
+  <main id="root"></main>
+  <p class="auth-foot">Team members sign in here · <a href="/erp/me">Employee portal</a> · <a href="/erp/client">Client portal</a></p>
+  <script type="module">
+    import { Auth } from '/erp/js/core.js';
+    import { renderLogin } from '/erp/js/login.js';
+    Auth.use('staff');
+    if (Auth.token()) location.replace('/erp');
+    else renderLogin(document.getElementById('root'), {
+      kind: 'staff', title: 'ERP', subtitle: 'For UXONIC admins, HR and accounts. We will email you a one-time code.',
+      onSuccess: () => location.replace('/erp'),
+    });
+  </script>
+</body>
+</html>

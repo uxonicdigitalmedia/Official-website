@@ -60,7 +60,10 @@ const Router = (function () {
       history.pushState({ page: pageName }, '', '#' + pageName);
     }
 
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Jump to top of the new page (motion.js swaps this for a Lenis-aware version)
+    if (typeof window.__uxScrollTop === 'function') window.__uxScrollTop();
+    else window.scrollTo(0, 0);
+    document.dispatchEvent(new CustomEvent('ux:page', { detail: { page: pageName, el: targetPage } }));
     setTimeout(() => triggerReveals(targetPage), 60);
     setTimeout(() => initCountersInEl(targetPage), 100);
 
@@ -192,25 +195,6 @@ function initCountersInEl(container) {
   }, { threshold: 0.5 });
   counters.forEach(el => observer.observe(el));
 }
-
-/* ============================================
-   CARD HOVER EFFECTS
-   ============================================ */
-(function initCardEffects() {
-  if (window.innerWidth <= 768) return;
-  document.addEventListener('mousemove', function (e) {
-    const card = e.target.closest('.service-card, .why-card, .portfolio-card');
-    if (!card) return;
-    const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left - rect.width / 2;
-    const y = e.clientY - rect.top - rect.height / 2;
-    card.style.transform = `perspective(1000px) rotateX(${-(y/(rect.height/2))*3}deg) rotateY(${(x/(rect.width/2))*3}deg) translateY(-6px)`;
-  });
-  document.addEventListener('mouseleave', function (e) {
-    const card = e.target.closest('.service-card, .why-card, .portfolio-card');
-    if (card) card.style.transform = '';
-  }, true);
-})();
 
 /* ============================================
    TESTIMONIALS SLIDER
@@ -457,29 +441,6 @@ function initContactForm() {
     badge.style.animation = `float ${3 + i * 0.5}s ease-in-out infinite`;
     badge.style.animationDelay = `${i * 0.3}s`;
   });
-})();
-
-/* ============================================
-   HERO PARALLAX
-   ============================================ */
-(function initParallax() {
-  if (window.innerWidth <= 768) return;
-  window.addEventListener('scroll', () => {
-    const hero = document.querySelector('#page-home .hero');
-    if (!hero) return;
-    const scrolled = window.scrollY;
-    if (scrolled > window.innerHeight) return;
-    const heroImg = hero.querySelector('.hero-bg-image');
-    if (heroImg) heroImg.style.transform = `translateY(${scrolled * 0.15}px) scale(1.05)`;
-    hero.querySelectorAll('.hero-orb').forEach((orb, i) => {
-      orb.style.transform = `translate(-50%, ${scrolled * (0.03 + i * 0.02)}px)`;
-    });
-    const heroContent = hero.querySelector('.hero-content');
-    if (heroContent) {
-      heroContent.style.opacity = Math.max(0, 1 - scrolled / 600);
-      heroContent.style.transform = `translateY(${scrolled * 0.1}px)`;
-    }
-  }, { passive: true });
 })();
 
 /* ============================================

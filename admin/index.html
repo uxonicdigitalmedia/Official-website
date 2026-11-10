@@ -8,26 +8,26 @@
   <link rel="icon" type="image/jpeg" href="/images/fav.jpeg"/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous"/>
-  <link rel="stylesheet" href="/admin/assets/admin.css"/>
+  <link rel="stylesheet" href="/admin/assets/admin.css?v=2"/>
   <style>
     .otp-inputs { display:flex; gap:10px; justify-content:center; margin:24px 0; }
     .otp-digit {
       width:52px; height:60px;
       text-align:center; font-size:1.6rem; font-weight:700;
-      background:rgba(255,255,255,0.05);
-      border:2px solid rgba(255,255,255,0.1);
-      border-radius:12px; color:#fff;
+      background:var(--bg-alt);
+      border:1.5px solid var(--border);
+      border-radius:12px; color:var(--ink);
       outline:none; caret-color:var(--gold);
-      transition:border-color .2s,box-shadow .2s;
-      font-family:'Inter',sans-serif;
+      transition:border-color .2s,box-shadow .2s,background .2s;
+      font-family:var(--font-display);
     }
     .otp-digit:focus {
-      border-color:var(--gold);
-      box-shadow:0 0 0 3px rgba(212,175,55,0.18);
+      border-color:var(--ink); background:#fff;
+      box-shadow:0 0 0 3px rgba(201,182,255,0.45);
     }
-    .otp-digit.filled { border-color:rgba(212,175,55,0.45); }
+    .otp-digit.filled { border-color:var(--ink); background:#fff; }
 
     .step { display:none; }
     .step.active { display:block; }
@@ -44,8 +44,8 @@
 
     .email-display {
       display:flex; align-items:center; gap:10px;
-      background:rgba(212,175,55,0.07);
-      border:1px solid rgba(212,175,55,0.2);
+      background:var(--gold-tint);
+      border:1px solid var(--gold-border);
       border-radius:10px; padding:11px 14px;
       font-size:.88rem; color:var(--text-body);
       margin-bottom:6px;
@@ -60,7 +60,7 @@
 
     <!-- Logo -->
     <div class="login-logo">
-      <img src="/images/nav-logo.png" alt="UXONIC" class="login-logo-img"/>
+      <img src="/images/nav-logo-sm.png" alt="UXONIC" class="login-logo-img"/>
       <div class="login-logo-text"><span>U</span>XO<span>N</span>IC</div>
     </div>
     <div class="login-subtitle">Admin Panel &nbsp;·&nbsp; Secure Login</div>
@@ -137,9 +137,12 @@
 </div>
 
 <script type="module">
+  // Where to go after login: /admin?next=/erp… comes back to the ERP (only same-site /erp paths allowed)
+  const NEXT = (() => { const n = new URLSearchParams(location.search).get('next') || ''; return /^\/erp(\/|$)/.test(n) ? n : '/admin/dashboard'; })();
+
   // Redirect if already logged in
   if (localStorage.getItem('uxonic_admin_token')) {
-    window.location.href = '/admin/dashboard';
+    window.location.href = NEXT;
   }
 
   const step1       = document.getElementById('step1');
@@ -252,7 +255,10 @@
       try { data = await res.json(); } catch { data = {}; }
 
       if (!res.ok) {
-        showAlert(data.message || (`Server error (${res.status}). Check server logs.`));
+        showAlert(data.message || (res.status === 405 || res.status === 404
+          // A static server (e.g. VS Code Live Server) can't run /api routes
+          ? 'API not available on this server. Run "npm run dev" and open http://127.0.0.1:5501/admin'
+          : `Server error (${res.status}). Check server logs.`));
       } else if (data.success) {
         emailDisp.textContent = currentEmail;
         showStep(2);
@@ -317,7 +323,7 @@
         localStorage.setItem('uxonic_admin_token', data.token);
         localStorage.setItem('uxonic_admin_info',  JSON.stringify(data.admin));
         showAlert('Login successful! Redirecting…', 'success');
-        setTimeout(() => { window.location.href = '/admin/dashboard'; }, 800);
+        setTimeout(() => { window.location.href = NEXT; }, 800);
       } else {
         showAlert(data.message || 'Invalid OTP. Please try again.');
         clearOtp();
