@@ -126,7 +126,7 @@ const footer = () => `
             <img class="logo-mark" src="/images/logo-mark-white.png" alt="" width="40" height="40">
             <span class="logo-text"><span class="acc">U</span>XO<span class="acc">N</span>IC</span>
           </a>
-          <p>UXONIC Books — CRM, billing, inventory and soon HR in one workspace. Manage your business. Grow smarter.</p>
+          <p>UXONIC Books — CRM, billing, inventory and HR in one workspace. Manage your business. Grow smarter.</p>
           <div class="socials">
             <a href="https://www.instagram.com/uxon.ic/" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
             <a href="https://wa.me/919843021717" target="_blank" rel="noopener" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
@@ -140,7 +140,7 @@ const footer = () => `
             <li><a href="/books/crm/">UXONIC CRM</a></li>
             <li><a href="/books/billing/">UXONIC Billing</a></li>
             <li><a href="/books/erp/">UXONIC ERP</a></li>
-            <li><a href="/books/hr/">UXONIC HR · soon</a></li>
+            <li><a href="/books/hr/">UXONIC HR</a></li>
             <li><a href="/books/#pricing">Pricing</a></li>
           </ul>
         </div>
@@ -186,7 +186,7 @@ const SIDE = [
   ['g', 'CRM'], ['leads', 'fa-user-plus', 'Leads'], ['pipeline', 'fa-table-columns', 'Pipeline'], ['contacts', 'fa-address-book', 'Contacts'], ['tasks', 'fa-list-check', 'Tasks'],
   ['g', 'Billing'], ['quotes', 'fa-file-lines', 'Quotations'], ['invoices', 'fa-file-invoice', 'Invoices'], ['payments', 'fa-indian-rupee-sign', 'Payments'], ['expenses', 'fa-receipt', 'Expenses'],
   ['g', 'ERP'], ['products', 'fa-boxes-stacked', 'Products'], ['stock', 'fa-warehouse', 'Stock'], ['purchases', 'fa-truck', 'Purchases'],
-  ['g', 'Coming soon'], ['hr', 'fa-id-badge', 'HR', true],
+  ['g', 'HR'], ['attendance', 'fa-calendar-check', 'Attendance'], ['leave', 'fa-umbrella-beach', 'Leave'],
 ];
 const shot = (on, url, main) => `
           <div class="device-stage" aria-hidden="true">
@@ -273,7 +273,7 @@ const XL = [
   ['crm', '/books/crm/', 'fa-user-plus', 'UXONIC CRM', 'Leads, pipeline, tasks'],
   ['billing', '/books/billing/', 'fa-file-invoice', 'UXONIC Billing', 'Quotes, invoices, payments'],
   ['erp', '/books/erp/', 'fa-boxes-stacked', 'UXONIC ERP', 'Products, stock, purchases'],
-  ['hr', '/books/hr/', 'fa-id-badge', 'UXONIC HR', 'Coming soon'],
+  ['hr', '/books/hr/', 'fa-id-badge', 'UXONIC HR', 'Employees, attendance, leave'],
 ];
 const xlinks = (active) => `
       <section class="section" style="padding-top:0">
@@ -288,7 +288,7 @@ ${XL.map(([k, href, ic, t, s]) => `            <a href="${href}" class="card xli
         </div>
       </section>`;
 
-const MODULE_OPTS = ['CRM', 'Billing', 'ERP', 'CRM + Billing', 'HR (coming soon)', 'Everything'];
+const MODULE_OPTS = ['CRM', 'Billing', 'ERP', 'HR', 'Everything'];
 const waitlist = ({ module, title, lead, points }) => `
       <section class="section" id="early-access" style="padding-top:0" data-glow>
         <div class="container">
@@ -472,13 +472,13 @@ ${secHead('Four modules. <em>One workspace.</em>', 'Switch on what you need toda
               <ul><li>Stock in every godown</li><li>Suppliers &amp; purchase orders</li><li>Low-stock alerts &amp; barcodes</li></ul>
               <span class="more">Explore ERP <i class="fas fa-arrow-right"></i></span>
             </a>
-            <a href="/books/hr/" class="card mod-card is-soon lift">
-              <span class="badge-s badge-soon">Coming soon</span>
+            <a href="/books/hr/" class="card mod-card is-ink lift">
+              <span class="badge-s badge-live">Live</span>
               <span class="mod-ic"><i class="fas fa-id-badge"></i></span>
               <h3><small>UXONIC</small>HR</h3>
               <p>Employees, attendance and leave — without another app or another login.</p>
-              <ul><li>Employee profiles</li><li>Check-in &amp; attendance</li><li>Leave approvals</li></ul>
-              <span class="more">See what's planned <i class="fas fa-arrow-right"></i></span>
+              <ul><li>Employee profiles</li><li>Phone check-in &amp; attendance</li><li>Leave approvals</li></ul>
+              <span class="more">Explore HR <i class="fas fa-arrow-right"></i></span>
             </a>
           </div>
         </div>
@@ -559,14 +559,14 @@ ${fCards([
       </section>
 ${pricing()}
 ${faq([
-  ['What is UXONIC Books?', 'One online workspace for running a small business: a CRM for leads and deals, Billing for quotations, invoices, payments and expenses, and ERP for products, stock and purchases. HR (employees, attendance and leave) is being built next and will appear in the same workspace.'],
+  ['What is UXONIC Books?', 'One online workspace for running a small business: a CRM for leads and deals, Billing for quotations, invoices, payments and expenses, ERP for products, stock and purchases, and HR for employees, attendance and leave — all in the same workspace.'],
   ['Do I need a separate login for each module?', 'No. One account, one workspace and one subscription. Modules are switched on inside your workspace based on your plan.'],
   ['Is there a free trial?', 'Yes — 14 days with Growth plan features, no payment details needed. If you do not subscribe, your workspace becomes read-only; your data is kept and you can still export it.'],
   ['How do I pay?', 'Monthly or yearly through Razorpay (UPI, cards, net banking). Yearly plans cost 10 months — two months free. Prices exclude GST.'],
   ['Can my team use it?', 'Yes. Growth includes 5 users and Business 15. Invite them by email and give each person the Admin, Manager or Employee role.'],
   ['When can I start?', 'Right now. Create your account, confirm your email and your workspace is ready in a minute — or sign up with your Google account. Prefer help? Message us on WhatsApp and we will set it up with you.'],
 ])}
-${startBlock({ title: 'Start today. <em>Grow smarter.</em>', lead: 'Your workspace is ready in a minute. 14 days free, no card needed.', points: ['CRM, Billing and ERP included in the trial', 'Sign up with email or Google', 'Help importing your leads and products'] })}
+${startBlock({ title: 'Start today. <em>Grow smarter.</em>', lead: 'Your workspace is ready in a minute. 14 days free, no card needed.', points: ['All four apps included in the trial', 'Sign up with email or Google', 'Help importing your leads, products and staff'] })}
 ` + footer();
 
 /* ================= PAGE: CRM ================= */
@@ -960,86 +960,133 @@ ${xlinks('erp')}
 ${startBlock({ title: 'Count less. <em>Sell more.</em>', lead: 'Add your products and opening stock today — your next invoice will update stock for you.', points: ['14-day free trial, no card', 'Stock linked to your GST invoices', 'Works on phone, tablet and laptop'] })}
 ` + footer();
 
-/* ================= COMING SOON PAGES ================= */
-const soon = ({ key, path, title, desc, crumbName, price, eyebrow, h1a, h1b, sub, icons, scopeTitle, scopeLead, scope, road, why }) =>
-  head({ title, desc, path, crumbName, product: { name: crumbName, price } }) + header(key) + `
+/* ================= PAGE: HR ================= */
+const hrMain = `
+                    <div class="shot-head"><b>Today · 12 Nov</b><span class="mini-btn">Check in</span></div>
+                    <div class="kpis">
+                      <div class="kpi"><small>Staff</small><b>18</b></div>
+                      <div class="kpi"><small>Present</small><b>15</b></div>
+                      <div class="kpi"><small>Late</small><b style="color:#A26A00">2</b></div>
+                      <div class="kpi"><small>On leave</small><b>1</b></div>
+                    </div>
+                    <div class="panel" style="padding:6px 8px">
+                      <table class="tbl">
+                        <thead><tr><th>Employee</th><th class="hide-sm">Shift</th><th class="r">In</th><th>Status</th></tr></thead>
+                        <tbody>
+                          <tr><td>Sneha Raj</td><td class="hide-sm">09:30–18:30</td><td class="r">9:24 am</td><td><span class="st st-paid">Present</span></td></tr>
+                          <tr><td>Murugan</td><td class="hide-sm">09:30–18:30</td><td class="r">9:52 am</td><td><span class="st st-part">Late</span></td></tr>
+                          <tr><td>Priya K</td><td class="hide-sm">10:00–19:00</td><td class="r">—</td><td><span class="st st-sent">On leave</span></td></tr>
+                          <tr><td>Karthik</td><td class="hide-sm">09:30–18:30</td><td class="r">—</td><td><span class="st st-over">Not in</span></td></tr>
+                        </tbody>
+                      </table>
+                    </div>`;
+
+const registerPanel = `
+              <div class="panel" style="padding:16px;overflow:hidden">
+                <div class="shot-head" style="margin-bottom:12px"><b style="font-size:16px">Attendance · November</b><span class="st st-draft">Export CSV</span></div>
+                <div style="display:grid;gap:6px">${[['Sneha', 'PPPHPPW PPPPLPW'], ['Murugan', 'PPPPPPW PAPPPPW'], ['Priya', 'PPLLPPW PPPPPHW']].map(([n, row]) => `<div style="display:flex;align-items:center;gap:6px"><span style="width:62px;font-size:11px;font-weight:600;color:var(--ink)">${n}</span>${row.replace(/ /g, '').split('').map((c) => `<span style="width:16px;height:16px;border-radius:4px;display:grid;place-items:center;font-size:8px;font-weight:700;background:${{ P: '#E4F3E4', H: '#FFF3D6', L: '#ECE8FF', A: '#FDE4E4', W: 'var(--bg-2)' }[c]};color:${{ P: '#2F7A2F', H: '#A26A00', L: '#5B3FD9', A: '#C93A3F', W: 'var(--muted)' }[c]}">${c === 'W' ? '' : c}</span>`).join('')}</div>`).join('')}</div>
+              </div>`;
+
+const leavePanel = `
+              <div class="panel" style="padding:16px">
+                <div class="shot-head" style="margin-bottom:10px"><b style="font-size:16px">Leave requests</b><span class="st st-part">2 pending</span></div>
+                <table class="tbl">
+                  <thead><tr><th>Employee</th><th class="hide-sm">Type</th><th>Dates</th><th>Status</th></tr></thead>
+                  <tbody>
+                    <tr><td>Priya K</td><td class="hide-sm">Casual</td><td>14–15 Jan</td><td><span class="st st-part">Pending</span></td></tr>
+                    <tr><td>Karthik</td><td class="hide-sm">Sick</td><td>11 Nov</td><td><span class="st st-paid">Approved</span></td></tr>
+                    <tr><td>Murugan</td><td class="hide-sm">Casual</td><td>3 Nov · ½ day</td><td><span class="st st-paid">Approved</span></td></tr>
+                  </tbody>
+                </table>
+                <div class="kpis" style="grid-template-columns:repeat(3,1fr);margin-top:12px">
+                  <div class="kpi"><small>Casual left</small><b>9</b></div>
+                  <div class="kpi"><small>Sick left</small><b>11</b></div>
+                  <div class="kpi"><small>LOP</small><b>0</b></div>
+                </div>
+              </div>`;
+
+const checkPanel = `
+              <div class="panel" style="padding:18px;max-width:340px;margin:0 auto">
+                <div class="shot-head" style="margin-bottom:14px"><b style="font-size:16px">My day</b><span class="st st-paid">On time</span></div>
+                <div class="kpis" style="grid-template-columns:repeat(3,1fr)">
+                  <div class="kpi"><small>Check in</small><b>9:24</b></div>
+                  <div class="kpi"><small>Check out</small><b>—</b></div>
+                  <div class="kpi"><small>Worked</small><b>4h 10m</b></div>
+                </div>
+                <div style="margin-top:14px;text-align:center"><span class="mini-btn" style="display:inline-block;padding:10px 26px;font-size:13px">Check out</span></div>
+                <p style="margin:12px 0 0;font-size:11px;color:var(--muted);text-align:center"><i class="fas fa-location-dot"></i> Location saved with check-in</p>
+              </div>`;
+
+const hr = head({ title: 'HR, Attendance & Leave Software for Small Businesses in Tamil Nadu | UXONIC HR', desc: 'Employee records, phone check-in attendance with late marks, shifts, holidays, leave requests and approvals and a monthly attendance register for shops, offices and small teams in Tamil Nadu. Part of UXONIC Books.', path: '/books/hr/', crumbName: 'UXONIC HR', product: { name: 'UXONIC HR', price: 299 } })
+  + header('hr') + `
       <section class="hero">
         <div class="container hero-inner">
-          <div class="eyebrow" data-hero="eyebrow"><b>${eyebrow}</b> Coming soon to UXONIC Books</div>
+          <div class="eyebrow" data-hero="eyebrow"><b>HR</b> Part of UXONIC Books</div>
           <h1 class="hero-title" data-split>
-            <span class="line line-1">${h1a}</span>
-            <span class="line line-2">${h1b}</span>
+            <span class="line line-1">No more registers.</span>
+            <span class="line line-2">Attendance by phone.</span>
           </h1>
-${keypad(icons)}
-          <p class="hero-sub" data-hero="sub">${sub}</p>
+          <p class="hero-sub" data-hero="sub">UXONIC HR keeps employee records, daily attendance and leave approvals together — staff check in from their phone, and the monthly register fills itself.</p>
           <div class="hero-ctas" data-hero="ctas">
-            <a href="#early-access" class="btn btn-lime">Notify me at launch <i class="fas fa-arrow-right"></i></a>
-            <a href="${SIGNUP}" class="btn btn-ghost">Start with CRM, Billing &amp; ERP</a>
+            <a href="${SIGNUP}" class="btn btn-lime">Start free trial <i class="fas fa-arrow-right"></i></a>
+            <a href="#features" class="btn btn-ghost">See features</a>
           </div>
-          <p class="hero-note" data-hero="sub"><span class="soon-badge">In development</span></p>
+${shot('attendance', 'books.uxonicdigital.com/hr/today', hrMain)}
+        </div>
+      </section>
+${strip([['fa-id-badge', 'Employee profiles'], ['fa-fingerprint', 'Phone check-in'], ['fa-clock', 'Late marks'], ['fa-business-time', 'Shifts'], ['fa-umbrella-beach', 'Leave'], ['fa-calendar-days', 'Holidays'], ['fa-table-cells', 'Monthly register'], ['fa-file-csv', 'CSV for payroll']])}
+
+      <section class="section" id="features" data-glow>
+        <div class="container">
+${secHead('Everything a small team <em>actually needs</em>', 'Built for shops, offices, clinics and site teams — not for a 500-person HR department.')}
+${fCards([
+  ['fa-id-badge', 'Employee profiles', 'Code, department, designation, shift, joining date, weekly off and emergency contact — in one place.', ['With or without an app login', 'Reports-to for each person', 'Former staff kept, not deleted']],
+  ['fa-fingerprint', 'Check-in &amp; check-out', 'Staff tap Check in on their phone. Late marks and half days are worked out for you.', ['Grace minutes per shift', 'Optional location on check-in', 'Night shifts supported']],
+  ['fa-pen-to-square', 'Manager corrections', 'Forgot to check in? Managers mark or correct any past day — with a note, and a record of who changed it.', ['Present, half day, absent, leave', 'Staff without phones too', 'Every change in the audit log']],
+  ['fa-umbrella-beach', 'Leave &amp; balances', 'Casual, sick and loss-of-pay out of the box. Add your own types and yearly allowance.', ['Half-day leave', 'Balances checked automatically', 'Weekly offs and holidays not counted']],
+  ['fa-check-double', 'One-tap approvals', 'Managers get a notification and approve or reject in a tap. The employee hears back straight away.', ['Managers can’t approve their own', 'Cancel future leave', 'Leave on behalf of staff']],
+  ['fa-table-cells', 'Monthly register', 'The whole month for everyone on one screen — present, half day, absent, leave, holiday and week off.', ['Late count and hours worked', 'CSV export for payroll', 'Holidays for your state']],
+])}
         </div>
       </section>
 
       <section class="section" data-glow>
         <div class="container">
-${secHead(scopeTitle, scopeLead)}
-${fCards(scope)}
-        </div>
-      </section>
-
-      <section class="section" style="padding-top:0" data-glow>
-        <div class="container">
-${secHead('How we plan to <em>roll it out</em>', 'Released in stages so each part is solid before the next one ships. Early-access members help shape the order.', 'h-lg')}
-          <div class="road" data-stagger>
-${road.map(([phase, t, items]) => `            <article class="card"><span class="phase">${phase}</span><h3>${t}</h3><ul>${items.map((i) => `<li>${i}</li>`).join('')}</ul></article>`).join('\n')}
-          </div>
+${split({ kicker: '<i class="fas fa-mobile-screen"></i> Check-in', title: 'One tap. <em>Done.</em>', text: 'Each employee sees their own day: check-in time, hours worked and whether they were late. No biometric machine, no paper register, no WhatsApp “reached office” messages.', ticks: ['Works on any phone browser', 'Late after start time + grace minutes', 'Less than half a shift becomes a half day'], stage: checkPanel })}
+${split({ rev: true, kicker: '<i class="fas fa-table-cells"></i> Register', title: 'The month, <em>at a glance</em>', text: 'Present, half day, absent, leave, holiday and weekly off — coloured for everyone, every day. Click any day to correct it. Export it for salary.', ticks: ['Totals per employee', 'Hours worked and late count', 'Download as CSV'], stage: registerPanel, stageClass: 'lime' })}
+${split({ kicker: '<i class="fas fa-umbrella-beach"></i> Leave', title: 'Ask, approve, <em>remember</em>', text: 'Employees apply from their phone and see their balance. Managers approve in one tap. The register and the balances update on their own.', ticks: ['Overlapping requests are blocked', 'Balance checked before sending', 'Holidays and week offs skipped'], stage: leavePanel })}
         </div>
       </section>
 
       <section class="section" style="padding-top:0">
         <div class="container">
-          <div class="card join" data-rise>
-            <div>
-              <span class="eyebrow"><b>Connected</b> Same workspace</span>
-              <h2 style="margin-top:24px">${why[0]}</h2>
-              <p>${why[1]}</p>
-              <a href="/books/" class="btn btn-ink">See the whole Suite <i class="fas fa-arrow-right"></i></a>
-            </div>
-            <ul class="perks">
-${why[2].map((p) => `              <li><i class="fas fa-check"></i> ${p}</li>`).join('\n')}
-            </ul>
+${secHead('The right access for <em>every role</em>', 'Employees see only their own records. Enforced in the database, not just hidden in the app.', 'h-lg')}
+          <div class="card roles" data-rise>
+            <table>
+              <thead><tr><th>What they can do</th><th>Admin</th><th>Manager</th><th>Employee</th></tr></thead>
+              <tbody>
+                <tr><td>Check in, apply for leave</td><td><span class="yes"><i class="fas fa-check"></i></span></td><td><span class="yes"><i class="fas fa-check"></i></span></td><td><span class="yes"><i class="fas fa-check"></i></span></td></tr>
+                <tr><td>See attendance and leave</td><td><span class="yes"><i class="fas fa-check"></i></span></td><td><span class="yes"><i class="fas fa-check"></i></span></td><td><span class="own">Own only</span></td></tr>
+                <tr><td>Correct attendance</td><td><span class="yes"><i class="fas fa-check"></i></span></td><td><span class="yes"><i class="fas fa-check"></i></span></td><td><span class="no"><i class="fas fa-minus"></i></span></td></tr>
+                <tr><td>Approve leave</td><td><span class="yes"><i class="fas fa-check"></i></span></td><td><span class="own">Not their own</span></td><td><span class="no"><i class="fas fa-minus"></i></span></td></tr>
+                <tr><td>Add and edit employees, shifts, holidays</td><td><span class="yes"><i class="fas fa-check"></i></span></td><td><span class="no"><i class="fas fa-minus"></i></span></td><td><span class="no"><i class="fas fa-minus"></i></span></td></tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </section>
-${xlinks(key)}
-${waitlist({ module: 'HR (coming soon)', title: `Be the first to try <em>UXONIC ${key.toUpperCase()}.</em>`, lead: 'Join the list and we will invite you to the beta. Already need CRM, Billing or ERP? You can start with those today and add HR later.', points: ['Early beta invitation', 'Tell us what you need most', 'Founding-customer pricing'] })}
+${pricing('HR is in <em>UXONIC Books</em>', 'Get HR with CRM, Billing and ERP in one subscription — or take UXONIC HR on its own. 14-day free trial.')}
+${faq([
+  ['Does every employee need a login?', 'No. Add store helpers or site workers without a login and let a manager mark their attendance. Link a login only for people who will check in from their own phone.'],
+  ['How is “late” decided?', 'Each shift has a start time and grace minutes. A check-in after start time plus grace is marked late, with the number of minutes. You can set different shifts for different people.'],
+  ['Can it stop people checking in from home?', 'Today the location is recorded with each check-in so managers can see it. Blocking check-ins outside the office (geofencing) is on our list.'],
+  ['Does it do payroll?', 'Not yet. The monthly register exports to CSV with present days, half days, leave, absences and hours — ready for your salary sheet or accountant. Payroll is planned.'],
+  ['Which holidays are included?', 'You add your own holidays for the year (for example Pongal, Tamil New Year, Deepavali). They are skipped when counting leave and shown on the register.'],
+])}
+${xlinks('hr')}
+${startBlock({ title: 'Close the register. <em>Open UXONIC HR.</em>', lead: 'Add your staff in ten minutes. Tomorrow morning, they check in from their phones.', points: ['14-day free trial, no card', 'Works on any phone', 'Help adding your staff list'] })}
 ` + footer();
 
-const hr = soon({
-  key: 'hr', path: '/books/hr/', crumbName: 'UXONIC HR', price: 299,
-  title: 'HR, Attendance & Leave Software for Small Businesses in Tamil Nadu | UXONIC HR',
-  desc: 'Employee records, mobile check-in attendance, shifts, leave requests and approvals and monthly attendance reports for small teams in Tamil Nadu. Part of UXONIC Books.',
-  eyebrow: 'HR', h1a: 'Your people, attendance and leave.', h1b: 'Sorted.',
-  sub: 'UXONIC HR will keep employee records, daily attendance and leave approvals together — in the same workspace your team already uses.',
-  icons: [['fa-id-badge'], ['fa-clock'], ['fa-calendar-check', 'is-ink'], ['fa-users'], ['fa-fingerprint', 'is-lime'], ['fa-umbrella-beach'], ['fa-sitemap'], ['fa-location-dot'], ['fa-chart-pie']],
-  scopeTitle: 'What UXONIC HR <em>will do</em>', scopeLead: 'Planned scope — made for small teams that are tired of attendance registers.',
-  scope: [
-    ['fa-id-badge', 'Employee profiles', 'Personal and job details, documents, department and designation — with or without an app login.'],
-    ['fa-fingerprint', 'Check-in &amp; check-out', 'Employees mark attendance from their phone, with optional location.', ['Late and half-day rules', 'Shift timings', 'Manager corrections with history']],
-    ['fa-umbrella-beach', 'Leave', 'Leave types and balances, requests and one-tap approvals.'],
-    ['fa-calendar-days', 'Holidays &amp; shifts', 'A holiday calendar and shifts per team or branch.'],
-    ['fa-sitemap', 'Departments', 'Organise people by department and designation.'],
-    ['fa-chart-pie', 'Attendance reports', 'Monthly attendance, late marks and leave taken — ready for payroll.'],
-  ],
-  road: [
-    ['Stage 1', 'People', ['Employee profiles', 'Departments and designations', 'Documents']],
-    ['Stage 2', 'Attendance', ['Check-in / check-out', 'Shifts and holidays', 'Attendance reports']],
-    ['Stage 3', 'Leave &amp; beyond', ['Leave types and balances', 'Requests and approvals', 'Payroll — planned after launch']],
-  ],
-  why: ['One team, <em>one workspace</em>', 'Not every employee needs a login, and not every login is an employee. UXONIC HR keeps the two separate — and connected where it helps.', ['Link an employee to a workspace member', 'Same roles and permissions', 'Branch support from day one', 'Switch it on when your plan includes it']],
-});
-
-// One folder per page → clean URLs (/books/crm/) that work on any static server and on Vercel.
 for (const [dir, html] of [['', suite], ['crm', crm], ['billing', billing], ['erp', erp], ['hr', hr]]) {
   mkdirSync(join(OUT, dir), { recursive: true });
   writeFileSync(join(OUT, dir, 'index.html'), html);
