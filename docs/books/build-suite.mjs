@@ -126,7 +126,7 @@ const footer = () => `
             <img class="logo-mark" src="/images/logo-mark-white.png" alt="" width="40" height="40">
             <span class="logo-text"><span class="acc">U</span>XO<span class="acc">N</span>IC</span>
           </a>
-          <p>UXONIC Books — CRM, billing and soon ERP and HR in one workspace. Manage your business. Grow smarter.</p>
+          <p>UXONIC Books — CRM, billing, inventory and soon HR in one workspace. Manage your business. Grow smarter.</p>
           <div class="socials">
             <a href="https://www.instagram.com/uxon.ic/" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
             <a href="https://wa.me/919843021717" target="_blank" rel="noopener" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
@@ -139,7 +139,7 @@ const footer = () => `
           <ul>
             <li><a href="/books/crm/">UXONIC CRM</a></li>
             <li><a href="/books/billing/">UXONIC Billing</a></li>
-            <li><a href="/books/erp/">UXONIC ERP · soon</a></li>
+            <li><a href="/books/erp/">UXONIC ERP</a></li>
             <li><a href="/books/hr/">UXONIC HR · soon</a></li>
             <li><a href="/books/#pricing">Pricing</a></li>
           </ul>
@@ -185,7 +185,8 @@ const SIDE = [
   ['g', 'Workspace'], ['overview', 'fa-house', 'Overview'],
   ['g', 'CRM'], ['leads', 'fa-user-plus', 'Leads'], ['pipeline', 'fa-table-columns', 'Pipeline'], ['contacts', 'fa-address-book', 'Contacts'], ['tasks', 'fa-list-check', 'Tasks'],
   ['g', 'Billing'], ['quotes', 'fa-file-lines', 'Quotations'], ['invoices', 'fa-file-invoice', 'Invoices'], ['payments', 'fa-indian-rupee-sign', 'Payments'], ['expenses', 'fa-receipt', 'Expenses'],
-  ['g', 'Coming soon'], ['erp', 'fa-boxes-stacked', 'ERP', true], ['hr', 'fa-id-badge', 'HR', true],
+  ['g', 'ERP'], ['products', 'fa-boxes-stacked', 'Products'], ['stock', 'fa-warehouse', 'Stock'], ['purchases', 'fa-truck', 'Purchases'],
+  ['g', 'Coming soon'], ['hr', 'fa-id-badge', 'HR', true],
 ];
 const shot = (on, url, main) => `
           <div class="device-stage" aria-hidden="true">
@@ -271,7 +272,7 @@ ${SINGLE_APPS.map(([k, name, what, price, icon]) => `              <a class="app
 const XL = [
   ['crm', '/books/crm/', 'fa-user-plus', 'UXONIC CRM', 'Leads, pipeline, tasks'],
   ['billing', '/books/billing/', 'fa-file-invoice', 'UXONIC Billing', 'Quotes, invoices, payments'],
-  ['erp', '/books/erp/', 'fa-boxes-stacked', 'UXONIC ERP', 'Coming soon'],
+  ['erp', '/books/erp/', 'fa-boxes-stacked', 'UXONIC ERP', 'Products, stock, purchases'],
   ['hr', '/books/hr/', 'fa-id-badge', 'UXONIC HR', 'Coming soon'],
 ];
 const xlinks = (active) => `
@@ -287,7 +288,7 @@ ${XL.map(([k, href, ic, t, s]) => `            <a href="${href}" class="card xli
         </div>
       </section>`;
 
-const MODULE_OPTS = ['CRM', 'Billing', 'CRM + Billing', 'ERP (coming soon)', 'HR (coming soon)', 'Everything'];
+const MODULE_OPTS = ['CRM', 'Billing', 'ERP', 'CRM + Billing', 'HR (coming soon)', 'Everything'];
 const waitlist = ({ module, title, lead, points }) => `
       <section class="section" id="early-access" style="padding-top:0" data-glow>
         <div class="container">
@@ -441,7 +442,7 @@ const suite = head({ title: 'UXONIC Books | GST Billing, CRM, Inventory & HR Sof
 ${shot('overview', 'app.uxonicdigital.com', suiteMain)}
         </div>
       </section>
-${strip([['fa-user-plus', 'Leads &amp; contacts'], ['fa-table-columns', 'Sales pipeline'], ['fa-list-check', 'Tasks &amp; reminders'], ['fa-file-lines', 'Quotations'], ['fa-file-invoice', 'GST invoices'], ['fa-indian-rupee-sign', 'Payments &amp; UPI'], ['fa-receipt', 'Expenses'], ['fa-chart-line', 'Reports']])}
+${strip([['fa-user-plus', 'Leads &amp; contacts'], ['fa-table-columns', 'Sales pipeline'], ['fa-list-check', 'Tasks &amp; reminders'], ['fa-file-lines', 'Quotations'], ['fa-file-invoice', 'GST invoices'], ['fa-indian-rupee-sign', 'Payments &amp; UPI'], ['fa-boxes-stacked', 'Stock &amp; godowns'], ['fa-truck', 'Purchase orders'], ['fa-chart-line', 'Reports']])}
 
       <section class="section" data-glow>
         <div class="container">
@@ -463,13 +464,13 @@ ${secHead('Four modules. <em>One workspace.</em>', 'Switch on what you need toda
               <ul><li>Quotations &amp; invoices</li><li>Payments &amp; reminders</li><li>Expenses &amp; profit</li></ul>
               <span class="more">Explore Billing <i class="fas fa-arrow-right"></i></span>
             </a>
-            <a href="/books/erp/" class="card mod-card is-soon lift">
-              <span class="badge-s badge-soon">Coming soon</span>
+            <a href="/books/erp/" class="card mod-card lift">
+              <span class="badge-s badge-live">Live</span>
               <span class="mod-ic"><i class="fas fa-boxes-stacked"></i></span>
               <h3><small>UXONIC</small>ERP</h3>
-              <p>Products, stock, purchases and branches — connected to your invoices.</p>
-              <ul><li>Stock &amp; warehouses</li><li>Suppliers &amp; purchase orders</li><li>Low-stock alerts</li></ul>
-              <span class="more">See what's planned <i class="fas fa-arrow-right"></i></span>
+              <p>Products, stock, purchases and godowns — connected to your invoices.</p>
+              <ul><li>Stock in every godown</li><li>Suppliers &amp; purchase orders</li><li>Low-stock alerts &amp; barcodes</li></ul>
+              <span class="more">Explore ERP <i class="fas fa-arrow-right"></i></span>
             </a>
             <a href="/books/hr/" class="card mod-card is-soon lift">
               <span class="badge-s badge-soon">Coming soon</span>
@@ -558,14 +559,14 @@ ${fCards([
       </section>
 ${pricing()}
 ${faq([
-  ['What is UXONIC Books?', 'One online workspace for running a small business: a CRM for leads and deals, and Billing for quotations, invoices, payments and expenses. ERP (stock and purchases) and HR (employees and attendance) are being built next and will appear in the same workspace.'],
+  ['What is UXONIC Books?', 'One online workspace for running a small business: a CRM for leads and deals, Billing for quotations, invoices, payments and expenses, and ERP for products, stock and purchases. HR (employees, attendance and leave) is being built next and will appear in the same workspace.'],
   ['Do I need a separate login for each module?', 'No. One account, one workspace and one subscription. Modules are switched on inside your workspace based on your plan.'],
   ['Is there a free trial?', 'Yes — 14 days with Growth plan features, no payment details needed. If you do not subscribe, your workspace becomes read-only; your data is kept and you can still export it.'],
   ['How do I pay?', 'Monthly or yearly through Razorpay (UPI, cards, net banking). Yearly plans cost 10 months — two months free. Prices exclude GST.'],
   ['Can my team use it?', 'Yes. Growth includes 5 users and Business 15. Invite them by email and give each person the Admin, Manager or Employee role.'],
   ['When can I start?', 'Right now. Create your account, confirm your email and your workspace is ready in a minute — or sign up with your Google account. Prefer help? Message us on WhatsApp and we will set it up with you.'],
 ])}
-${startBlock({ title: 'Start today. <em>Grow smarter.</em>', lead: 'Your workspace is ready in a minute. 14 days free, no card needed.', points: ['CRM + Billing included in the trial', 'Sign up with email or Google', 'Help importing your existing leads'] })}
+${startBlock({ title: 'Start today. <em>Grow smarter.</em>', lead: 'Your workspace is ready in a minute. 14 days free, no card needed.', points: ['CRM, Billing and ERP included in the trial', 'Sign up with email or Google', 'Help importing your leads and products'] })}
 ` + footer();
 
 /* ================= PAGE: CRM ================= */
@@ -832,6 +833,133 @@ ${xlinks('billing')}
 ${startBlock({ title: 'Send your next invoice <em>with UXONIC.</em>', lead: 'Add your logo, GSTIN and UPI ID once — every invoice after that takes a minute.', points: ['14-day free trial, no card', 'CGST / SGST / IGST worked out for you', 'UPI QR on every invoice'] })}
 ` + footer();
 
+/* ================= PAGE: ERP ================= */
+const erpMain = `
+                    <div class="shot-head"><b>Stock</b><span class="mini-btn">+ New product</span></div>
+                    <div class="kpis">
+                      <div class="kpi"><small>Stock value</small><b>₹4.8L</b></div>
+                      <div class="kpi"><small>Products</small><b>312</b></div>
+                      <div class="kpi"><small>Low stock</small><b style="color:#A26A00">7</b></div>
+                      <div class="kpi"><small>Open POs</small><b>3</b></div>
+                    </div>
+                    <div class="panel" style="padding:6px 8px">
+                      <table class="tbl">
+                        <thead><tr><th>Product</th><th class="hide-sm">Godown</th><th class="r">In hand</th><th>Status</th></tr></thead>
+                        <tbody>
+                          <tr><td>LED bulb 9W</td><td class="hide-sm">Main godown</td><td class="r">150 pcs</td><td><span class="st st-paid">In stock</span></td></tr>
+                          <tr><td>PVC pipe 1 inch</td><td class="hide-sm">Madurai branch</td><td class="r">42 m</td><td><span class="st st-paid">In stock</span></td></tr>
+                          <tr><td>Extension board</td><td class="hide-sm">Main godown</td><td class="r">6 pcs</td><td><span class="st st-part">Low stock</span></td></tr>
+                          <tr><td>Ceiling fan 48"</td><td class="hide-sm">Main godown</td><td class="r">0 pcs</td><td><span class="st st-over">Out of stock</span></td></tr>
+                        </tbody>
+                      </table>
+                    </div>`;
+
+const ledgerPanel = `
+              <div class="panel" style="padding:16px">
+                <div class="shot-head" style="margin-bottom:10px"><b style="font-size:16px">LED bulb 9W · stock history</b><span class="st st-paid">150 pcs</span></div>
+                <table class="tbl">
+                  <thead><tr><th>When</th><th>Type</th><th class="r">Qty</th><th class="hide-sm">Source</th></tr></thead>
+                  <tbody>
+                    <tr><td>Today</td><td><span class="st st-part">Sale</span></td><td class="r">−30</td><td class="hide-sm">INV/26-27/0118</td></tr>
+                    <tr><td>10 Nov</td><td><span class="st st-paid">Purchase</span></td><td class="r">+50</td><td class="hide-sm">PO/26-27/0001</td></tr>
+                    <tr><td>09 Nov</td><td><span class="st st-sent">Transfer</span></td><td class="r">−30</td><td class="hide-sm">To Madurai branch</td></tr>
+                    <tr><td>01 Nov</td><td><span class="st st-paid">Opening</span></td><td class="r">+160</td><td class="hide-sm">Opening stock</td></tr>
+                  </tbody>
+                </table>
+              </div>`;
+
+const poPanel = `
+              <div class="panel" style="padding:16px">
+                <div class="shot-head" style="margin-bottom:10px"><b style="font-size:16px">PO/26-27/0007 · Sri Murugan Electricals</b><span class="st st-part">Partly received</span></div>
+                <table class="tbl">
+                  <thead><tr><th>Product</th><th class="r">Ordered</th><th class="r">Received</th></tr></thead>
+                  <tbody>
+                    <tr><td>Extension board 4-way</td><td class="r">30</td><td class="r">30</td></tr>
+                    <tr><td>Ceiling fan 48"</td><td class="r">12</td><td class="r">5</td></tr>
+                    <tr><td>Switch 6A (box of 20)</td><td class="r">10</td><td class="r">0</td></tr>
+                  </tbody>
+                </table>
+                <div class="tot" style="display:grid;gap:4px;margin:12px 0 0 auto;width:min(240px,100%);font-size:12px">
+                  <div style="display:flex;justify-content:space-between;font-weight:600;color:var(--ink);border-top:1px solid var(--ink);padding-top:6px"><span>PO total</span><span>₹48,380</span></div>
+                </div>
+              </div>`;
+
+const labelsPanel = `
+              <div class="panel" style="padding:16px">
+                <div class="shot-head" style="margin-bottom:12px"><b style="font-size:16px">Barcode labels</b><span class="st st-draft">A4 · 3 per row</span></div>
+                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">${['LED bulb 9W', 'Extension board', 'PVC pipe 1"'].map((n, i) => `<div style="border:1px solid var(--border);border-radius:8px;padding:8px;text-align:center;background:#fff;color:#111"><div style="font-size:10px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${n}</div><div style="height:30px;margin:6px 0;background:repeating-linear-gradient(90deg,#111 0 ${1 + (i % 2)}px,#fff ${1 + (i % 2)}px ${3 + i}px,#111 ${3 + i}px ${5 + i}px,#fff ${5 + i}px 7px)"></div><div style="font-size:9px;font-family:monospace">89012345${i}789${i}</div><div style="font-size:11px;font-weight:700">₹${[142, 531, 89][i]}</div></div>`).join('')}</div>
+              </div>`;
+
+const erp = head({ title: 'Inventory & Stock Management Software for Tamil Nadu | UXONIC ERP', desc: 'Products, stock in every godown or branch, suppliers, purchase orders, low-stock alerts and barcode labels — connected to your GST invoices. Inventory software for shops, traders and distributors in Tamil Nadu.', path: '/books/erp/', crumbName: 'UXONIC ERP', product: { name: 'UXONIC ERP', price: 399 } })
+  + header('erp') + `
+      <section class="hero">
+        <div class="container hero-inner">
+          <div class="eyebrow" data-hero="eyebrow"><b>ERP</b> Part of UXONIC Books</div>
+          <h1 class="hero-title" data-split>
+            <span class="line line-1">Know your stock.</span>
+            <span class="line line-2">In every godown.</span>
+          </h1>
+          <p class="hero-sub" data-hero="sub">UXONIC ERP keeps your products, stock, suppliers and purchases together — and because it sits next to your invoices, every sale reduces stock on its own.</p>
+          <div class="hero-ctas" data-hero="ctas">
+            <a href="${SIGNUP}" class="btn btn-lime">Start free trial <i class="fas fa-arrow-right"></i></a>
+            <a href="#features" class="btn btn-ghost">See features</a>
+          </div>
+${shot('stock', 'books.uxonicdigital.com/erp/stock', erpMain)}
+        </div>
+      </section>
+${strip([['fa-tags', 'Products &amp; services'], ['fa-warehouse', 'Godowns &amp; branches'], ['fa-right-left', 'Stock transfers'], ['fa-truck', 'Suppliers'], ['fa-clipboard-list', 'Purchase orders'], ['fa-triangle-exclamation', 'Low-stock alerts'], ['fa-barcode', 'Barcode labels'], ['fa-file-csv', 'Stock export']])}
+
+      <section class="section" id="features" data-glow>
+        <div class="container">
+${secHead('Stock that <em>keeps itself up to date</em>', 'Made for shops, traders, distributors and contractors who are tired of counting on paper.')}
+${fCards([
+  ['fa-tags', 'Products &amp; services', 'One list with SKU, barcode, HSN, GST rate, unit, selling price and cost.', ['Categories and units (pcs, kg, m, box…)', 'Goods with stock, services without', 'Shared with your invoice lines']],
+  ['fa-warehouse', 'Stock per godown', 'See what is in hand in each godown or branch — and the total.', ['Stock in, stock out, physical count', 'Move stock between godowns', 'Opening stock in minutes']],
+  ['fa-file-invoice', 'Linked to invoices', 'Issue a GST invoice and the items leave stock automatically. Void it and they come back.', ['Pick products on the invoice', 'Choose which godown it ships from', 'No double entry']],
+  ['fa-clipboard-list', 'Suppliers &amp; purchase orders', 'Raise a PO, mark it ordered, then receive goods — all at once or in parts.', ['Automatic PO numbers per year', 'Partly received tracking', 'Received stock costed at the PO rate']],
+  ['fa-triangle-exclamation', 'Low-stock alerts', 'Set a reorder level per product and see what to buy before you run out.', ['Low and out-of-stock lists', 'On your dashboard every morning', 'Stock value at cost']],
+  ['fa-barcode', 'Barcode labels', 'Print Code 128 labels with name and price; scan to find a product instantly.', ['A4 sheets, 3 labels per row', 'Works with any USB barcode scanner', 'Your own codes or SKUs']],
+])}
+        </div>
+      </section>
+
+      <section class="section" data-glow>
+        <div class="container">
+${split({ kicker: '<i class="fas fa-clock-rotate-left"></i> Stock history', title: 'Every piece, <em>accounted for</em>', text: 'Stock only changes through a recorded entry — a sale, a purchase, a count or a transfer — with who did it and why. Entries cannot be edited later, so the numbers always add up.', ticks: ['Linked back to the invoice or purchase order', 'Reason on every manual change', 'Filter by godown, product or type'], stage: ledgerPanel })}
+${split({ rev: true, kicker: '<i class="fas fa-truck"></i> Purchases', title: 'Order it. Receive it. <em>Done.</em>', text: 'Raise a purchase order to your supplier, mark it ordered, and receive goods as they arrive. Stock goes up the moment you receive — never before, never twice.', ticks: ['Receive in parts; we track what is pending', 'Cannot receive more than you ordered', 'GST input shown on every PO'], stage: poPanel, stageClass: 'lime' })}
+${split({ kicker: '<i class="fas fa-barcode"></i> Labels', title: 'Scan, sell, <em>move on</em>', text: 'Print barcode stickers for your shelves and boxes. At the counter, scan a product into the invoice instead of searching for it.', ticks: ['Code 128 — readable by every scanner', 'Price including GST on the label', 'Print as many copies as you need'], stage: labelsPanel })}
+        </div>
+      </section>
+
+      <section class="section" style="padding-top:0">
+        <div class="container">
+${secHead('The right access for <em>every role</em>', 'Permissions are enforced in the database, so a hidden button is never the only thing keeping stock safe.', 'h-lg')}
+          <div class="card roles" data-rise>
+            <table>
+              <thead><tr><th>What they can do</th><th>Admin</th><th>Manager</th><th>Employee</th></tr></thead>
+              <tbody>
+                <tr><td>View products and stock</td><td><span class="yes"><i class="fas fa-check"></i></span></td><td><span class="yes"><i class="fas fa-check"></i></span></td><td><span class="yes"><i class="fas fa-check"></i></span></td></tr>
+                <tr><td>Add and edit products</td><td><span class="yes"><i class="fas fa-check"></i></span></td><td><span class="yes"><i class="fas fa-check"></i></span></td><td><span class="no"><i class="fas fa-minus"></i></span></td></tr>
+                <tr><td>Adjust and transfer stock</td><td><span class="yes"><i class="fas fa-check"></i></span></td><td><span class="yes"><i class="fas fa-check"></i></span></td><td><span class="no"><i class="fas fa-minus"></i></span></td></tr>
+                <tr><td>Suppliers and purchase orders</td><td><span class="yes"><i class="fas fa-check"></i></span></td><td><span class="yes"><i class="fas fa-check"></i></span></td><td><span class="no"><i class="fas fa-minus"></i></span></td></tr>
+                <tr><td>Godowns and categories</td><td><span class="yes"><i class="fas fa-check"></i></span></td><td><span class="yes"><i class="fas fa-check"></i></span></td><td><span class="no"><i class="fas fa-minus"></i></span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+${pricing('ERP is in <em>UXONIC Books</em>', 'Get ERP with CRM, Billing and HR in one subscription — or take UXONIC ERP on its own. 14-day free trial.')}
+${faq([
+  ['Does selling on an invoice reduce stock?', 'Yes. When you issue an invoice with products on it, those quantities leave stock from the godown you chose (or your default godown). If you void the invoice, the stock comes back.'],
+  ['Can I manage more than one godown or branch?', 'Yes. Add as many godowns as you need, see stock in each, and move stock between them with a transfer entry.'],
+  ['How do I enter my current stock?', 'Add your products, then use Update stock → Opening stock for each one. Prefer help? Send us your Excel sheet on WhatsApp and we will help you load it.'],
+  ['Does it work with a barcode scanner?', 'Yes. Any USB or Bluetooth scanner that types the code works — scan into the product search or the invoice product picker. You can also print Code 128 labels from UXONIC ERP.'],
+  ['What about manufacturing, batches and expiry?', 'Not yet. UXONIC ERP covers products, stock, godowns, suppliers and purchase orders today. Tell us what you need next — we build in the order our customers ask.'],
+])}
+${xlinks('erp')}
+${startBlock({ title: 'Count less. <em>Sell more.</em>', lead: 'Add your products and opening stock today — your next invoice will update stock for you.', points: ['14-day free trial, no card', 'Stock linked to your GST invoices', 'Works on phone, tablet and laptop'] })}
+` + footer();
+
 /* ================= COMING SOON PAGES ================= */
 const soon = ({ key, path, title, desc, crumbName, price, eyebrow, h1a, h1b, sub, icons, scopeTitle, scopeLead, scope, road, why }) =>
   head({ title, desc, path, crumbName, product: { name: crumbName, price } }) + header(key) + `
@@ -846,7 +974,7 @@ ${keypad(icons)}
           <p class="hero-sub" data-hero="sub">${sub}</p>
           <div class="hero-ctas" data-hero="ctas">
             <a href="#early-access" class="btn btn-lime">Notify me at launch <i class="fas fa-arrow-right"></i></a>
-            <a href="${SIGNUP}" class="btn btn-ghost">Start with CRM &amp; Billing</a>
+            <a href="${SIGNUP}" class="btn btn-ghost">Start with CRM, Billing &amp; ERP</a>
           </div>
           <p class="hero-note" data-hero="sub"><span class="soon-badge">In development</span></p>
         </div>
@@ -884,32 +1012,8 @@ ${why[2].map((p) => `              <li><i class="fas fa-check"></i> ${p}</li>`).
         </div>
       </section>
 ${xlinks(key)}
-${waitlist({ module: key === 'erp' ? 'ERP (coming soon)' : 'HR (coming soon)', title: `Be the first to try <em>UXONIC ${key.toUpperCase()}.</em>`, lead: 'Join the list and we will invite you to the beta. Already need CRM or Billing? You can start with those today and add this later.', points: ['Early beta invitation', 'Tell us what you need most', 'Founding-customer pricing'] })}
+${waitlist({ module: 'HR (coming soon)', title: `Be the first to try <em>UXONIC ${key.toUpperCase()}.</em>`, lead: 'Join the list and we will invite you to the beta. Already need CRM, Billing or ERP? You can start with those today and add HR later.', points: ['Early beta invitation', 'Tell us what you need most', 'Founding-customer pricing'] })}
 ` + footer();
-
-const erp = soon({
-  key: 'erp', path: '/books/erp/', crumbName: 'UXONIC ERP', price: 399,
-  title: 'Inventory & Stock Management Software for Tamil Nadu | UXONIC ERP',
-  desc: 'Products, stock in every godown or branch, suppliers, purchase orders and low-stock alerts — connected to your GST invoices. Inventory software for traders and small manufacturers in Tamil Nadu.',
-  eyebrow: 'ERP', h1a: 'Stock, purchases, operations.', h1b: 'All in one place.',
-  sub: 'UXONIC ERP will connect what you buy, what you stock and what you sell — inside the same workspace as your CRM and invoices.',
-  icons: [['fa-boxes-stacked'], ['fa-warehouse'], ['fa-barcode', 'is-ink'], ['fa-truck'], ['fa-cart-flatbed', 'is-lime'], ['fa-clipboard-list'], ['fa-store'], ['fa-chart-column'], ['fa-tags']],
-  scopeTitle: 'What UXONIC ERP <em>will do</em>', scopeLead: 'Planned scope — built for traders, contractors and small manufacturers.',
-  scope: [
-    ['fa-tags', 'Products &amp; services', 'One catalogue with categories and units, shared with your invoice line items.'],
-    ['fa-warehouse', 'Stock &amp; warehouses', 'Stock levels per warehouse or branch, with every movement recorded.', ['Stock in, out and transfer', 'Adjustments with a reason', 'Low-stock alerts']],
-    ['fa-truck', 'Suppliers &amp; purchases', 'Purchase orders to suppliers and goods-received notes when stock arrives.'],
-    ['fa-cart-shopping', 'Sales orders', 'Orders that reserve stock and flow straight into invoices.'],
-    ['fa-barcode', 'Barcode labels', 'Print labels for products and scan them in and out.'],
-    ['fa-chart-column', 'Branch reports', 'Stock value, movement and sales by branch.'],
-  ],
-  road: [
-    ['Stage 1', 'Catalogue &amp; stock', ['Products, categories, units', 'Warehouses and stock levels', 'Stock movements and adjustments']],
-    ['Stage 2', 'Buying', ['Suppliers', 'Purchase orders', 'Goods received and low-stock alerts']],
-    ['Stage 3', 'Selling &amp; branches', ['Sales orders linked to invoices', 'Barcode labels', 'Branch-wise reports']],
-  ],
-  why: ['Your stock will know about <em>your invoices</em>', 'Because ERP lives in the same workspace as Billing, selling an item on an invoice can update stock — no double entry, no second app.', ['One product list for stock and invoices', 'Same login and the same team roles', 'Old invoices never change when prices do', 'Switch it on when your plan includes it']],
-});
 
 const hr = soon({
   key: 'hr', path: '/books/hr/', crumbName: 'UXONIC HR', price: 299,
