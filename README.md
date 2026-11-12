@@ -18,6 +18,8 @@ erp/                      UXONIC's OWN internal ERP (our employees, payroll, inv
   me.html client.html     employee portal, client portal
   js/ erp.css
 admin/                    Website admin panel — /admin/ (jobs, applications, contacts, content)
+  books.html books.js     Admin → UXONIC Books: customers, revenue, payments, plans & prices
+                          (talks to the UXONIC Books database with the owner's Google sign-in)
 
 api/                      Vercel Functions (contact, apply, jobs, admin/*, erp)
 assets/

@@ -58,6 +58,10 @@
       "destination": "/admin/settings.html"
     },
     {
+      "source": "/admin/books",
+      "destination": "/admin/books.html"
+    },
+    {
       "source": "/erp",
       "destination": "/erp/index.html"
     },

@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>UXONIC Books — UXONIC Admin</title>
+  <meta name="robots" content="noindex,nofollow"/>
+  <link rel="icon" type="image/jpeg" href="/images/fav.jpeg"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous"/>
+  <link rel="stylesheet" href="/admin/assets/admin.css?v=2"/>
+  <link rel="stylesheet" href="/admin/assets/books.css?v=2"/>
+</head>
+<body>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <img src="/images/nav-logo-sm.png" alt="UXONIC" class="sidebar-logo-img"/>
+    <div><span class="sidebar-logo-text"><span>U</span>XO<span>N</span>IC</span><span class="sidebar-badge">Admin Panel</span></div>
+  </div>
+  <nav class="sidebar-nav">
+    <span class="sidebar-section-label">Main</span>
+    <a href="/admin/dashboard.html" class="nav-item" data-page="dashboard"><i class="fas fa-chart-pie"></i> Dashboard</a>
+    <span class="sidebar-section-label">Recruitment</span>
+    <a href="/admin/applications.html" class="nav-item" data-page="applications"><i class="fas fa-file-lines"></i> Applications</a>
+    <a href="/admin/jobs.html" class="nav-item" data-page="jobs"><i class="fas fa-briefcase"></i> Job Postings</a>
+    <span class="sidebar-section-label">Website</span>
+    <a href="/admin/content.html" class="nav-item" data-page="content"><i class="fas fa-pen-to-square"></i> Website Content</a>
+    <a href="/admin/contacts.html" class="nav-item" data-page="contacts"><i class="fas fa-envelope"></i> Messages</a>
+    <span class="sidebar-section-label">Business</span>
+    <a href="/admin/books.html" class="nav-item" data-page="books"><i class="fas fa-layer-group"></i> UXONIC Books</a>
+    <a href="/erp/" class="nav-item"><i class="fas fa-building"></i> ERP <span class="nav-badge">New</span></a>
+    <span class="sidebar-section-label">Account</span>
+    <a href="/admin/settings.html" class="nav-item" data-page="settings"><i class="fas fa-gear"></i> Settings</a>
+    <a href="/" target="_blank" class="nav-item"><i class="fas fa-arrow-up-right-from-square"></i> View Website</a>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="sidebar-user">
+      <div class="sidebar-user-avatar" id="sidebarUserAvatar">A</div>
+      <div class="sidebar-user-info">
+        <div class="sidebar-user-name" id="sidebarUserName">Admin</div>
+        <div class="sidebar-user-role" id="sidebarUserRole">superadmin</div>
+      </div>
+      <a href="#" data-action="logout" class="sidebar-logout" title="Logout"><i class="fas fa-right-from-bracket"></i></a>
+    </div>
+  </div>
+</aside>
+
+<div class="main-content">
+  <header class="topbar">
+    <button class="hamburger-btn" id="hamburgerBtn" aria-label="Open menu"><i class="fas fa-bars"></i></button>
+    <div>
+      <div class="topbar-title">UXONIC Books</div>
+      <div class="topbar-subtitle">Customers, subscriptions, revenue and plans</div>
+    </div>
+    <div class="topbar-spacer"></div>
+    <div class="bk-who" id="bkWho" hidden></div>
+    <a href="#" data-action="logout" class="btn btn-ghost btn-sm"><i class="fas fa-right-from-bracket"></i> Logout</a>
+  </header>
+
+  <main class="page-body">
+    <!-- Not connected / no access -->
+    <section id="bkGate" class="bk-gate" hidden>
+      <div class="table-card bk-gate-card">
+        <div class="bk-gate-icon"><i class="fas fa-layer-group"></i></div>
+        <h2 id="bkGateTitle">Connect UXONIC Books</h2>
+        <p id="bkGateBody">UXONIC Books runs on its own secure database. Sign in once with the Google account that owns UXONIC Books (<b>uxonicdigitalmedia@gmail.com</b>). You stay connected on this browser.</p>
+        <div class="bk-gate-actions">
+          <button class="btn btn-primary btn-lg" id="bkGoogle"><img src="/books/assets/google-g.svg" alt="" width="18" height="18"/> Sign in with Google</button>
+          <button class="btn btn-ghost btn-lg" id="bkSwitch" hidden>Use another account</button>
+        </div>
+        <p class="form-hint" id="bkGateHint"></p>
+      </div>
+    </section>
+
+    <div id="bkApp" hidden>
+      <div class="bk-tabs" role="tablist" aria-label="UXONIC Books sections">
+        <button role="tab" data-tab="overview"><i class="fas fa-chart-line"></i> Overview</button>
+        <button role="tab" data-tab="customers"><i class="fas fa-building"></i> Customers</button>
+        <button role="tab" data-tab="payments"><i class="fas fa-indian-rupee-sign"></i> Payments</button>
+        <button role="tab" data-tab="plans"><i class="fas fa-tags"></i> Plans &amp; prices</button>
+        <button role="tab" data-tab="settings"><i class="fas fa-sliders"></i> Settings</button>
+      </div>
+
+      <!-- OVERVIEW -->
+      <section data-panel="overview" role="tabpanel">
+        <div class="stats-grid" id="ovStats"></div>
+        <div class="bk-grid-2">
+          <div class="table-card">
+            <div class="table-card-header"><div class="table-card-title">Revenue received — last 12 months</div></div>
+            <div class="bk-chart" id="ovRevenue"></div>
+          </div>
+          <div class="table-card">
+            <div class="table-card-header"><div class="table-card-title">New workspaces — last 12 months</div></div>
+            <div class="bk-chart" id="ovSignups"></div>
+          </div>
+        </div>
+        <div class="bk-grid-3">
+          <div class="table-card">
+            <div class="table-card-header"><div class="table-card-title">Trials ending in 7 days</div></div>
+            <div id="ovTrials"></div>
+          </div>
+          <div class="table-card">
+            <div class="table-card-header"><div class="table-card-title">Renewals due &amp; overdue</div></div>
+            <div id="ovRenewals"></div>
+          </div>
+          <div class="table-card">
+            <div class="table-card-header"><div class="table-card-title">Newest workspaces</div></div>
+            <div id="ovRecent"></div>
+          </div>
+        </div>
+        <div class="table-card">
+          <div class="table-card-header"><div class="table-card-title">By plan</div></div>
+          <div class="table-wrap"><table>
+            <thead><tr><th>Plan</th><th>Type</th><th class="num">Workspaces</th><th class="num">Paying</th><th class="num">Monthly revenue (MRR)</th></tr></thead>
+            <tbody id="ovPlans"></tbody>
+          </table></div>
+        </div>
+      </section>
+
+      <!-- CUSTOMERS -->
+      <section data-panel="customers" role="tabpanel" hidden>
+        <div class="table-card">
+          <div class="filter-bar">
+            <input class="form-input" id="cuSearch" type="search" placeholder="Search business, owner email, phone, GSTIN" aria-label="Search customers"/>
+            <select class="form-select" id="cuState" aria-label="Filter by status"></select>
+            <select class="form-select" id="cuPlan" aria-label="Filter by plan"><option value="">All plans</option></select>
+            <span class="topbar-spacer"></span>
+            <span class="filter-label" id="cuCount"></span>
+          </div>
+          <div class="table-wrap"><table>
+            <thead><tr><th>Business</th><th>Owner</th><th>Plan</th><th>Status</th><th>Trial / paid till</th><th class="num">Users</th><th class="num">Paid so far</th><th>Joined</th></tr></thead>
+            <tbody id="cuRows"><tr><td colspan="8" class="table-empty">Loading…</td></tr></tbody>
+          </table></div>
+          <div class="pagination" id="cuPager"></div>
+        </div>
+      </section>
+
+      <!-- PAYMENTS -->
+      <section data-panel="payments" role="tabpanel" hidden>
+        <div class="table-card">
+          <div class="filter-bar">
+            <input class="form-input" id="paSearch" type="search" placeholder="Search business or reference" aria-label="Search payments"/>
+            <span class="topbar-spacer"></span>
+            <span class="filter-label" id="paSum"></span>
+          </div>
+          <div class="table-wrap"><table>
+            <thead><tr><th>Date</th><th>Business</th><th>Plan</th><th>Method</th><th>Reference</th><th class="num">Amount</th><th>Status</th><th></th></tr></thead>
+            <tbody id="paRows"><tr><td colspan="8" class="table-empty">Loading…</td></tr></tbody>
+          </table></div>
+          <div class="pagination" id="paPager"></div>
+        </div>
+        <p class="form-hint">Record a UPI, bank or cash payment from the customer's page (Customers → open a business → Record payment). Online Razorpay payments will appear here automatically once Razorpay is switched on.</p>
+      </section>
+
+      <!-- PLANS -->
+      <section data-panel="plans" role="tabpanel" hidden>
+        <div class="table-card">
+          <div class="table-card-header">
+            <div>
+              <div class="table-card-title">Plans &amp; prices</div>
+              <div class="text-xs text-muted">Changes show on the website pricing and in the app straight away. Existing customers keep their plan; new limits apply to them too.</div>
+            </div>
+            <button class="btn btn-primary btn-sm" id="plNew"><i class="fas fa-plus"></i> New plan</button>
+          </div>
+          <div class="table-wrap"><table>
+            <thead><tr><th>Plan</th><th>Apps</th><th class="num">Monthly</th><th class="num">Yearly</th><th class="num">Users</th><th class="num">Contacts</th><th class="num">Staff (HR)</th><th class="num">Workspaces</th><th>Shown</th><th></th></tr></thead>
+            <tbody id="plRows"></tbody>
+          </table></div>
+        </div>
+      </section>
+
+      <!-- SETTINGS -->
+      <section data-panel="settings" role="tabpanel" hidden>
+        <div class="table-card bk-narrow">
+          <div class="table-card-header"><div class="table-card-title">Free trial</div></div>
+          <form id="stForm" class="bk-form">
+            <div class="form-group">
+              <label class="form-label" for="stDays">Trial length (days)</label>
+              <input class="form-input" id="stDays" type="number" min="1" max="90" required/>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="stPlan">Trial plan when someone signs up from the UXONIC Books page</label>
+              <select class="form-select" id="stPlan"></select>
+              <p class="form-hint">Sign-ups from an app's own page (for example /books/crm/) start on that app's plan.</p>
+            </div>
+            <button class="btn btn-primary" type="submit">Save</button>
+          </form>
+        </div>
+        <div class="table-card bk-narrow">
+          <div class="table-card-header"><div class="table-card-title">Who can open this section</div></div>
+          <div class="bk-pad text-sm">
+            <p>Only UXONIC Books owner accounts. Today: <b>uxonicdigitalmedia@gmail.com</b>. To add another person, they sign in to UXONIC Books once, then run this in the Supabase SQL editor (UXONIC Books project):</p>
+            <pre class="bk-code">insert into public.platform_admins (user_id)
+select id from auth.users where email = 'their@email.com';</pre>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
+
+<!-- Customer detail -->
+<div class="modal-overlay" id="orgModal">
+  <div class="modal bk-modal-wide" role="dialog" aria-modal="true" aria-labelledby="orgTitle">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="orgTitle">Business</div>
+        <div class="text-xs text-muted" id="orgSub"></div>
+      </div>
+      <button class="modal-close" data-close="orgModal" aria-label="Close"><i class="fas fa-xmark"></i></button>
+    </div>
+    <div id="orgBody"></div>
+  </div>
+</div>
+
+<!-- Plan editor -->
+<div class="modal-overlay" id="planModal">
+  <div class="modal bk-modal-wide" role="dialog" aria-modal="true" aria-labelledby="planTitle">
+    <div class="modal-header">
+      <div class="modal-title" id="planTitle">Edit plan</div>
+      <button class="modal-close" data-close="planModal" aria-label="Close"><i class="fas fa-xmark"></i></button>
+    </div>
+    <form id="planForm" class="bk-form" novalidate></form>
+  </div>
+</div>
+
+<div class="bk-tip" id="bkTip" role="tooltip" hidden></div>
+
+<script src="/books/assets/books-config.js?v=1"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script type="module" src="/admin/books.js?v=1"></script>
+</body>
+</html>

@@ -310,13 +310,13 @@
           </div>
           <div class="price-grid" data-stagger>
 
-            <article class="card price-card">
+            <article class="card price-card" data-plan="starter">
               
               <h3>Books Starter</h3>
               <p class="for">For owners and very small teams who want everything in one place.</p>
               <div class="amt" data-month="599"><b>₹599</b><span>/ month</span></div>
               <div class="gst">+ GST</div>
-              <div class="limits"><div><b>2</b><span>users</span></div><div><b>1,000</b><span>contacts</span></div></div>
+              <div class="limits"><div><b data-f="users">2</b><span>users</span></div><div><b data-f="contacts">1,000</b><span>contacts</span></div></div>
               <ul>
                 <li><i class="fas fa-check"></i> All apps: CRM · Billing · ERP · HR</li>
                 <li><i class="fas fa-check"></i> GST invoices &amp; quotations</li>
@@ -325,16 +325,16 @@
                 <li><i class="fas fa-check"></i> Attendance for up to 10 staff</li>
                 <li class="off"><i class="fas fa-minus"></i> Multiple pipelines &amp; export</li>
               </ul>
-              <a href="https://books.uxonicdigital.com/signup" class="btn btn-ink">Start free trial <i class="fas fa-arrow-right"></i></a>
+              <a href="https://books.uxonicdigital.com/signup?plan=starter" class="btn btn-ink">Start free trial <i class="fas fa-arrow-right"></i></a>
             </article>
 
-            <article class="card price-card is-pop">
+            <article class="card price-card is-pop" data-plan="growth">
               <span class="pop">Most popular</span>
               <h3>Books Growth</h3>
               <p class="for">For growing teams that sell, bill and manage stock together.</p>
               <div class="amt" data-month="999"><b>₹999</b><span>/ month</span></div>
               <div class="gst">+ GST</div>
-              <div class="limits"><div><b>5</b><span>users</span></div><div><b>5,000</b><span>contacts</span></div></div>
+              <div class="limits"><div><b data-f="users">5</b><span>users</span></div><div><b data-f="contacts">5,000</b><span>contacts</span></div></div>
               <ul>
                 <li><i class="fas fa-check"></i> All apps: CRM · Billing · ERP · HR</li>
                 <li><i class="fas fa-check"></i> Everything in Starter</li>
@@ -343,16 +343,16 @@
                 <li><i class="fas fa-check"></i> Attendance for up to 50 staff</li>
                 <li class="off"><i class="fas fa-minus"></i> Multiple pipelines &amp; export</li>
               </ul>
-              <a href="https://books.uxonicdigital.com/signup" class="btn btn-lime">Start free trial <i class="fas fa-arrow-right"></i></a>
+              <a href="https://books.uxonicdigital.com/signup?plan=growth" class="btn btn-lime">Start free trial <i class="fas fa-arrow-right"></i></a>
             </article>
 
-            <article class="card price-card">
+            <article class="card price-card" data-plan="business">
               
               <h3>Books Business</h3>
               <p class="for">For companies with several teams, branches and pipelines.</p>
               <div class="amt" data-month="1999"><b>₹1,999</b><span>/ month</span></div>
               <div class="gst">+ GST</div>
-              <div class="limits"><div><b>15</b><span>users</span></div><div><b>20,000</b><span>contacts</span></div></div>
+              <div class="limits"><div><b data-f="users">15</b><span>users</span></div><div><b data-f="contacts">20,000</b><span>contacts</span></div></div>
               <ul>
                 <li><i class="fas fa-check"></i> All apps: CRM · Billing · ERP · HR</li>
                 <li><i class="fas fa-check"></i> Everything in Growth</li>
@@ -361,7 +361,7 @@
                 <li><i class="fas fa-check"></i> Data export</li>
                 <li><i class="fas fa-check"></i> Priority support</li>
               </ul>
-              <a href="https://books.uxonicdigital.com/signup" class="btn btn-ink">Start free trial <i class="fas fa-arrow-right"></i></a>
+              <a href="https://books.uxonicdigital.com/signup?plan=business" class="btn btn-ink">Start free trial <i class="fas fa-arrow-right"></i></a>
             </article>
           </div>
 
@@ -371,10 +371,10 @@
               <p>Each app on its own for up to 2 users. <b>Need 2 or more apps? UXONIC Books costs less.</b></p>
             </div>
             <div class="apps-price-grid">
-              <a class="apps-price-item" href="/books/crm/"><i class="fas fa-user-plus"></i><span><b>UXONIC CRM</b><small>Leads, pipeline, tasks</small></span><span class="amt" data-month="299"><b>₹299</b><span>/ month</span></span></a>
-              <a class="apps-price-item" href="/books/billing/"><i class="fas fa-file-invoice"></i><span><b>UXONIC Billing</b><small>GST invoices, quotes, payments</small></span><span class="amt" data-month="299"><b>₹299</b><span>/ month</span></span></a>
-              <a class="apps-price-item" href="/books/erp/"><i class="fas fa-boxes-stacked"></i><span><b>UXONIC ERP</b><small>Products, stock, purchases</small></span><span class="amt" data-month="399"><b>₹399</b><span>/ month</span></span></a>
-              <a class="apps-price-item" href="/books/hr/"><i class="fas fa-id-badge"></i><span><b>UXONIC HR</b><small>Employees, attendance, leave</small></span><span class="amt" data-month="299"><b>₹299</b><span>/ month</span></span></a>
+              <a class="apps-price-item" href="/books/crm/" data-plan="crm_app"><i class="fas fa-user-plus"></i><span><b>UXONIC CRM</b><small>Leads, pipeline, tasks</small></span><span class="amt" data-month="299"><b>₹299</b><span>/ month</span></span></a>
+              <a class="apps-price-item" href="/books/billing/" data-plan="billing_app"><i class="fas fa-file-invoice"></i><span><b>UXONIC Billing</b><small>GST invoices, quotes, payments</small></span><span class="amt" data-month="299"><b>₹299</b><span>/ month</span></span></a>
+              <a class="apps-price-item" href="/books/erp/" data-plan="erp_app"><i class="fas fa-boxes-stacked"></i><span><b>UXONIC ERP</b><small>Products, stock, purchases</small></span><span class="amt" data-month="399"><b>₹399</b><span>/ month</span></span></a>
+              <a class="apps-price-item" href="/books/hr/" data-plan="hr_app"><i class="fas fa-id-badge"></i><span><b>UXONIC HR</b><small>Employees, attendance, leave</small></span><span class="amt" data-month="299"><b>₹299</b><span>/ month</span></span></a>
             </div>
           </div>
           <p class="price-foot">Prices exclude GST. Yearly plans cost 10 months. Upgrade from a single app to UXONIC Books any time — your data stays.</p>
@@ -495,7 +495,8 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-  <script src="/books/assets/suite.js?v=3"></script>
+  <script src="/books/assets/books-config.js?v=1"></script>
+  <script src="/books/assets/suite.js?v=4"></script>
   <script src="/assets/js/motion.js?v=4"></script>
 </body>
 

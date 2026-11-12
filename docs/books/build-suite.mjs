@@ -172,7 +172,8 @@ const footer = () => `
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-  <script src="/books/assets/suite.js?v=3"></script>
+  <script src="/books/assets/books-config.js?v=1"></script>
+  <script src="/books/assets/suite.js?v=4"></script>
   <script src="/assets/js/motion.js?v=4"></script>
 </body>
 
@@ -216,21 +217,23 @@ const kanban = (dragIdx = 1) => {
   return `<div class="kanban">${cols.map(([t, n, cards], ci) => `<div class="k-col${t === 'Won' ? ' won' : ''}"><small>${t} <em>${n}</em></small>${cards.map(([b, v, a], i) => `<div class="k-card${ci === dragIdx && i === 0 ? ' drag' : ''}"><b>${b}</b><div class="row"><span>${v}</span><span class="av">${a}</span></div></div>`).join('')}</div>`).join('')}</div>`;
 };
 
-const priceCard = ({ name, month, forWho, users, contacts, items, pop }) => `
-            <article class="card price-card${pop ? ' is-pop' : ''}">
+// data-plan: suite.js refreshes price, users and contacts from the live plans table (edited in Admin → UXONIC Books).
+const priceCard = ({ plan, name, month, forWho, users, contacts, items, pop }) => `
+            <article class="card price-card${pop ? ' is-pop' : ''}" data-plan="${plan}">
               ${pop ? '<span class="pop">Most popular</span>' : ''}
               <h3>${name}</h3>
               <p class="for">${forWho}</p>
               <div class="amt" data-month="${month}"><b>₹${month.toLocaleString('en-IN')}</b><span>/ month</span></div>
               <div class="gst">+ GST</div>
-              <div class="limits"><div><b>${users}</b><span>${users === '1' ? 'user' : 'users'}</span></div><div><b>${contacts}</b><span>contacts</span></div></div>
+              <div class="limits"><div><b data-f="users">${users}</b><span>${users === '1' ? 'user' : 'users'}</span></div><div><b data-f="contacts">${contacts}</b><span>contacts</span></div></div>
               <ul>
 ${items.map(([t, off]) => `                <li${off ? ' class="off"' : ''}><i class="fas ${off ? 'fa-minus' : 'fa-check'}"></i> ${t}</li>`).join('\n')}
               </ul>
-              <a href="${SIGNUP}" class="btn ${pop ? 'btn-lime' : 'btn-ink'}">Start free trial <i class="fas fa-arrow-right"></i></a>
+              <a href="${SIGNUP}?plan=${plan}" class="btn ${pop ? 'btn-lime' : 'btn-ink'}">Start free trial <i class="fas fa-arrow-right"></i></a>
             </article>`;
 
-// PROPOSED prices (₹/month, excl. GST) — confirm before publishing. The same numbers live in the app's plans table.
+// Fallback prices (₹/month, excl. GST) for the static HTML. The live numbers come from the app's plans table,
+// which the owner edits in Admin → UXONIC Books → Plans (suite.js swaps them in on page load).
 const SINGLE_APPS = [
   ['crm', 'UXONIC CRM', 'Leads, pipeline, tasks', 299, 'fa-user-plus'],
   ['billing', 'UXONIC Billing', 'GST invoices, quotes, payments', 299, 'fa-file-invoice'],
@@ -251,9 +254,9 @@ const pricing = (title = 'One subscription. <em>Every app.</em>', lead = 'UXONIC
             <button type="button" data-v="yearly">Yearly <em>2 months free</em></button>
           </div>
           <div class="price-grid" data-stagger>
-${priceCard({ name: 'Books Starter', month: 599, forWho: 'For owners and very small teams who want everything in one place.', users: '2', contacts: '1,000', items: [['All apps: CRM · Billing · ERP · HR'], ['GST invoices &amp; quotations'], ['Leads, pipeline &amp; tasks'], ['Stock &amp; purchases'], ['Attendance for up to 10 staff'], ['Multiple pipelines &amp; export', true]] })}
-${priceCard({ name: 'Books Growth', month: 999, pop: true, forWho: 'For growing teams that sell, bill and manage stock together.', users: '5', contacts: '5,000', items: [['All apps: CRM · Billing · ERP · HR'], ['Everything in Starter'], ['Expenses &amp; approvals'], ['Team assignment &amp; reports'], ['Attendance for up to 50 staff'], ['Multiple pipelines &amp; export', true]] })}
-${priceCard({ name: 'Books Business', month: 1999, forWho: 'For companies with several teams, branches and pipelines.', users: '15', contacts: '20,000', items: [['All apps: CRM · Billing · ERP · HR'], ['Everything in Growth'], ['Multiple pipelines &amp; branches'], ['Advanced permissions'], ['Data export'], ['Priority support']] })}
+${priceCard({ plan: 'starter', name: 'Books Starter', month: 599, forWho: 'For owners and very small teams who want everything in one place.', users: '2', contacts: '1,000', items: [['All apps: CRM · Billing · ERP · HR'], ['GST invoices &amp; quotations'], ['Leads, pipeline &amp; tasks'], ['Stock &amp; purchases'], ['Attendance for up to 10 staff'], ['Multiple pipelines &amp; export', true]] })}
+${priceCard({ plan: 'growth', name: 'Books Growth', month: 999, pop: true, forWho: 'For growing teams that sell, bill and manage stock together.', users: '5', contacts: '5,000', items: [['All apps: CRM · Billing · ERP · HR'], ['Everything in Starter'], ['Expenses &amp; approvals'], ['Team assignment &amp; reports'], ['Attendance for up to 50 staff'], ['Multiple pipelines &amp; export', true]] })}
+${priceCard({ plan: 'business', name: 'Books Business', month: 1999, forWho: 'For companies with several teams, branches and pipelines.', users: '15', contacts: '20,000', items: [['All apps: CRM · Billing · ERP · HR'], ['Everything in Growth'], ['Multiple pipelines &amp; branches'], ['Advanced permissions'], ['Data export'], ['Priority support']] })}
           </div>
 
           <div class="apps-price" data-rise>
@@ -262,7 +265,7 @@ ${priceCard({ name: 'Books Business', month: 1999, forWho: 'For companies with s
               <p>Each app on its own for up to 2 users. <b>Need 2 or more apps? UXONIC Books costs less.</b></p>
             </div>
             <div class="apps-price-grid">
-${SINGLE_APPS.map(([k, name, what, price, icon]) => `              <a class="apps-price-item" href="/books/${k}/"><i class="fas ${icon}"></i><span><b>${name}</b><small>${what}</small></span><span class="amt" data-month="${price}"><b>₹${price}</b><span>/ month</span></span></a>`).join('\n')}
+${SINGLE_APPS.map(([k, name, what, price, icon]) => `              <a class="apps-price-item" href="/books/${k}/" data-plan="${k}_app"><i class="fas ${icon}"></i><span><b>${name}</b><small>${what}</small></span><span class="amt" data-month="${price}"><b>₹${price}</b><span>/ month</span></span></a>`).join('\n')}
             </div>
           </div>
           <p class="price-foot">Prices exclude GST. Yearly plans cost 10 months. Upgrade from a single app to UXONIC Books any time — your data stays.</p>
@@ -1087,8 +1090,14 @@ ${xlinks('hr')}
 ${startBlock({ title: 'Close the register. <em>Open UXONIC HR.</em>', lead: 'Add your staff in ten minutes. Tomorrow morning, they check in from their phones.', points: ['14-day free trial, no card', 'Works on any phone', 'Help adding your staff list'] })}
 ` + footer();
 
+// On an app's own page, "Start free trial" starts that app on its own (e.g. ?plan=crm_app);
+// the pricing cards keep their own plan links. The Books page starts the default Books trial.
+const forApp = (dir, html) => !dir ? html : html
+  .replaceAll(`href="${SIGNUP}"`, `href="${SIGNUP}?plan=${dir}_app"`)
+  .replaceAll(`href="${SIGNUP}?with=google"`, `href="${SIGNUP}?plan=${dir}_app&amp;with=google"`);
+
 for (const [dir, html] of [['', suite], ['crm', crm], ['billing', billing], ['erp', erp], ['hr', hr]]) {
   mkdirSync(join(OUT, dir), { recursive: true });
-  writeFileSync(join(OUT, dir, 'index.html'), html);
+  writeFileSync(join(OUT, dir, 'index.html'), forApp(dir, html));
 }
 console.log('ok');
