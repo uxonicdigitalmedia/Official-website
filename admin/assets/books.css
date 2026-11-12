@@ -1,7 +1,4 @@
 /* Admin → UXONIC Books. Uses the admin.css tokens. */
-.bk-who { display: flex; align-items: center; gap: 8px; font-size: .78rem; color: var(--text-muted); margin-right: 8px; }
-.bk-who b { color: var(--ink); font-weight: 600; }
-.bk-who button { color: var(--gold); font-weight: 600; font-size: .78rem; }
 
 .bk-gate { display: grid; place-items: center; min-height: 60vh; }
 .bk-gate[hidden], [data-panel][hidden], #bkApp[hidden] { display: none; }
@@ -98,8 +95,7 @@ th.num, td.num { text-align: right; font-variant-numeric: tabular-nums; }
 @media (max-width: 900px) {
   .bk-grid-2 { grid-template-columns: 1fr; }
   .bk-row-3, .bk-row-4 { grid-template-columns: 1fr 1fr; }
-  .bk-who { display: none; }
-}
+  }
 @media (max-width: 560px) {
   .bk-row, .bk-row-3, .bk-row-4 { grid-template-columns: 1fr; }
   .bk-kpis { grid-template-columns: 1fr 1fr; }

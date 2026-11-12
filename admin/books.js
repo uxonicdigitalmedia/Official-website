@@ -1,18 +1,13 @@
 'use strict';
 /* ================================================================
    Admin → UXONIC Books (owner's panel)
-   Talks straight to the UXONIC Books database with the publishable key
-   and the owner's own Google sign-in. Every call is a platform_* function
-   that the database only runs for UXONIC Books owners — no secret keys.
+   Same OTP login as the rest of the admin. Every call goes to
+   /api/admin/books, which calls the UXONIC Books database's platform_*
+   functions with a private server key (never sent to the browser).
    ================================================================ */
-import { initLayout, e, toast } from '/admin/admin.js';
+import { initLayout, API, e, toast } from '/admin/admin.js';
 
 initLayout('books');
-
-const cfg = window.UXONIC_BOOKS;
-const sb = window.supabase.createClient(cfg.supabaseUrl, cfg.publishableKey, {
-  auth: { storageKey: 'uxonic-books-owner', flowType: 'pkce', detectSessionInUrl: true, persistSession: true, autoRefreshToken: true },
-});
 const $ = (id) => document.getElementById(id);
 const PAGE = 25;
 
@@ -51,16 +46,17 @@ const FEATURES = {
 
 // ── database calls ───────────────────────────────────────────────
 const ERRORS = {
-  forbidden: 'This Google account is not a UXONIC Books owner.',
+  forbidden: 'The UXONIC Books server key does not match. Check BOOKS_PLATFORM_KEY on the server.',
   payment_in_future: 'The payment date cannot be in the future.',
 };
 async function rpc(name, args) {
-  const { data, error } = await sb.rpc(name, args);
-  if (error) {
-    const hint = error.hint ? ` (${error.hint})` : '';
-    throw new Error(ERRORS[error.message] || (error.message === 'invalid_input' ? `Please check the form${hint}.` : error.message));
+  const r = await API.post('/books', { fn: name, args: args || {} });
+  if (!r) throw new Error('Signed out.');
+  if (!r.success) {
+    const hint = r.hint ? ` (${r.hint})` : '';
+    throw new Error(ERRORS[r.code] || (r.code === 'invalid_input' ? `Please check the form${hint}.` : r.message));
   }
-  return data;
+  return r.data;
 }
 const fail = (err) => toast(err.message || String(err), 'error');
 
@@ -72,45 +68,11 @@ document.querySelectorAll('[data-close]').forEach((b) => b.addEventListener('cli
 document.querySelectorAll('.modal-overlay').forEach((m) => m.addEventListener('click', (ev) => { if (ev.target === m) closeModal(m.id); }));
 document.addEventListener('keydown', (ev) => { if (ev.key === 'Escape') document.querySelectorAll('.modal-overlay.open').forEach((m) => closeModal(m.id)); });
 
-// ── sign-in gate ─────────────────────────────────────────────────
-let me = null;
-async function gate() {
-  const { data: { session } } = await sb.auth.getSession();
-  const show = (title, body, { google = true, other = false, hint = '' } = {}) => {
-    $('bkApp').hidden = true; $('bkGate').hidden = false;
-    $('bkGateTitle').textContent = title; $('bkGateBody').innerHTML = body;
-    $('bkGoogle').hidden = !google; $('bkSwitch').hidden = !other; $('bkGateHint').textContent = hint;
-  };
-  if (!session) {
-    show('Connect UXONIC Books', 'UXONIC Books runs on its own secure database. Sign in once with the Google account that owns UXONIC Books (<b>uxonicdigitalmedia@gmail.com</b>). You stay connected on this browser.');
-    return false;
-  }
-  try {
-    me = await rpc('platform_whoami');
-  } catch (err) {
-    show('Could not reach UXONIC Books', e(err.message), { google: false, other: true,
-      hint: 'If this says a function does not exist, the latest database update has not been applied yet (npx supabase db push).' });
-    return false;
-  }
-  if (!me.is_admin) {
-    show('No access', `You are signed in to UXONIC Books as <b>${e(me.email)}</b>, which is not an owner account.`, { google: false, other: true });
-    return false;
-  }
-  $('bkGate').hidden = true; $('bkApp').hidden = false;
-  $('bkWho').hidden = false;
-  $('bkWho').innerHTML = `<i class="fab fa-google"></i> <b>${e(me.email)}</b> <button type="button" id="bkOut">Disconnect</button>`;
-  $('bkOut').addEventListener('click', disconnect);
-  return true;
+// ── connection check ─────────────────────────────────────────────
+function showProblem(message) {
+  $('bkApp').hidden = true; $('bkGate').hidden = false;
+  $('bkGateBody').textContent = message;
 }
-async function disconnect() { await sb.auth.signOut(); location.reload(); }
-$('bkGoogle').addEventListener('click', async () => {
-  const { error } = await sb.auth.signInWithOAuth({
-    provider: 'google',
-    options: { redirectTo: `${location.origin}/admin/books.html`, queryParams: { prompt: 'select_account' } },
-  });
-  if (error) fail(error);
-});
-$('bkSwitch').addEventListener('click', async () => { await sb.auth.signOut(); $('bkGoogle').click(); });
 
 // ── tabs ─────────────────────────────────────────────────────────
 const loaders = {};
@@ -514,11 +476,10 @@ $('stForm').addEventListener('submit', async (ev) => {
 });
 
 // ── start ────────────────────────────────────────────────────────
-sb.auth.onAuthStateChange((event) => { if (event === 'SIGNED_OUT') { $('bkWho').hidden = true; } });
 (async () => {
-  // Coming back from Google: the client exchanges ?code= for a session while it starts up
-  // (getSession waits for that); then the code is removed from the address bar.
-  await sb.auth.getSession();
-  if (location.search) history.replaceState(null, '', location.pathname + location.hash);
-  if (await gate()) showTab(location.hash.slice(1) || 'overview');
+  try {
+    await rpc('platform_plans'); // proves the connection before showing anything
+  } catch (err) { showProblem(err.message); return; }
+  $('bkGate').hidden = true; $('bkApp').hidden = false;
+  showTab(location.hash.slice(1) || 'overview');
 })();
