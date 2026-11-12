@@ -4,6 +4,14 @@
 (function () {
   'use strict';
 
+  // Local preview: when the site runs on this computer, send app links to the local app (npm run dev)
+  // instead of books.uxonicdigital.com, which isn't live yet. Has no effect on the real website.
+  if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname)) {
+    document.querySelectorAll('a[href^="https://books.uxonicdigital.com"]').forEach((a) => {
+      a.href = a.href.replace('https://books.uxonicdigital.com', 'http://localhost:5173');
+    });
+  }
+
   // Sticky header
   const header = document.getElementById('header');
   if (header) {
