@@ -6,13 +6,13 @@
   <title>Careers & Openings | UXONIC Digital Solutions</title>
   <meta name="description" content="Join UXONIC Digital Solutions. View open internships and job opportunities. Apply now to grow your career with us."/>
   <meta name="robots" content="index, follow"/>
-  <link rel="canonical" href="https://www.uxonicdigital.com/careers"/>
+  <link rel="canonical" href="https://www.uxonicdigital.com/careers/"/>
   <link rel="icon" type="image/jpeg" href="/images/fav.jpeg"/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800;900&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer"/>
-  <link rel="stylesheet" href="/internship.css"/>
+  <link rel="stylesheet" href="/assets/css/internship.css"/>
   <style>
     /* ── Careers-specific overrides ── */
     .careers-hero { padding: 140px 0 80px; min-height: auto; }
@@ -400,7 +400,7 @@
           errMsg = 'API error ' + apiRes.status + ' — open site via http://127.0.0.1:5501';
         }
       } catch (e) {
-        errMsg = 'Cannot reach /api/jobs. Run: npm run dev → http://127.0.0.1:5501/careers';
+        errMsg = 'Cannot reach /api/jobs. Run: npm run dev → http://127.0.0.1:5501/careers/';
       }
 
       if (!dbJobs.length) {
@@ -453,7 +453,7 @@
                          : 'fa-clock';
         const typeBadge  = `badge-type-${esc(job.job_type)}`;
         const applyLink  = job.apply_url
-          || (`internship.html?job=${encodeURIComponent(job.id)}&title=${encodeURIComponent(job.title || '')}`);
+          || (`/internship/?job=${encodeURIComponent(job.id)}&title=${encodeURIComponent(job.title || '')}`);
 
         return `
           <a href="${esc(applyLink)}" class="opening-card" aria-label="Apply for ${esc(job.title)}">

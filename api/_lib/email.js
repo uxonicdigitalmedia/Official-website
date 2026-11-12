@@ -172,7 +172,7 @@ export function applicationConfirmationHtml(app) {
         <div style="border-top:1px solid rgba(255,255,255,0.08);padding-top:18px;">
           <p style="font-size:.86rem;color:#CBD5E1;margin:0 0 4px;font-weight:600;">Warm regards,</p>
           <p style="font-size:.88rem;color:#D4AF37;font-weight:700;margin:0 0 2px;">Talent Acquisition Team</p>
-          <p style="font-size:.8rem;color:#64748B;margin:0;">UXONIC Digital Solutions<br/>✉️ <a href="mailto:uxonicdigitalmedia@gmail.com" style="color:#94A3B8;text-decoration:none;">uxonicdigitalmedia@gmail.com</a> | 🌐 <a href="https://www.uxonicdigital.com" style="color:#94A3B8;text-decoration:none;">uxonicdigital.com</a></p>
+          <p style="font-size:.8rem;color:#64748B;margin:0;">UXONIC Digital Solutions<br/>✉️ <a href="mailto:info@uxonicdigital.com" style="color:#94A3B8;text-decoration:none;">info@uxonicdigital.com</a> | 🌐 <a href="https://www.uxonicdigital.com" style="color:#94A3B8;text-decoration:none;">uxonicdigital.com</a></p>
         </div>
       </div>
 
@@ -279,7 +279,7 @@ export function contactConfirmationHtml(c) {
           <p style="font-size:.88rem;color:#D4AF37;font-weight:700;margin:0 0 2px;">The UXONIC Team</p>
           <p style="font-size:.8rem;color:#64748B;margin:0;">
             UXONIC Digital Solutions<br/>
-            ✉️ <a href="mailto:uxonicdigitalmedia@gmail.com" style="color:#94A3B8;text-decoration:none;">uxonicdigitalmedia@gmail.com</a> | 🌐 <a href="https://www.uxonicdigital.com" style="color:#94A3B8;text-decoration:none;">uxonicdigital.com</a>
+            ✉️ <a href="mailto:info@uxonicdigital.com" style="color:#94A3B8;text-decoration:none;">info@uxonicdigital.com</a> | 🌐 <a href="https://www.uxonicdigital.com" style="color:#94A3B8;text-decoration:none;">uxonicdigital.com</a>
           </p>
         </div>
       </div>

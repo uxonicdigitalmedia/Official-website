@@ -13,8 +13,8 @@
   <link rel="stylesheet" href="/erp/erp.css?v=2" />
   <script>
     // Not signed in (ERP login or admin-panel login) → ERP login page
-    try { if (!localStorage.getItem('uxonic_erp_token') && !localStorage.getItem('uxonic_admin_token')) location.replace('/erp/login'); }
-    catch (e) { location.replace('/erp/login'); }
+    try { if (!localStorage.getItem('uxonic_erp_token') && !localStorage.getItem('uxonic_admin_token')) location.replace('/erp/login.html'); }
+    catch (e) { location.replace('/erp/login.html'); }
   </script>
 </head>
 <body>

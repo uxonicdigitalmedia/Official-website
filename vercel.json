@@ -2,42 +2,153 @@
   "version": 2,
   "buildCommand": null,
   "outputDirectory": ".",
+  "redirects": [
+    {
+      "source": "/careers.html",
+      "destination": "/careers/",
+      "permanent": true
+    },
+    {
+      "source": "/internship.html",
+      "destination": "/internship/",
+      "permanent": true
+    },
+    {
+      "source": "/suite",
+      "destination": "/books/",
+      "permanent": true
+    },
+    {
+      "source": "/suite/:path*",
+      "destination": "/books/:path*",
+      "permanent": true
+    }
+  ],
   "rewrites": [
-    { "source": "/admin",          "destination": "/admin/index.html" },
-    { "source": "/admin/",         "destination": "/admin/index.html" },
-    { "source": "/admin/dashboard","destination": "/admin/dashboard.html" },
-    { "source": "/admin/applications","destination": "/admin/applications.html" },
-    { "source": "/admin/jobs",     "destination": "/admin/jobs.html" },
-    { "source": "/admin/contacts", "destination": "/admin/contacts.html" },
-    { "source": "/admin/content",  "destination": "/admin/content.html" },
-    { "source": "/admin/settings", "destination": "/admin/settings.html" },
-    { "source": "/internship",     "destination": "/internship.html" },
-    { "source": "/careers",        "destination": "/careers.html" },
-    { "source": "/erp",            "destination": "/erp/index.html" },
-    { "source": "/erp/",           "destination": "/erp/index.html" },
-    { "source": "/erp/login",      "destination": "/erp/login.html" },
-    { "source": "/erp/me",         "destination": "/erp/me.html" },
-    { "source": "/erp/client",     "destination": "/erp/client.html" },
-    { "source": "/api/cron/daily", "destination": "/api/erp?r=cron" }
+    {
+      "source": "/admin",
+      "destination": "/admin/index.html"
+    },
+    {
+      "source": "/admin/",
+      "destination": "/admin/index.html"
+    },
+    {
+      "source": "/admin/dashboard",
+      "destination": "/admin/dashboard.html"
+    },
+    {
+      "source": "/admin/applications",
+      "destination": "/admin/applications.html"
+    },
+    {
+      "source": "/admin/jobs",
+      "destination": "/admin/jobs.html"
+    },
+    {
+      "source": "/admin/contacts",
+      "destination": "/admin/contacts.html"
+    },
+    {
+      "source": "/admin/content",
+      "destination": "/admin/content.html"
+    },
+    {
+      "source": "/admin/settings",
+      "destination": "/admin/settings.html"
+    },
+    {
+      "source": "/erp",
+      "destination": "/erp/index.html"
+    },
+    {
+      "source": "/erp/",
+      "destination": "/erp/index.html"
+    },
+    {
+      "source": "/erp/login",
+      "destination": "/erp/login.html"
+    },
+    {
+      "source": "/erp/me",
+      "destination": "/erp/me.html"
+    },
+    {
+      "source": "/erp/client",
+      "destination": "/erp/client.html"
+    },
+    {
+      "source": "/careers",
+      "destination": "/careers/index.html"
+    },
+    {
+      "source": "/internship",
+      "destination": "/internship/index.html"
+    },
+    {
+      "source": "/books",
+      "destination": "/books/index.html"
+    },
+    {
+      "source": "/books/crm",
+      "destination": "/books/crm/index.html"
+    },
+    {
+      "source": "/books/billing",
+      "destination": "/books/billing/index.html"
+    },
+    {
+      "source": "/books/erp",
+      "destination": "/books/erp/index.html"
+    },
+    {
+      "source": "/books/hr",
+      "destination": "/books/hr/index.html"
+    },
+    {
+      "source": "/api/cron/daily",
+      "destination": "/api/erp?r=cron"
+    }
   ],
   "crons": [
-    { "path": "/api/cron/daily", "schedule": "30 3 * * *" }
+    {
+      "path": "/api/cron/daily",
+      "schedule": "30 3 * * *"
+    }
   ],
   "headers": [
     {
       "source": "/api/(.*)",
       "headers": [
-        { "key": "Access-Control-Allow-Origin",  "value": "*" },
-        { "key": "Access-Control-Allow-Methods", "value": "GET,POST,PUT,DELETE,OPTIONS" },
-        { "key": "Access-Control-Allow-Headers", "value": "Content-Type,Authorization,X-Admin-Token" }
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "Access-Control-Allow-Methods",
+          "value": "GET,POST,PUT,DELETE,OPTIONS"
+        },
+        {
+          "key": "Access-Control-Allow-Headers",
+          "value": "Content-Type,Authorization,X-Admin-Token"
+        }
       ]
     },
     {
       "source": "/admin/(.*)",
       "headers": [
-        { "key": "X-Frame-Options",        "value": "DENY" },
-        { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "Referrer-Policy",        "value": "strict-origin-when-cross-origin" }
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        }
       ]
     }
   ]

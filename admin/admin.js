@@ -24,10 +24,10 @@ export const Auth = {
   },
   logout() {
     this.clear();
-    window.location.href = '/admin';
+    window.location.href = '/admin/';
   },
   requireLogin() {
-    if (!this.isLoggedIn()) { window.location.href = '/admin'; }
+    if (!this.isLoggedIn()) { window.location.href = '/admin/'; }
   },
 };
 

@@ -5,9 +5,9 @@ import { inr, parseYmd } from './calc.js';
 
 // Each app keeps its own token. The staff ERP also accepts the admin-panel token (owner).
 const APPS = {
-  staff: { keys: ['uxonic_erp_token', 'uxonic_admin_token'], info: 'uxonic_erp_info', login: '/erp/login' },
-  employee: { keys: ['uxonic_emp_token'], info: 'uxonic_emp_info', login: '/erp/me' },
-  client: { keys: ['uxonic_client_token'], info: 'uxonic_client_info', login: '/erp/client' },
+  staff: { keys: ['uxonic_erp_token', 'uxonic_admin_token'], info: 'uxonic_erp_info', login: '/erp/login.html' },
+  employee: { keys: ['uxonic_emp_token'], info: 'uxonic_emp_info', login: '/erp/me.html' },
+  client: { keys: ['uxonic_client_token'], info: 'uxonic_client_info', login: '/erp/client.html' },
 };
 let app = APPS.staff;
 const ls = {

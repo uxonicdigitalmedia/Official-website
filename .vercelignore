@@ -1,0 +1,6 @@
+# Kept in git, never deployed to the public site
+docs/
+database/
+README.md
+local-server.mjs
+uploads/

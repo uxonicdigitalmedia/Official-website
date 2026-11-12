@@ -14,15 +14,15 @@
 </head>
 <body class="auth-page">
   <main id="root"></main>
-  <p class="auth-foot">Team members sign in here · <a href="/erp/me">Employee portal</a> · <a href="/erp/client">Client portal</a></p>
+  <p class="auth-foot">Team members sign in here · <a href="/erp/me.html">Employee portal</a> · <a href="/erp/client.html">Client portal</a></p>
   <script type="module">
     import { Auth } from '/erp/js/core.js';
     import { renderLogin } from '/erp/js/login.js';
     Auth.use('staff');
-    if (Auth.token()) location.replace('/erp');
+    if (Auth.token()) location.replace('/erp/');
     else renderLogin(document.getElementById('root'), {
       kind: 'staff', title: 'ERP', subtitle: 'For UXONIC admins, HR and accounts. We will email you a one-time code.',
-      onSuccess: () => location.replace('/erp'),
+      onSuccess: () => location.replace('/erp/'),
     });
   </script>
 </body>

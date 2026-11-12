@@ -1,5 +1,7 @@
 User-agent: *
 Allow: /
 Disallow: /internship
-Disallow: /internship.html
+Disallow: /internship/
+Disallow: /admin/
+Disallow: /erp/
 Sitemap: https://uxonicdigital.com/sitemap.xml

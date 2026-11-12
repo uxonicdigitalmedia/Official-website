@@ -138,7 +138,7 @@
 
 <script type="module">
   // Where to go after login: /admin?next=/erp… comes back to the ERP (only same-site /erp paths allowed)
-  const NEXT = (() => { const n = new URLSearchParams(location.search).get('next') || ''; return /^\/erp(\/|$)/.test(n) ? n : '/admin/dashboard'; })();
+  const NEXT = (() => { const n = new URLSearchParams(location.search).get('next') || ''; return /^\/erp(\/|$)/.test(n) ? n : '/admin/dashboard.html'; })();
 
   // Redirect if already logged in
   if (localStorage.getItem('uxonic_admin_token')) {
