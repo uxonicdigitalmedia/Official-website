@@ -63,7 +63,7 @@
     rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
     crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <link rel="stylesheet" href="/assets/css/site.css?v=5" />
+  <link rel="stylesheet" href="/assets/css/site.css?v=7" />
 </head>
 
 <body>
@@ -88,7 +88,21 @@
           <li><a href="#home" class="nav-link active" data-page="home">Home</a></li>
           <li><a href="#services" class="nav-link" data-page="services">Services</a></li>
           <li><a href="#about" class="nav-link" data-page="about">About</a></li>
-          <li><a href="/books/" class="nav-link" data-external>UXONIC Books</a></li>
+          <li class="nav-dd" id="navProducts">
+            <button type="button" class="nav-link nav-dd-btn" aria-expanded="false" aria-controls="navProductsMenu">Products <i class="fas fa-chevron-down" aria-hidden="true"></i></button>
+            <div class="nav-dd-menu" id="navProductsMenu">
+              <a href="/books/" class="nav-dd-item nav-dd-main" data-external>
+                <span class="nav-dd-ic"><i class="fas fa-layer-group"></i></span>
+                <span><b>UXONIC Books</b><small>Every app in one subscription — CRM, Billing, ERP and HR</small></span>
+              </a>
+              <div class="nav-dd-grid">
+                <a href="/books/crm/" class="nav-dd-item" data-external><span class="nav-dd-ic"><i class="fas fa-user-plus"></i></span><span><b>UXONIC CRM</b><small>Leads, pipeline, follow-ups</small></span></a>
+                <a href="/books/billing/" class="nav-dd-item" data-external><span class="nav-dd-ic"><i class="fas fa-file-invoice"></i></span><span><b>UXONIC Billing</b><small>GST invoices, quotes, payments</small></span></a>
+                <a href="/books/erp/" class="nav-dd-item" data-external><span class="nav-dd-ic"><i class="fas fa-boxes-stacked"></i></span><span><b>UXONIC ERP</b><small>Products, stock, purchases</small></span></a>
+                <a href="/books/hr/" class="nav-dd-item" data-external><span class="nav-dd-ic"><i class="fas fa-id-badge"></i></span><span><b>UXONIC HR</b><small>Staff, attendance, leave</small></span></a>
+              </div>
+            </div>
+          </li>
           <li><a href="#contact" class="nav-link" data-page="contact">Contact</a></li>
         </ul>
         <a href="#contact" class="btn btn-lime nav-cta-mobile" data-page="contact">Start a project <i class="fas fa-arrow-right"></i></a>
@@ -842,7 +856,7 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-  <script src="/assets/js/script.js?v=5"></script>
+  <script src="/assets/js/script.js?v=6"></script>
   <script src="/assets/js/motion.js?v=4"></script>
 </body>
 

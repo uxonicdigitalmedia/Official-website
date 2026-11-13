@@ -136,6 +136,27 @@ const Router = (function () {
 })();
 
 /* ============================================
+   PRODUCTS DROPDOWN (header)
+   Desktop: opens on hover or click; mobile menu: tap to expand.
+   ============================================ */
+(function initProductsMenu() {
+  const dd = document.getElementById('navProducts');
+  if (!dd) return;
+  const btn = dd.querySelector('.nav-dd-btn');
+  const desktop = window.matchMedia('(min-width: 861px) and (hover: hover)');
+  let timer;
+  const set = (open) => { dd.classList.toggle('open', open); btn.setAttribute('aria-expanded', String(open)); };
+  btn.addEventListener('click', (e) => { e.preventDefault(); set(!dd.classList.contains('open')); });
+  dd.addEventListener('mouseenter', () => { if (desktop.matches) { clearTimeout(timer); set(true); } });
+  dd.addEventListener('mouseleave', () => { if (desktop.matches) timer = setTimeout(() => set(false), 120); });
+  document.addEventListener('click', (e) => { if (!dd.contains(e.target)) set(false); });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && dd.classList.contains('open')) { set(false); btn.focus(); }
+  });
+  dd.addEventListener('focusout', (e) => { if (desktop.matches && !dd.contains(e.relatedTarget)) set(false); });
+})();
+
+/* ============================================
    SCROLL REVEAL
    ============================================ */
 function triggerReveals(container) {

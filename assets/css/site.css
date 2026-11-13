@@ -183,6 +183,31 @@ em { font-style: normal; }
 .nav-link.active { background: var(--ink); color: #fff; }
 .nav-cta-mobile { display: none; }
 
+/* Products dropdown (header) */
+.nav-dd { position: relative; }
+.nav-dd-btn { display: inline-flex; align-items: center; gap: 7px; border: 0; background: none; font: inherit; cursor: pointer; }
+.nav-dd-btn i { font-size: 10px; transition: transform 0.3s var(--ease); }
+.nav-dd.open .nav-dd-btn { color: var(--ink); background: rgba(17, 17, 20, 0.05); }
+.nav-dd.open .nav-dd-btn i { transform: rotate(180deg); }
+.nav-dd-menu {
+  position: absolute; top: calc(100% + 14px); left: 50%; width: 520px; padding: 10px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 20px; box-shadow: var(--shadow);
+  opacity: 0; visibility: hidden; transform: translate(-50%, 6px); transition: opacity 0.25s var(--ease), transform 0.25s var(--ease), visibility 0.25s;
+  z-index: 50;
+}
+.nav-dd-menu::before { content: ''; position: absolute; left: 0; right: 0; top: -16px; height: 16px; } /* hover bridge */
+.nav-dd.open .nav-dd-menu { opacity: 1; visibility: visible; transform: translate(-50%, 0); }
+.nav-dd-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px; border-radius: 14px; color: var(--ink); transition: background 0.2s; }
+.nav-dd-item:hover, .nav-dd-item:focus-visible { background: #F4F4EF; }
+.nav-dd-item b { display: block; font-size: 14px; font-weight: 600; }
+.nav-dd-item small { display: block; margin-top: 2px; font-size: 12.5px; line-height: 1.4; color: var(--muted); }
+.nav-dd-ic { flex: 0 0 auto; width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; background: #F0EBFF; color: var(--violet); font-size: 15px; }
+.nav-dd-main { background: var(--ink); color: #fff; margin-bottom: 6px; }
+.nav-dd-main:hover, .nav-dd-main:focus-visible { background: #24242a; }
+.nav-dd-main small { color: rgba(255, 255, 255, 0.65); }
+.nav-dd-main .nav-dd-ic { background: var(--lime); color: var(--ink); }
+.nav-dd-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
+
 .hamburger { display: none; width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--border); background: var(--surface); cursor: pointer; position: relative; }
 .hamburger span { position: absolute; left: 13px; right: 13px; height: 1.5px; background: var(--ink); transition: transform 0.4s var(--ease), opacity 0.3s; }
 .hamburger span:nth-child(1) { top: 16px; }
@@ -625,10 +650,24 @@ textarea.field { height: 120px; padding: 16px 18px; resize: vertical; }
   /* backdrop-filter would trap the fixed menu inside the header bar */
   .header:has(.nav.open) { backdrop-filter: none; -webkit-backdrop-filter: none; background: transparent; border-bottom-color: transparent; }
   .nav.open { opacity: 1; visibility: visible; }
+  /* Tall menu (Products open): keep it below the logo and let it scroll */
+  .nav { justify-content: safe center; overflow-y: auto; padding-top: 92px; padding-bottom: 32px; }
   .nav-list { flex-direction: column; background: none; border: 0; gap: 6px; }
   .nav-link { font-family: var(--font-head); font-size: 36px; font-weight: 600; letter-spacing: -0.04em; color: var(--ink); padding: 6px 0; background: none !important; }
   .nav-link.active { color: var(--violet); }
   .nav-cta-mobile { display: inline-flex; margin-top: 28px; align-self: flex-start; }
+  /* Products: an accordion inside the full-screen menu */
+  .nav-dd-btn { justify-content: flex-start; }
+  .nav-dd-btn i { font-size: 18px; }
+  .nav-dd.open .nav-dd-btn { background: none; color: var(--violet); }
+  .nav-dd-menu { position: static; width: auto; padding: 4px 0 8px; border: 0; box-shadow: none; background: none; transform: none; opacity: 1; visibility: visible; display: none; }
+  .nav-dd.open .nav-dd-menu { display: block; transform: none; }
+  .nav-dd-menu::before { display: none; }
+  .nav-dd-grid { grid-template-columns: 1fr; }
+  .nav-dd-item { padding: 8px 4px; }
+  .nav-dd-main { background: none; color: var(--ink); margin: 0; }
+  .nav-dd-main small { color: var(--muted); }
+  .nav-dd-main:hover { background: #F4F4EF; }
   .header-cta { display: none; }
   .hamburger { display: block; }
 
