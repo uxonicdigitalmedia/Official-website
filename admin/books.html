@@ -11,7 +11,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous"/>
   <link rel="stylesheet" href="/admin/assets/admin.css?v=2"/>
-  <link rel="stylesheet" href="/admin/assets/books.css?v=3"/>
+  <link rel="stylesheet" href="/admin/assets/books.css?v=4"/>
 </head>
 <body>
 <div class="sidebar-overlay" id="sidebarOverlay"></div>
@@ -76,6 +76,7 @@
       <div class="bk-tabs" role="tablist" aria-label="UXONIC Books sections">
         <button role="tab" data-tab="overview"><i class="fas fa-chart-line"></i> Overview</button>
         <button role="tab" data-tab="customers"><i class="fas fa-building"></i> Customers</button>
+        <button role="tab" data-tab="support"><i class="fas fa-life-ring"></i> Support <span class="nav-badge red" id="supBadge" hidden></span></button>
         <button role="tab" data-tab="payments"><i class="fas fa-indian-rupee-sign"></i> Payments</button>
         <button role="tab" data-tab="plans"><i class="fas fa-tags"></i> Plans &amp; prices</button>
         <button role="tab" data-tab="settings"><i class="fas fa-sliders"></i> Settings</button>
@@ -133,6 +134,26 @@
           </table></div>
           <div class="pagination" id="cuPager"></div>
         </div>
+      </section>
+
+      <!-- SUPPORT -->
+      <section data-panel="support" role="tabpanel" hidden>
+        <div class="table-card">
+          <div class="filter-bar">
+            <input class="form-input" id="suSearch" type="search" placeholder="Search subject, business or email" aria-label="Search support messages"/>
+            <select class="form-select" id="suStatus" aria-label="Filter by status">
+              <option value="open">Needs reply</option><option value="pending">Replied</option><option value="closed">Closed</option><option value="">All</option>
+            </select>
+            <span class="topbar-spacer"></span>
+            <span class="filter-label" id="suCount"></span>
+          </div>
+          <div class="table-wrap"><table>
+            <thead><tr><th>Subject</th><th>Business</th><th>From</th><th>Last message</th><th>Status</th></tr></thead>
+            <tbody id="suRows"><tr><td colspan="5" class="table-empty">Loading…</td></tr></tbody>
+          </table></div>
+          <div class="pagination" id="suPager"></div>
+        </div>
+        <p class="form-hint">New customer messages are also emailed to info@uxonicdigital.com. Your reply reaches the customer in the app (Help) and by email.</p>
       </section>
 
       <!-- PAYMENTS -->
@@ -211,6 +232,20 @@
   </div>
 </div>
 
+<!-- Support conversation -->
+<div class="modal-overlay" id="tkModal">
+  <div class="modal bk-modal-wide" role="dialog" aria-modal="true" aria-labelledby="tkTitle">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="tkTitle">Conversation</div>
+        <div class="text-xs text-muted" id="tkSub"></div>
+      </div>
+      <button class="modal-close" data-close="tkModal" aria-label="Close"><i class="fas fa-xmark"></i></button>
+    </div>
+    <div id="tkBody"></div>
+  </div>
+</div>
+
 <!-- Plan editor -->
 <div class="modal-overlay" id="planModal">
   <div class="modal bk-modal-wide" role="dialog" aria-modal="true" aria-labelledby="planTitle">
@@ -224,6 +259,6 @@
 
 <div class="bk-tip" id="bkTip" role="tooltip" hidden></div>
 
-<script type="module" src="/admin/books.js?v=2"></script>
+<script type="module" src="/admin/books.js?v=3"></script>
 </body>
 </html>

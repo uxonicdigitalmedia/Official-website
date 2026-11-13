@@ -355,6 +355,73 @@ function renderOrg(d, allPlans) {
 }
 const currentTab = () => document.querySelector('.bk-tabs [aria-selected="true"]')?.dataset.tab || 'overview';
 
+// ── SUPPORT ──────────────────────────────────────────────────────
+const TICKET = { open: ['Needs reply', 'st-warn'], pending: ['Replied', 'st-trial'], closed: ['Closed', 'st-muted'] };
+const ticketBadge = (s) => { const [l, c] = TICKET[s] || [s, 'st-muted']; return `<span class="st ${c}">${e(l)}</span>`; };
+const dateTime = (v) => new Date(v).toLocaleString('en-IN', { day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit', hour12: true, timeZone: TZ });
+const su = { page: 0 };
+let suTimer;
+$('suSearch').addEventListener('input', () => { clearTimeout(suTimer); suTimer = setTimeout(() => { su.page = 0; loaders.support().catch(fail); }, 300); });
+$('suStatus').addEventListener('change', () => { su.page = 0; loaders.support().catch(fail); });
+function setSupportBadge(n) { $('supBadge').hidden = !n; $('supBadge').textContent = String(n || ''); }
+
+loaders.support = async () => {
+  const r = await rpc('platform_tickets', { p_status: $('suStatus').value || null, p_search: $('suSearch').value || null, p_limit: PAGE, p_offset: su.page * PAGE });
+  setSupportBadge(r.counts.open);
+  $('suCount').textContent = `${r.counts.open} need a reply · ${r.counts.pending} replied · ${r.counts.closed} closed`;
+  $('suRows').innerHTML = r.rows.length ? r.rows.map((x) => `<tr>
+      <td><button class="bk-link" data-ticket="${e(x.id)}">${e(x.subject)}</button><div class="text-xs text-muted">${x.messages} message${x.messages === 1 ? '' : 's'}</div></td>
+      <td>${e(x.org_name)}</td>
+      <td><div>${e(x.creator_name || '—')}</div><div class="text-xs text-muted">${e(x.creator_email || '')}</div></td>
+      <td>${dateTime(x.last_message_at)}<div class="text-xs text-muted">${x.last_from === 'uxonic' ? 'by UXONIC' : 'by customer'}</div></td>
+      <td>${ticketBadge(x.status)}</td></tr>`).join('')
+    : `<tr><td colspan="5" class="table-empty">${$('suStatus').value === 'open' ? 'Nothing waiting for a reply.' : 'No messages.'}</td></tr>`;
+  $('suRows').querySelectorAll('[data-ticket]').forEach((b) => b.addEventListener('click', () => openTicket(b.dataset.ticket)));
+  pager($('suPager'), r.total, su.page, (p) => { su.page = p; loaders.support().catch(fail); });
+};
+
+async function openTicket(id) {
+  $('tkTitle').textContent = 'Loading…'; $('tkSub').textContent = ''; $('tkBody').innerHTML = '';
+  openModal('tkModal');
+  let d;
+  try { d = await rpc('platform_ticket', { p_ticket: id }); } catch (err) { closeModal('tkModal'); fail(err); return; }
+  const tk = d.ticket;
+  $('tkTitle').textContent = tk.subject;
+  $('tkSub').innerHTML = `${ticketBadge(tk.status)} &nbsp; ${e(d.org.name)} · ${e(d.org.plan_name)} · ${e(d.creator?.email || '')}`;
+  const msgs = [{ author_kind: 'customer', author_name: d.creator?.name || 'Customer', body: tk.body, created_at: tk.created_at }, ...d.messages];
+  $('tkBody').innerHTML = `
+    <div class="bk-thread" id="tkThread">${msgs.map((m) => `<div class="bk-msg ${m.author_kind}"><small>${e(m.author_kind === 'uxonic' ? 'UXONIC Support' : (m.author_name || 'Customer'))} · ${dateTime(m.created_at)}</small>${e(m.body)}</div>`).join('')}</div>
+    <form id="tkForm" class="bk-form" novalidate>
+      <div class="form-group"><label class="form-label" for="tkReply">Your reply</label><textarea class="form-textarea" id="tkReply" rows="4" maxlength="5000" placeholder="Write the answer — the customer gets it in the app and by email."></textarea></div>
+      <p class="bk-err" id="tkErr" role="alert"></p>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-ghost" data-org="${e(d.org.id)}"><i class="fas fa-building"></i> Customer</button>
+        ${tk.status !== 'closed' ? '<button type="button" class="btn btn-ghost" id="tkClose">Close without reply</button>' : ''}
+        <button type="submit" class="btn btn-ghost" data-close-after="1">Reply &amp; close</button>
+        <button type="submit" class="btn btn-primary">Send reply</button>
+      </div>
+    </form>`;
+  const thread = $('tkThread'); thread.scrollTop = thread.scrollHeight;
+  $('tkBody').querySelector('[data-org]').addEventListener('click', () => { closeModal('tkModal'); openOrg(d.org.id); });
+  $('tkClose')?.addEventListener('click', async () => {
+    try { await rpc('platform_set_ticket_status', { p_ticket: id, p_status: 'closed' }); toast('Conversation closed.'); closeModal('tkModal'); loaders.support().catch(fail); } catch (err) { fail(err); }
+  });
+  $('tkForm').addEventListener('submit', async (ev) => {
+    ev.preventDefault();
+    const body = $('tkReply').value.trim();
+    if (!body) { $('tkErr').textContent = 'Write a reply first.'; $('tkReply').focus(); return; }
+    $('tkErr').textContent = '';
+    const close = ev.submitter?.dataset.closeAfter === '1';
+    $('tkForm').querySelectorAll('[type="submit"]').forEach((b) => { b.disabled = true; });
+    try {
+      const r = await rpc('platform_reply_ticket', { p_ticket: id, p_body: body, p_close: close });
+      toast(r.emailed ? 'Reply sent — the customer also got it by email.' : 'Reply sent (shown in their app; email could not be sent).', r.emailed ? 'success' : 'warning');
+      closeModal('tkModal');
+      loaders.support().catch(fail);
+    } catch (err) { $('tkErr').textContent = err.message; $('tkForm').querySelectorAll('[type="submit"]').forEach((b) => { b.disabled = false; }); }
+  });
+}
+
 // ── PAYMENTS ─────────────────────────────────────────────────────
 const pa = { page: 0 };
 let paTimer;
@@ -482,4 +549,6 @@ $('stForm').addEventListener('submit', async (ev) => {
   } catch (err) { showProblem(err.message); return; }
   $('bkGate').hidden = true; $('bkApp').hidden = false;
   showTab(location.hash.slice(1) || 'overview');
+  // Badge on the Support tab: conversations waiting for a reply.
+  rpc('platform_tickets', { p_status: 'open', p_limit: 1, p_offset: 0 }).then((r) => setSupportBadge(r.counts.open)).catch(() => {});
 })();
