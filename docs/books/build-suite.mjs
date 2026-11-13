@@ -165,7 +165,7 @@ const footer = () => `
       </div>
       <div class="footer-bottom">
         <p>&copy; 2026 UXONIC Digital Solutions. All rights reserved.</p>
-        <p>Trichy · Tamil Nadu · India</p>
+        <p><a href="/privacy/">Privacy Policy</a> · <a href="/terms/">Terms of Service</a> · Trichy · Tamil Nadu · India</p>
       </div>
     </div>
   </footer>

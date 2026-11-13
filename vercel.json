@@ -110,6 +110,14 @@
       "destination": "/books/hr/index.html"
     },
     {
+      "source": "/privacy",
+      "destination": "/privacy/index.html"
+    },
+    {
+      "source": "/terms",
+      "destination": "/terms/index.html"
+    },
+    {
       "source": "/api/cron/daily",
       "destination": "/api/erp?r=cron"
     }
