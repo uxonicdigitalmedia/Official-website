@@ -4,4 +4,4 @@ Disallow: /internship
 Disallow: /internship/
 Disallow: /admin/
 Disallow: /erp/
-Sitemap: https://uxonicdigital.com/sitemap.xml
+Sitemap: https://www.uxonicdigital.com/sitemap.xml

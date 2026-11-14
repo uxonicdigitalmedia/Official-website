@@ -13,18 +13,24 @@
     content="UXONIC Digital Solutions, website development company in Trichy, website development company in Karur, web development Trichy, web development Karur, mobile app development Trichy, mobile app development Karur, UI UX design Trichy, SEO Trichy, digital marketing Trichy, software company Trichy, software company Karur" />
   <meta name="author" content="UXONIC Digital Solutions" />
   <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://www.uxonicdigital.com/" />
   <meta name="theme-color" content="#FAFAF7" />
 
   <!-- Open Graph -->
-  <meta property="og:title" content="UXONIC Digital Solutions" />
+  <meta property="og:title" content="UXONIC Digital Solutions — Website &amp; App Development Company in Trichy &amp; Karur" />
+  <meta property="og:site_name" content="UXONIC Digital Solutions" />
+  <meta property="og:locale" content="en_IN" />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://www.uxonicdigital.com" />
+  <meta property="og:url" content="https://www.uxonicdigital.com/" />
   <meta property="og:image" content="https://www.uxonicdigital.com/cover.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="UXONIC — Websites, apps &amp; software that grow your business. Trichy &amp; Karur." />
   <meta property="og:description" content="UXONIC Digital Solutions is an India-based digital agency providing Website Development, Mobile App Development, UI/UX Design, Branding, SEO and Digital Marketing." />
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="UXONIC Digital Solutions" />
+  <meta name="twitter:title" content="UXONIC Digital Solutions — Website &amp; App Development Company in Trichy &amp; Karur" />
   <meta name="twitter:description"
     content="UXONIC Digital Solutions — Website Development, App Development, UI/UX Design, Branding, SEO &amp; Digital Marketing." />
   <meta name="twitter:image" content="https://www.uxonicdigital.com/cover.jpg" />
@@ -35,26 +41,73 @@
 
   <!-- Schema.org Structured Data -->
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "UXONIC Digital Solutions",
-    "url": "https://www.uxonicdigital.com/",
-    "logo": "https://www.uxonicdigital.com/logo.png",
-    "description": "UXONIC Digital Solutions is an India-based digital agency specializing in Website Development, Mobile App Development, UI/UX Design, Branding, SEO, and Digital Marketing.",
-    "email": "info@uxonicdigital.com",
-    "telephone": "+91 9843021717",
-    "address": {
-      "@type": "PostalAddress",
-      "addressCountry": "IN",
-      "addressRegion": "Tamil Nadu"
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": [
+        "Organization",
+        "ProfessionalService"
+      ],
+      "@id": "https://www.uxonicdigital.com/#org",
+      "name": "UXONIC Digital Solutions",
+      "url": "https://www.uxonicdigital.com/",
+      "logo": "https://www.uxonicdigital.com/images/logo-mark-ink.png",
+      "image": "https://www.uxonicdigital.com/cover.jpg",
+      "description": "Website and app development company in Trichy and Karur, Tamil Nadu — websites, mobile apps, UI/UX design, SEO, digital marketing and UXONIC Books business software.",
+      "email": "info@uxonicdigital.com",
+      "telephone": "+91 98430 21717",
+      "priceRange": "₹₹",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Tiruchirappalli",
+        "addressRegion": "Tamil Nadu",
+        "addressCountry": "IN"
+      },
+      "areaServed": [
+        {
+          "@type": "City",
+          "name": "Tiruchirappalli"
+        },
+        {
+          "@type": "City",
+          "name": "Karur"
+        },
+        {
+          "@type": "State",
+          "name": "Tamil Nadu"
+        },
+        {
+          "@type": "Country",
+          "name": "India"
+        }
+      ],
+      "knowsAbout": [
+        "Website development",
+        "Mobile app development",
+        "UI/UX design",
+        "SEO",
+        "Digital marketing",
+        "Business software"
+      ],
+      "sameAs": [
+        "https://www.instagram.com/uxon.ic/",
+        "https://www.linkedin.com/company/uxonic-digital-solutions/",
+        "https://github.com/uxonicdigitalmedia"
+      ]
     },
-    "sameAs": [
-      "https://www.instagram.com/uxon.ic",
-      "https://www.linkedin.com/company/uxonic-digital-solutions",
-      "https://github.com/uxonicdigital"
-    ]
-  }
+    {
+      "@type": "WebSite",
+      "@id": "https://www.uxonicdigital.com/#website",
+      "url": "https://www.uxonicdigital.com/",
+      "name": "UXONIC Digital Solutions",
+      "publisher": {
+        "@id": "https://www.uxonicdigital.com/#org"
+      },
+      "inLanguage": "en-IN"
+    }
+  ]
+}
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -63,7 +116,7 @@
     rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
     crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <link rel="stylesheet" href="/assets/css/site.css?v=9" />
+  <link rel="stylesheet" href="/assets/css/site.css?v=11" />
 </head>
 
 <body>
@@ -124,10 +177,10 @@
       <section class="hero" id="home">
         <div class="container hero-inner">
           <a href="/books/" class="eyebrow eyebrow-link" data-hero="eyebrow" data-external><b>New</b> UXONIC Books is live<span class="eyebrow-more"> — CRM, Billing, ERP &amp; HR</span> <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
-          <h1 class="hero-title" data-split>
+          <p class="hero-title" data-split>
             <span class="line line-1">Websites, apps &amp; software</span>
             <span class="line line-2">that grow your business</span>
-          </h1>
+          </p>
 
           <div class="device-stage" aria-hidden="true">
             <div class="device-float" data-hero="device">
@@ -145,10 +198,10 @@
             </div>
           </div>
 
-          <p class="hero-sub" data-hero="sub">
+          <h1 class="hero-sub" data-hero="sub">
             Website &amp; app development company in Trichy &amp; Karur — and the makers of
             <a href="/books/" data-external>UXONIC Books</a>.
-          </p>
+          </h1>
           <div class="hero-ctas" data-hero="ctas">
             <a href="#contact" class="btn btn-lime" data-page="contact">Start your project <i class="fas fa-arrow-right"></i></a>
             <a href="#services" class="btn btn-ghost" data-page="services">View our work</a>

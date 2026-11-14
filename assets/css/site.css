@@ -285,6 +285,8 @@ em { font-style: normal; }
 .device:hover .key.is-lime { transform: translateY(4px); }
 
 .hero-sub { margin: 0 auto; max-width: 600px; font-size: clamp(16px, 1.4vw, 18px); }
+h1.hero-sub { font-family: var(--font-body); font-weight: 400; color: var(--body); letter-spacing: normal; line-height: 1.6; }
+p.hero-title { margin-top: 0; font-family: var(--font-head); color: var(--ink); }
 .hero-ctas { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 32px; }
 
 /* ---------- Services marquee strip ---------- */
@@ -727,3 +729,4 @@ textarea.field { height: 120px; padding: 16px 18px; resize: vertical; }
   .strip-track, .marquee-track { animation: none; }
   .marquee { overflow-x: auto; }
 }
+.eyebrow-more { margin-left: -4px; }
