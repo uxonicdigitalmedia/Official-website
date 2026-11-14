@@ -22,8 +22,12 @@ export const Auth = {
   save(token, info) { ls.set(app.keys[0], token); ls.set(app.info, JSON.stringify(info || {})); },
   info() { try { return JSON.parse(ls.get(app.info) || ls.get('uxonic_admin_info') || '{}'); } catch { return {}; } },
   logout(redirect = true) {
+    // The super admin reaches the ERP with the admin-panel token: logging out ends that session,
+    // so send them to the admin sign-in rather than the ERP staff sign-in.
+    const viaAdmin = app.keys.includes('uxonic_admin_token') && !ls.get(app.keys[0]) && !!ls.get('uxonic_admin_token');
     app.keys.forEach(ls.del); ls.del(app.info);
-    if (redirect) location.href = app.login;
+    if (viaAdmin) ls.del('uxonic_admin_info');
+    if (redirect) location.href = viaAdmin ? '/admin/' : app.login;
   },
 };
 
