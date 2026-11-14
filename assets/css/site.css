@@ -730,3 +730,4 @@ textarea.field { height: 120px; padding: 16px 18px; resize: vertical; }
   .marquee { overflow-x: auto; }
 }
 .eyebrow-more { margin-left: -4px; }
+.mock-shot { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; object-position: top center; background: #F4F4F2; }
