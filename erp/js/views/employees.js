@@ -16,6 +16,7 @@ export const EMP_FIELDS = [
   { name: 'exit_date', label: 'Exit date', type: 'date', hint: 'Leave empty while working here' },
   { type: 'section', label: 'Salary & bank' },
   { name: 'monthly_salary', label: 'Monthly salary (₹)', type: 'number', step: '0.01', required: true, hint: 'Paid in full for a month with full attendance' },
+  { name: 'absent_deduction', label: 'Deduction per absent day (₹)', type: 'number', step: '0.01', hint: 'Leave empty to cut salary ÷ working days. A half day cuts half of this.' },
   { name: 'pan', label: 'PAN' },
   { name: 'bank_name', label: 'Bank name' },
   { name: 'bank_account', label: 'Account number' },

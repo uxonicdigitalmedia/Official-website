@@ -8,10 +8,25 @@ import {
 const EMP_SPEC = {
   emp_code: 'text', full_name: 'text!', email: 'text', phone: 'text', designation: 'text', department: 'text',
   employment_type: 'enum:full-time|part-time|intern|contract', join_date: 'date', exit_date: 'date',
-  monthly_salary: 'num', bank_name: 'text', bank_account: 'text', bank_ifsc: 'text', pan: 'text',
+  monthly_salary: 'num', absent_deduction: 'num', bank_name: 'text', bank_account: 'text', bank_ifsc: 'text', pan: 'text',
   address: 'text', status: 'enum:active|inactive', notes: 'text',
   pf_applicable: 'bool', esi_applicable: 'bool', tds_percent: 'num', portal_enabled: 'bool',
 };
+
+// The absent-deduction columns arrive with database/erp_schema.sql (2026-11). Until that SQL has
+// been run, leave them out so employees and payroll keep working.
+let absentColumns = null;
+async function hasAbsentColumns(sb) {
+  if (!absentColumns) {  // re-check until the columns exist, then remember
+    const { error } = await sb.from('erp_payroll').select('absent_amount').limit(1);
+    absentColumns = !error;
+  }
+  return absentColumns;
+}
+async function withoutMissingColumns(sb, row) {
+  if (!(await hasAbsentColumns(sb))) { delete row.absent_deduction; delete row.absent_rate; delete row.absent_amount; }
+  return row;
+}
 
 export async function employees({ sb, method, q, body }) {
   if (method === 'GET') {
@@ -19,7 +34,7 @@ export async function employees({ sb, method, q, body }) {
     return { employees: must(await sb.from('erp_employees').select('*').order('status').order('full_name')) };
   }
   if (method === 'POST') {
-    const row = clean(body, EMP_SPEC);
+    const row = await withoutMissingColumns(sb, clean(body, EMP_SPEC));
     if (row.monthly_salary == null) row.monthly_salary = 0;
     if (row.email) row.email = row.email.toLowerCase();
     if (!row.emp_code) {
@@ -33,7 +48,7 @@ export async function employees({ sb, method, q, body }) {
   if (method === 'PUT') {
     const id = idOf(q);
     const cur = must(await sb.from('erp_employees').select('*').eq('id', id).single());
-    const row = clean(body, EMP_SPEC, { partial: true });
+    const row = await withoutMissingColumns(sb, clean(body, EMP_SPEC, { partial: true }));
     if ('emp_code' in row && !row.emp_code) delete row.emp_code;
     if (row.email) row.email = row.email.toLowerCase();
     const emp = must(await sb.from('erp_employees').update(row).eq('id', id).select('*').single());
@@ -350,9 +365,9 @@ async function generatePayroll(sb, month, onlyIds = null) {
       joinDate: e.join_date, exitDate: e.exit_date, attendance: attBy.get(e.id) || [], weeklyOff: s.weekly_off,
       allowances: prev?.allowances || 0, bonus: prev?.bonus || 0, deductions: prev?.deductions || 0,
       statutory: { pf: s.pf_enabled && e.pf_applicable !== false, esi: s.esi_enabled && e.esi_applicable !== false, tdsPercent: e.tds_percent || 0 },
-      advanceDue,
+      advanceDue, absentRate: e.absent_deduction ?? null,
     });
-    rows.push({ employee_id: e.id, month: first, ...calc, status: 'draft' });
+    rows.push(await withoutMissingColumns(sb, { employee_id: e.id, month: first, ...calc, status: 'draft' }));
   }
   if (rows.length) must(await sb.from('erp_payroll').upsert(rows, { onConflict: 'employee_id,month' }));
   return { rows, skippedPaid };

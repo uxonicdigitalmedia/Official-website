@@ -79,7 +79,10 @@ export function payslipDoc(p, s) {
       </div>
       <div class="doc-cols">
         <table class="doc-table"><thead><tr><th>Earnings</th><th class="r">Amount</th></tr></thead><tbody>
-          <tr><td>Salary (${money(p.monthly_salary)} × ${num(p.paid_days)}/${num(p.working_days)} days)</td><td class="r">${money(p.earned)}</td></tr>
+          ${p.absent_rate !== null && p.absent_rate !== undefined
+            ? `<tr><td>Salary</td><td class="r">${money(Number(p.earned) + Number(p.absent_amount || 0))}</td></tr>
+          <tr><td>Less: absent (${num(Number(p.absent_days) + Number(p.unmarked_days || 0))} day(s)${Number(p.half_days) ? ` + ${num(p.half_days)} half` : ''} × ${money(p.absent_rate)})</td><td class="r">− ${money(p.absent_amount)}</td></tr>`
+            : `<tr><td>Salary (${money(p.monthly_salary)} × ${num(p.paid_days)}/${num(p.working_days)} days)</td><td class="r">${money(p.earned)}</td></tr>`}
           <tr><td>Allowances</td><td class="r">${money(p.allowances)}</td></tr>
           <tr><td>Bonus / incentive</td><td class="r">${money(p.bonus)}</td></tr>
         </tbody><tfoot><tr><td>Gross earnings</td><td class="r">${money(gross)}</td></tr></tfoot></table>

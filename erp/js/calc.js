@@ -51,7 +51,7 @@ export const ATTENDANCE_VALUE = { present: 1, 'half-day': 0.5, leave: 1, holiday
  *  - Working days with no attendance record are reported as "unmarked" and are NOT paid.
  */
 export function computePayroll({ month, salary, joinDate, exitDate, attendance = [], weeklyOff = [0],
-  allowances = 0, bonus = 0, deductions = 0, statutory = null, advanceDue = 0 }) {
+  allowances = 0, bonus = 0, deductions = 0, statutory = null, advanceDue = 0, absentRate = null }) {
   const all = workingDates(month, weeklyOff);
   const inWindow = all.filter((d) => (!joinDate || d >= joinDate) && (!exitDate || d <= exitDate));
   const byDate = new Map(attendance.map((a) => [String(a.date).slice(0, 10), a.status]));
@@ -68,7 +68,15 @@ export function computePayroll({ month, salary, joinDate, exitDate, attendance =
   const rawPaid = present + half * 0.5 + leave + holiday;
   const paidDays = Math.min(rawPaid, inWindow.length);
   const workingDays = all.length;
-  const earned = workingDays ? round2((Number(salary) || 0) * paidDays / workingDays) : 0;
+  // Fixed deduction per absent day (set on the employee): salary for the days employed this month,
+  // minus the rate for every absent or unmarked working day and half the rate for a half day.
+  // Without a rate: salary × paid days ÷ working days (as before).
+  const rate = absentRate === null || absentRate === undefined || absentRate === '' ? null : Math.max(0, Number(absentRate) || 0);
+  const base = workingDays ? round2((Number(salary) || 0) * inWindow.length / workingDays) : 0;
+  const absentAmount = rate === null ? 0 : round2(Math.min(base, rate * (absent + unmarked + half * 0.5)));
+  const earned = rate === null
+    ? (workingDays ? round2((Number(salary) || 0) * paidDays / workingDays) : 0)
+    : round2(base - absentAmount);
   const gross = round2(earned + (Number(allowances) || 0) + (Number(bonus) || 0));
   const st = statutoryDeductions({ earned, gross, salary, ...(statutory || {}) });
   const beforeAdvance = round2(gross - (Number(deductions) || 0) - st.pf - st.esi - st.tds);
@@ -77,6 +85,7 @@ export function computePayroll({ month, salary, joinDate, exitDate, attendance =
 
   return {
     pf: st.pf, esi: st.esi, tds: st.tds, advance_deduction: advance,
+    absent_rate: rate, absent_amount: absentAmount,
     working_days: workingDays,
     paid_days: paidDays,
     present_days: present,

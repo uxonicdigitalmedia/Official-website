@@ -488,3 +488,9 @@ END $$;
 -- ================================================================
 -- END OF ERP SCHEMA
 -- ================================================================
+
+-- ---------- fixed deduction per absent day (2026-11) ----------
+-- Empty = salary ÷ working days (as before). A half day deducts half of it.
+ALTER TABLE erp_employees ADD COLUMN IF NOT EXISTS absent_deduction NUMERIC(12,2) CHECK (absent_deduction IS NULL OR absent_deduction >= 0);
+ALTER TABLE erp_payroll   ADD COLUMN IF NOT EXISTS absent_rate      NUMERIC(12,2);
+ALTER TABLE erp_payroll   ADD COLUMN IF NOT EXISTS absent_amount    NUMERIC(12,2) NOT NULL DEFAULT 0;
