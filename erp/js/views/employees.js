@@ -1,4 +1,4 @@
-import { api, esc, money, fdate, fmonth, num, badge, pageHead, empty, formModal, toast, toastErr, downloadCsv, canEdit } from '../core.js';
+import { api, esc, money, fdate, fmonth, num, badge, pageHead, empty, formModal, toast, toastErr, downloadCsv, canEdit, modal, Me } from '../core.js';
 import { ymd } from '../calc.js';
 
 export const EMP_FIELDS = [
@@ -52,6 +52,41 @@ export function editEmployee(emp, onDone) {
   });
 }
 
+/** Remove an employee: mark as left (keeps history) or, for an admin, delete everything. */
+export function removeEmployee(e, onDone) {
+  const admin = Me.role === 'admin';
+  const m = modal({
+    title: `Remove ${e.full_name}`,
+    body: `
+      <div class="remove-opts">
+        ${e.status === 'active' ? `<button class="remove-opt" data-opt="left"><i class="fas fa-user-clock"></i><span><b>Mark as left</b><small>Keeps attendance, payroll and salary history. They move to the Inactive tab and stop showing in payroll.</small></span></button>` : ''}
+        ${admin ? `<button class="remove-opt danger" data-opt="delete"><i class="fas fa-trash"></i><span><b>Delete permanently</b><small>Deletes the employee with all attendance, payroll, payslips, salary payments, leave, advances and timesheets. This cannot be undone.</small></span></button>` : ''}
+      </div>
+      <div id="confirmBox" hidden>
+        <div class="alert alert-warn"><i class="fas fa-triangle-exclamation"></i><div>Type <b>${esc(e.full_name)}</b> to confirm. All their records will be gone for good.</div></div>
+        <div class="field"><input id="confirmName" autocomplete="off" placeholder="${esc(e.full_name)}"></div>
+        <button class="btn btn-primary danger-fill" id="doDelete" disabled><i class="fas fa-trash"></i> Delete ${esc(e.full_name)} permanently</button>
+      </div>`,
+  });
+  const el = m.el;
+  el.querySelector('[data-opt="left"]')?.addEventListener('click', async (ev) => {
+    ev.currentTarget.disabled = true;
+    try { const r = await api.put('employees', e.id, { status: 'inactive', exit_date: e.exit_date || ymd(new Date()) }); toast(r.message || 'Marked as left.'); m.close(); onDone && onDone('left'); }
+    catch (err) { toastErr(err); ev.currentTarget.disabled = false; }
+  });
+  el.querySelector('[data-opt="delete"]')?.addEventListener('click', () => {
+    el.querySelector('.remove-opts').hidden = true; el.querySelector('#confirmBox').hidden = false; el.querySelector('#confirmName').focus();
+  });
+  const input = el.querySelector('#confirmName');
+  const btn = el.querySelector('#doDelete');
+  input?.addEventListener('input', () => { btn.disabled = input.value.trim().toLowerCase() !== e.full_name.trim().toLowerCase(); });
+  btn?.addEventListener('click', async () => {
+    btn.disabled = true;
+    try { const r = await api.del('employees', { id: e.id, permanent: '1' }); toast(r.message); m.close(); onDone && onDone('deleted'); }
+    catch (err) { toastErr(err); btn.disabled = false; }
+  });
+}
+
 export async function employeesList(root, _p, query, alive) {
   const { employees } = await api.get('employees');
   if (!alive()) return;
@@ -83,7 +118,7 @@ export async function employeesList(root, _p, query, alive) {
             <td>${fdate(e.join_date)}</td>
             <td class="r">${money(e.monthly_salary)}</td>
             <td>${badge(e.status)}</td>
-            <td class="r"><button class="icon-btn" data-edit="${e.id}" title="Edit" aria-label="Edit ${esc(e.full_name)}"><i class="fas fa-pen"></i></button></td>
+            <td class="r nowrap"><button class="icon-btn" data-edit="${e.id}" title="Edit" aria-label="Edit ${esc(e.full_name)}"><i class="fas fa-pen"></i></button>${canEdit('employees') ? `<button class="icon-btn" data-remove title="Remove" aria-label="Remove ${esc(e.full_name)}"><i class="fas fa-trash"></i></button>` : ''}</td>
           </tr>`).join('')}</tbody></table></div>`
       : empty('fa-users', employees.length ? 'No employees match.' : 'No employees yet. Add your team to start tracking attendance and payroll.',
         employees.length ? '' : '<button class="btn btn-primary" id="add2"><i class="fas fa-user-plus"></i> Add first employee</button>')}`;
@@ -102,6 +137,14 @@ export async function employeesList(root, _p, query, alive) {
       const editBtn = ev.target.closest('[data-edit]');
       const emp = employees.find((x) => String(x.id) === tr.dataset.id);
       if (editBtn) { editEmployee(emp, (u) => { Object.assign(emp, u); draw(); }); return; }
+      if (ev.target.closest('[data-remove]')) {
+        removeEmployee(emp, (how) => {
+          if (how === 'deleted') employees.splice(employees.indexOf(emp), 1);
+          else Object.assign(emp, { status: 'inactive', exit_date: emp.exit_date || ymd(new Date()) });
+          draw();
+        });
+        return;
+      }
       location.hash = '#/employees/' + tr.dataset.id;
     }));
   };
@@ -181,10 +224,8 @@ export async function employeeDetail(root, [id], _q, alive) {
 
   if (!canEdit('employees')) { root.querySelector('#edit')?.remove(); root.querySelector('#del')?.remove(); }
   root.querySelector('#edit')?.addEventListener('click', () => editEmployee(e, () => dispatchEvent(new Event('erp:refresh'))));
-  root.querySelector('#del')?.addEventListener('click', async () => {
-    if (!confirm(`Remove ${e.full_name}? If they have attendance or payroll history they will be marked inactive instead.`)) return;
-    try { const r = await api.del('employees', { id: e.id }); toast(r.message); location.hash = '#/employees'; }
-    catch (err) { toastErr(err); }
-  });
+  root.querySelector('#del')?.addEventListener('click', () => removeEmployee(e, (how) => {
+    if (how === 'deleted') location.hash = '#/employees'; else dispatchEvent(new Event('erp:refresh'));
+  }));
   root.querySelectorAll('tr[data-href]').forEach((tr) => tr.addEventListener('click', () => { location.hash = tr.dataset.href; }));
 }

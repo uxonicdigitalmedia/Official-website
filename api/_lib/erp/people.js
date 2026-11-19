@@ -28,7 +28,7 @@ async function withoutMissingColumns(sb, row) {
   return row;
 }
 
-export async function employees({ sb, method, q, body }) {
+export async function employees({ sb, method, q, body, actor }) {
   if (method === 'GET') {
     if (q.id) return employeeDetail(sb, idOf(q));
     return { employees: must(await sb.from('erp_employees').select('*').order('status').order('full_name')) };
@@ -68,6 +68,14 @@ export async function employees({ sb, method, q, body }) {
   }
   if (method === 'DELETE') {
     const id = idOf(q);
+    if (q.permanent === '1') {
+      // Everything about this person goes: attendance, payroll, salary payments, leave, advances, timesheets
+      // (ON DELETE CASCADE). Tasks and leads they handled stay, just unassigned.
+      if (actor?.role !== 'admin') throw new HttpError(403, 'Only an admin can delete an employee permanently.');
+      const emp = must(await sb.from('erp_employees').select('full_name').eq('id', id).single());
+      must(await sb.from('erp_employees').delete().eq('id', id));
+      return { message: `${emp.full_name} and all their records were deleted.` };
+    }
     const [{ count: att }, { count: pay }] = await Promise.all([
       sb.from('erp_attendance').select('id', { count: 'exact', head: true }).eq('employee_id', id),
       sb.from('erp_payroll').select('id', { count: 'exact', head: true }).eq('employee_id', id),

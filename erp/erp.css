@@ -561,3 +561,18 @@ label.check { display: flex; align-items: center; gap: 8px; font-weight: 500; cu
 .pay-list { list-style: none; display: grid; gap: 4px; min-width: 200px; }
 .pay-line { display: flex; justify-content: space-between; align-items: center; gap: 6px; font-size: 13px; }
 .pay-line .icon-btn { width: 26px; height: 26px; font-size: 11px; }
+
+/* ---------- remove employee ---------- */
+.remove-opts { display: grid; gap: 10px; }
+.remove-opt { display: flex; gap: 14px; align-items: flex-start; text-align: left; width: 100%; padding: 14px 16px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface); cursor: pointer; font: inherit; color: var(--ink); }
+.remove-opt:hover { border-color: var(--ink); }
+.remove-opt > i { margin-top: 3px; width: 18px; color: var(--body); }
+.remove-opt b { display: block; margin-bottom: 2px; }
+.remove-opt small { color: var(--muted); font-size: 13px; line-height: 1.45; }
+.remove-opt.danger b, .remove-opt.danger > i { color: var(--red); }
+.remove-opt.danger:hover { border-color: var(--red); }
+#confirmBox { display: grid; gap: 12px; }
+#confirmBox[hidden] { display: none; }
+#confirmBox input { width: 100%; height: 42px; border: 1px solid var(--border); border-radius: 10px; padding: 0 12px; font: inherit; }
+.btn.danger-fill { background: var(--red); border-color: var(--red); color: #fff; justify-content: center; }
+.btn.danger-fill:disabled { opacity: .45; cursor: default; }
