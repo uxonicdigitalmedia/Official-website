@@ -73,6 +73,7 @@ const RULES = {
   leaves: { read: ['admin', 'hr'], write: ['admin', 'hr'] },
   advances: { read: ['admin', 'hr', 'accountant'], write: ['admin', 'hr'] },
   payroll: { read: ALL, write: ALL },
+  salary: { read: ALL, write: ['admin', 'hr', 'accountant'] },
   products: { read: ALL, write: ALL },
   members: { read: ALL, write: ALL },
   tasks: { read: ALL, write: ALL },

@@ -1,7 +1,7 @@
 // Employees, salary history, attendance, timesheets, leave, advances, payroll
 import {
   C, must, clean, bad, conflict, idOf, today, employedOn, getSettings, groupBy, workCost,
-  DATE_RE, MONTH_RE, methodNotAllowed,
+  DATE_RE, MONTH_RE, methodNotAllowed, HttpError,
 } from './core.js';
 
 // ================================================================ EMPLOYEES
@@ -349,7 +349,7 @@ async function generatePayroll(sb, month, onlyIds = null) {
   const advBy = groupBy(advs.filter((a) => Number(a.amount) - Number(a.recovered) > 0.004), 'employee_id');
 
   const targets = emps.filter((e) => (!onlyIds || onlyIds.includes(e.id)) &&
-    (existingBy.has(e.id) || (e.status === 'active' && employedOn(e, first, last))));
+    (existingBy.has(e.id) || ((e.status === 'active' || e.exit_date) && employedOn(e, first, last))));
   const rows = [];
   let skippedPaid = 0;
   for (const e of targets) {
@@ -454,6 +454,109 @@ export async function payroll({ sb, method, q, body }) {
     if (cur.status === 'paid') throw conflict('Paid payroll cannot be deleted.');
     must(await sb.from('erp_payroll').delete().eq('id', id));
     return { message: 'Payroll row removed.' };
+  }
+  throw methodNotAllowed();
+}
+
+// ================================================================ SALARY REGISTER (what was actually given)
+// payable = payroll net pay for the month, or the monthly salary when payroll isn't generated yet.
+// paid    = payments recorded here; a payroll row marked "paid" counts as fully paid.
+let salaryTable = false;
+async function ensureSalaryTable(sb) {
+  if (salaryTable) return;
+  const { error } = await sb.from('erp_salary_payments').select('id').limit(1);
+  if (error) throw new HttpError(503, 'Salary register is not set up yet. Run the "Salary register" part of database/erp_schema.sql in the Supabase SQL editor, then reload.');
+  salaryTable = true;
+}
+const sumBy = (rows) => rows.reduce((t, r) => t + Number(r.amount || 0), 0);
+const monthsBetween = (from, to) => { const out = []; let m = from; while (m <= to) { out.push(m); const [y, mo] = m.split('-').map(Number); m = mo === 12 ? `${y + 1}-01` : `${y}-${String(mo + 1).padStart(2, '0')}`; } return out; };
+
+function salaryLine(emp, month, pay, payments) {
+  const { first, last } = C.monthRange(month);
+  const paidSum = C.round2(sumBy(payments));
+  const payable = pay ? Number(pay.net_pay) : employedOn(emp, first, last) ? Number(emp.monthly_salary || 0) : 0;
+  const viaPayroll = pay?.status === 'paid';
+  const paid = viaPayroll ? Math.max(paidSum, payable) : paidSum;
+  const balance = C.round2(payable - paid);
+  return {
+    month, payable: C.round2(payable), paid: C.round2(paid), balance, estimate: !pay, payroll_id: pay?.id || null,
+    payroll_status: pay?.status || null, via_payroll: viaPayroll && paidSum < payable,
+    status: payable <= 0 && paid <= 0 ? 'none' : balance <= 0 ? 'paid' : paid > 0 ? 'partial' : 'unpaid',
+    payments: payments.sort((a, b) => String(b.paid_on).localeCompare(String(a.paid_on)) || b.id - a.id),
+  };
+}
+
+export async function salary({ sb, method, q, body, actor }) {
+  await ensureSalaryTable(sb);
+  if (method === 'GET') {
+    // One employee: month-by-month for a financial year (Apr–Mar)
+    if (q.employee_id) {
+      const empId = idOf(q, 'employee_id');
+      const fy = /^\d{4}$/.test(String(q.fy || '')) ? Number(q.fy) : Number(C.financialYear(today()).slice(0, 4));
+      const from = `${fy}-04`, to = [`${fy + 1}-03`, today().slice(0, 7)].sort()[0];
+      const [emp, pays, rolls] = await Promise.all([
+        sb.from('erp_employees').select('*').eq('id', empId).single().then(must),
+        sb.from('erp_salary_payments').select('*').eq('employee_id', empId).gte('month', from + '-01').lte('month', `${fy + 1}-03-01`).then(must),
+        sb.from('erp_payroll').select('id, month, net_pay, status, paid_on').eq('employee_id', empId).gte('month', from + '-01').lte('month', `${fy + 1}-03-01`).then(must),
+      ]);
+      // Count from the first month this employee has a payroll row or a payment (older months were
+      // paid before the register existed), and not before they joined.
+      const [p1, r1] = await Promise.all([
+        sb.from('erp_salary_payments').select('month').eq('employee_id', empId).order('month').limit(1).then(must),
+        sb.from('erp_payroll').select('month').eq('employee_id', empId).order('month').limit(1).then(must),
+      ]);
+      const tracked = [p1[0]?.month, r1[0]?.month].filter(Boolean).map((m) => String(m).slice(0, 7)).sort()[0] || today().slice(0, 7);
+      const start = [from, tracked, emp.join_date ? String(emp.join_date).slice(0, 7) : from].sort().pop();
+      const months = to >= start ? monthsBetween(start, to).reverse() : [];
+      const lines = months.map((m) => salaryLine(emp, m, rolls.find((r) => String(r.month).startsWith(m)), pays.filter((p) => String(p.month).startsWith(m))))
+        .filter((l) => l.status !== 'none' || l.payments.length);
+      const tot = (k) => C.round2(lines.reduce((t, l) => t + l[k], 0));
+      return { employee: emp, fy, lines, totals: { payable: tot('payable'), paid: tot('paid'), balance: C.round2(lines.reduce((t, l) => t + Math.max(0, l.balance), 0)) } };
+    }
+    // One month: every employee on the rolls that month
+    if (!MONTH_RE.test(String(q.month))) throw bad('month must be YYYY-MM.');
+    const month = String(q.month);
+    const { first, last } = C.monthRange(month);
+    const [emps, pays, rolls] = await Promise.all([
+      sb.from('erp_employees').select('id, emp_code, full_name, designation, monthly_salary, join_date, exit_date, status, phone, bank_account, bank_ifsc').order('full_name').then(must),
+      sb.from('erp_salary_payments').select('*').eq('month', first).then(must),
+      sb.from('erp_payroll').select('id, employee_id, net_pay, status').eq('month', first).then(must),
+    ]);
+    const rows = emps
+      .filter((e) => rolls.some((r) => r.employee_id === e.id) || pays.some((p) => p.employee_id === e.id) || ((e.status === 'active' || e.exit_date) && employedOn(e, first, last)))
+      .map((e) => ({ employee: e, ...salaryLine(e, month, rolls.find((r) => r.employee_id === e.id), pays.filter((p) => p.employee_id === e.id)) }));
+    const tot = (k) => C.round2(rows.reduce((t, r) => t + r[k], 0));
+    return { month, rows, totals: { payable: tot('payable'), paid: tot('paid'), balance: C.round2(rows.reduce((t, r) => t + Math.max(0, r.balance), 0)) }, payroll_generated: rolls.length > 0, last_day: last };
+  }
+
+  if (method === 'POST') {
+    const row = clean(body, { employee_id: 'int!', month: 'text!', amount: 'num!', paid_on: 'date', mode: 'text', reference: 'text', note: 'text' });
+    if (!MONTH_RE.test(row.month)) throw bad('month must be YYYY-MM.');
+    if (row.amount <= 0) throw bad('Amount must be more than zero.');
+    row.month += '-01';
+    row.paid_on = row.paid_on || today();
+    row.created_by = actor?.name || actor?.email || null;
+    const emp = must(await sb.from('erp_employees').select('id, full_name').eq('id', row.employee_id).single());
+    const payment = must(await sb.from('erp_salary_payments').insert(row).select('*').single());
+
+    // Fully given → mark that month's payroll as paid too (recovers advances like the Payroll "Pay" button)
+    const pay = (await sb.from('erp_payroll').select('*').eq('employee_id', row.employee_id).eq('month', row.month).maybeSingle()).data;
+    let note = '';
+    if (pay && pay.status === 'draft') {
+      const total = sumBy(must(await sb.from('erp_salary_payments').select('amount').eq('employee_id', row.employee_id).eq('month', row.month)));
+      if (total >= Number(pay.net_pay) - 0.5) {
+        must(await sb.from('erp_payroll').update({ status: 'paid', paid_on: row.paid_on, payment_mode: row.mode || null }).eq('id', pay.id));
+        await recoverAdvances(sb, pay);
+        note = ' Payroll marked paid.';
+      }
+    }
+    return { payment, message: `Salary payment saved for ${emp.full_name}.${note}` };
+  }
+
+  if (method === 'DELETE') {
+    const id = idOf(q);
+    must(await sb.from('erp_salary_payments').delete().eq('id', id));
+    return { message: 'Payment removed. If Payroll shows this month as paid, use "Undo paid" there.' };
   }
   throw methodNotAllowed();
 }

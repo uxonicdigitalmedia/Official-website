@@ -556,3 +556,8 @@ label.check { display: flex; align-items: center; gap: 8px; font-weight: 500; cu
 .block-btn { width: 100%; justify-content: center; }
 @media (max-width: 600px) { .note-foot .btn-primary { margin-left: 0; width: 100%; justify-content: center; } }
 .feed { list-style: none; }
+
+/* ---------- Salary register ---------- */
+.pay-list { list-style: none; display: grid; gap: 4px; min-width: 200px; }
+.pay-line { display: flex; justify-content: space-between; align-items: center; gap: 6px; font-size: 13px; }
+.pay-line .icon-btn { width: 26px; height: 26px; font-size: 11px; }

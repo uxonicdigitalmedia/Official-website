@@ -15,7 +15,7 @@ import { getSupabase } from './_lib/supabase.js';
 import { handleOptions, json } from './_lib/cors.js';
 import { HttpError, today } from './_lib/erp/core.js';
 import { resolveActor, staffCan, allowedResources, authSend, authVerify } from './_lib/erp/auth.js';
-import { employees, attendance, timesheets, leaves, advances, payroll } from './_lib/erp/people.js';
+import { employees, attendance, timesheets, leaves, advances, payroll, salary } from './_lib/erp/people.js';
 import { products, members, tasks } from './_lib/erp/work.js';
 import { clients, invoices, payments, quotes, recurring, expenses, runDueRecurring, sendDueReminders } from './_lib/erp/sales.js';
 import { settings, dashboard, reports, gst, users, audit, backup, writeAudit } from './_lib/erp/insights.js';
@@ -23,7 +23,7 @@ import { employeePortal, clientPortal } from './_lib/erp/portal.js';
 import { leads } from './_lib/erp/crm.js';
 
 const STAFF = {
-  dashboard, settings, employees, attendance, timesheets, leaves, advances, payroll,
+  dashboard, settings, employees, attendance, timesheets, leaves, advances, payroll, salary,
   products, members, tasks, leads, clients, invoices, payments, quotes, recurring, expenses,
   reports, gst, users, audit, backup,
 };
@@ -96,7 +96,7 @@ export default async function handler(req, res) {
     }
 
     if (method !== 'GET') {
-      const recordId = q.id || data?.invoice?.id || data?.quote?.id || data?.employee?.id || data?.lead?.id || data?.client?.id || data?.product?.id ||
+      const recordId = q.id || data?.invoice?.id || data?.quote?.id || data?.employee?.id || data?.payment?.id || data?.lead?.id || data?.client?.id || data?.product?.id ||
         data?.leave?.id || data?.task?.id || data?.expense?.id || data?.recurring?.id || null;
       await writeAudit(sb, {
         actor: actor.email || actor.name, actor_role: actor.role, action: method + (q.action ? ':' + q.action : ''),

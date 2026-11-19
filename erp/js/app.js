@@ -8,6 +8,7 @@ import { attendanceDay, attendanceMonth } from './views/attendance.js';
 import { payrollView, payslipView } from './views/payroll.js';
 import { clientsList, clientDetail } from './views/clients.js';
 import { leadsView, leadDetail } from './views/crm.js';
+import { salaryView, salaryEmployee } from './views/salary.js';
 import { productsList, productDetail } from './views/products.js';
 import { invoicesList, invoiceEditor, invoiceDetail } from './views/invoices.js';
 import { quotesList, quoteEditor, quoteDetail } from './views/quotes.js';
@@ -33,6 +34,8 @@ const ROUTES = [
   [/^\/leaves$/, leavesView, 'leaves', 'Leave', 'leaves'],
   [/^\/payroll$/, payrollView, 'payroll', 'Payroll', 'payroll'],
   [/^\/payslip\/(\d+)$/, payslipView, 'payroll', 'Payslip', 'payroll'],
+  [/^\/salary$/, salaryView, 'salary', 'Salary', 'salary'],
+  [/^\/salary\/(\d+)$/, salaryEmployee, 'salary', 'Salary', 'salary'],
   [/^\/advances$/, advancesView, 'advances', 'Advances & loans', 'advances'],
   [/^\/products$/, productsList, 'products', 'Products & Apps', 'products'],
   [/^\/products\/(\d+)$/, productDetail, 'products', 'Product', 'products'],

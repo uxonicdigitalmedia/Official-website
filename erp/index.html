@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <link rel="stylesheet" href="/erp/erp.css?v=3" />
+  <link rel="stylesheet" href="/erp/erp.css?v=4" />
   <script>
     // Not signed in (ERP login or admin-panel login) → ERP login page
     try { if (!localStorage.getItem('uxonic_erp_token') && !localStorage.getItem('uxonic_admin_token')) location.replace('/erp/login.html'); }
@@ -35,6 +35,7 @@
       <a href="#/timesheets" data-nav="timesheets" data-need="timesheets"><i class="fas fa-clock"></i> Timesheets</a>
       <a href="#/leaves" data-nav="leaves" data-need="leaves"><i class="fas fa-umbrella-beach"></i> Leave <span class="nav-count" id="navLeaves"></span></a>
       <a href="#/payroll" data-nav="payroll" data-need="payroll"><i class="fas fa-money-check-dollar"></i> Payroll</a>
+      <a href="#/salary" data-nav="salary" data-need="salary"><i class="fas fa-wallet"></i> Salary</a>
       <a href="#/advances" data-nav="advances" data-need="advances"><i class="fas fa-hand-holding-dollar"></i> Advances</a>
       <span class="side-label" data-group="work">Work</span>
       <a href="#/products" data-nav="products" data-need="products"><i class="fas fa-cubes"></i> Products &amp; Apps</a>
@@ -71,6 +72,6 @@
     <main class="view" id="view"></main>
   </div>
 
-  <script type="module" src="/erp/js/app.js?v=3"></script>
+  <script type="module" src="/erp/js/app.js?v=4"></script>
 </body>
 </html>

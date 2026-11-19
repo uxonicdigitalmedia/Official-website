@@ -541,3 +541,23 @@ DROP POLICY IF EXISTS deny_anon_erp_leads ON erp_leads;
 CREATE POLICY deny_anon_erp_leads ON erp_leads FOR ALL TO anon USING (FALSE);
 DROP POLICY IF EXISTS deny_anon_erp_lead_activities ON erp_lead_activities;
 CREATE POLICY deny_anon_erp_lead_activities ON erp_lead_activities FOR ALL TO anon USING (FALSE);
+
+-- ---------- Salary register: what was actually given to each employee (2026-11) ----------
+-- One row per payment. A month's salary can be given in parts (e.g. ₹5,000 cash on the 1st, rest by UPI on the 10th).
+CREATE TABLE IF NOT EXISTS erp_salary_payments (
+  id           BIGSERIAL     PRIMARY KEY,
+  employee_id  BIGINT        NOT NULL REFERENCES erp_employees(id) ON DELETE CASCADE,
+  month        DATE          NOT NULL,                       -- salary month (first day)
+  amount       NUMERIC(12,2) NOT NULL CHECK (amount > 0),
+  paid_on      DATE          NOT NULL DEFAULT CURRENT_DATE,
+  mode         TEXT,
+  reference    TEXT,
+  note         TEXT,
+  created_by   TEXT,
+  created_at   TIMESTAMPTZ   NOT NULL DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS idx_erp_salary_payments_emp_month ON erp_salary_payments(employee_id, month);
+CREATE INDEX IF NOT EXISTS idx_erp_salary_payments_month     ON erp_salary_payments(month);
+ALTER TABLE erp_salary_payments ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS deny_anon_erp_salary_payments ON erp_salary_payments;
+CREATE POLICY deny_anon_erp_salary_payments ON erp_salary_payments FOR ALL TO anon USING (FALSE);
