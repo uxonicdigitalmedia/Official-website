@@ -1,5 +1,7 @@
 // Dashboard, P&L reports, GST report, settings, staff users, audit log, backup
 import { C, must, clean, bad, conflict, idOf, today, employedOn, getSettings, invoiceMoney, workCost, MONTH_RE, methodNotAllowed } from './core.js';
+import { staffCan } from './auth.js';
+import { crmSummary } from './crm.js';
 
 // ================================================================ SETTINGS
 const SETTINGS_SPEC = {
@@ -23,6 +25,7 @@ export async function settings({ sb, method, body }) {
 export async function dashboard({ sb, actor }) {
   const out = await dashboardData(sb);
   if (actor?.role === 'hr') { out.invoices = null; out.month_pnl = null; } // HR doesn't see money in/out
+  out.crm = staffCan(actor?.role, 'leads', 'GET') ? await crmSummary(sb) : null;
   return out;
 }
 

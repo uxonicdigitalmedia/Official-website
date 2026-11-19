@@ -76,6 +76,7 @@ const RULES = {
   products: { read: ALL, write: ALL },
   members: { read: ALL, write: ALL },
   tasks: { read: ALL, write: ALL },
+  leads: { read: ['admin', 'accountant'], write: ['admin', 'accountant'] },
   clients: { read: ['admin', 'accountant', 'hr'], write: ['admin', 'accountant'] },
   invoices: { read: ['admin', 'accountant'], write: ['admin', 'accountant'] },
   payments: { read: ['admin', 'accountant'], write: ['admin', 'accountant'] },

@@ -18,6 +18,7 @@ export default async function dashboard(root, _p, _q, alive) {
     canView('leaves') && td.pending_leaves && [`#/leaves`, 'fa-umbrella-beach', `${td.pending_leaves} leave request(s) to approve`],
     d.invoices && d.invoices.overdue_count &&['#/invoices?status=overdue', 'fa-triangle-exclamation', `${d.invoices.overdue_count} overdue invoice(s)`],
     canView('quotes') && td.quotes_accepted && ['#/quotes?status=accepted', 'fa-file-signature', `${td.quotes_accepted} accepted quote(s) to invoice`],
+    d.crm && d.crm.due && ['#/leads?tab=followups', 'fa-bell', `${d.crm.due} lead follow-up(s) due`],
     canView('tasks') && td.overdue_tasks && ['#/tasks', 'fa-list-check', `${td.overdue_tasks} overdue task(s)`],
     canView('attendance') && a.unmarked && ['#/attendance', 'fa-calendar-xmark', `${a.unmarked} not marked today`],
   ].filter(Boolean);

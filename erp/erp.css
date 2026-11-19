@@ -521,3 +521,38 @@ label.check { display: flex; align-items: center; gap: 8px; font-weight: 500; cu
   .pnl-row > div { min-width: 40%; }
 }
 @media print { .portal-top, .portal::before { display: none !important; } .portal-body { padding: 0; max-width: none; } }
+
+/* ---------- CRM ---------- */
+.t-amber { color: var(--amber) !important; }
+.board-5 { grid-template-columns: repeat(5, minmax(210px, 1fr)); }
+.lead-quick { display: flex; gap: 6px; }
+.lead-quick a { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; background: var(--surface-2); border: 1px solid var(--border); color: var(--body); font-size: 13px; }
+.lead-quick a:hover { border-color: var(--ink); color: var(--ink); }
+.lead-quick a .fa-whatsapp { color: #1DA851; font-size: 15px; }
+.stage-bar { display: flex; gap: 4px; margin-bottom: 18px; overflow-x: auto; scrollbar-width: none; }
+.stage { flex: 1; min-width: max-content; border: 1px solid var(--border); background: var(--surface); padding: 9px 14px; font-weight: 500; font-size: 13px; cursor: pointer; color: var(--body); border-radius: 10px; }
+.stage:hover { border-color: var(--ink); }
+.stage.on { background: var(--ink); color: #fff; border-color: var(--ink); }
+.stage.on.stage-won { background: var(--green); border-color: var(--green); }
+.stage.on.stage-lost { background: var(--red); border-color: var(--red); }
+.note-form { display: grid; gap: 10px; padding-bottom: 16px; margin-bottom: 6px; border-bottom: 1px solid var(--border); }
+.note-form .seg-tabs { max-width: 100%; overflow-x: auto; scrollbar-width: none; justify-self: start; }
+.note-form textarea { width: 100%; border: 1px solid var(--border); border-radius: 12px; padding: 10px 12px; font: inherit; resize: vertical; background: var(--surface); }
+.note-form textarea:focus { outline: 0; border-color: var(--ink); }
+.note-foot { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.note-foot label { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); }
+.note-foot input[type=date] { height: 34px; border: 1px solid var(--border); border-radius: 8px; padding: 0 8px; font: inherit; color: var(--ink); background: var(--surface); }
+.note-foot .btn-primary { margin-left: auto; }
+.quick-dates { display: flex; gap: 4px; flex-wrap: wrap; }
+.feed li { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); }
+.feed li:last-child { border: 0; }
+.feed p { margin: 0 0 2px; color: var(--ink); }
+.feed-ic { width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0; display: grid; place-items: center; background: var(--grey-soft); color: var(--body); font-size: 12px; }
+.feed-call .feed-ic { background: var(--blue-soft); color: var(--blue); }
+.feed-whatsapp .feed-ic { background: var(--green-soft); color: var(--green); }
+.feed-meeting .feed-ic { background: var(--violet-soft); color: var(--violet); }
+.feed-status .feed-ic { background: var(--amber-soft); color: var(--amber); }
+.feed-status p { color: var(--body); font-size: 13.5px; }
+.block-btn { width: 100%; justify-content: center; }
+@media (max-width: 600px) { .note-foot .btn-primary { margin-left: 0; width: 100%; justify-content: center; } }
+.feed { list-style: none; }

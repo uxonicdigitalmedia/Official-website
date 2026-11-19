@@ -205,7 +205,7 @@ export const go = (hash) => { location.hash = hash; };
 const WRITE = {
   admin: null, // everything
   hr: ['employees', 'attendance', 'timesheets', 'leaves', 'advances', 'payroll', 'products', 'members', 'tasks'],
-  accountant: ['payroll', 'products', 'members', 'tasks', 'clients', 'invoices', 'payments', 'quotes', 'recurring', 'expenses'],
+  accountant: ['payroll', 'products', 'members', 'tasks', 'leads', 'clients', 'invoices', 'payments', 'quotes', 'recurring', 'expenses'],
 };
 export const Me = { user: null, role: 'admin', access: new Set() };
 export const canView = (r) => Me.role === 'admin' || Me.access.has(r);

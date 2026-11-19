@@ -494,3 +494,50 @@ END $$;
 ALTER TABLE erp_employees ADD COLUMN IF NOT EXISTS absent_deduction NUMERIC(12,2) CHECK (absent_deduction IS NULL OR absent_deduction >= 0);
 ALTER TABLE erp_payroll   ADD COLUMN IF NOT EXISTS absent_rate      NUMERIC(12,2);
 ALTER TABLE erp_payroll   ADD COLUMN IF NOT EXISTS absent_amount    NUMERIC(12,2) NOT NULL DEFAULT 0;
+
+-- ---------- CRM: leads, follow-ups, activity (2026-11) ----------
+CREATE TABLE IF NOT EXISTS erp_leads (
+  id              BIGSERIAL     PRIMARY KEY,
+  name            TEXT          NOT NULL,
+  company         TEXT,
+  phone           TEXT,
+  email           TEXT,
+  city            TEXT,
+  source          TEXT          NOT NULL DEFAULT 'other'
+                  CHECK (source IN ('website','whatsapp','call','referral','instagram','facebook','google','walk-in','other')),
+  service         TEXT,
+  value           NUMERIC(12,2) CHECK (value IS NULL OR value >= 0),
+  status          TEXT          NOT NULL DEFAULT 'new'
+                  CHECK (status IN ('new','contacted','proposal','negotiation','won','lost')),
+  priority        TEXT          NOT NULL DEFAULT 'medium' CHECK (priority IN ('low','medium','high')),
+  owner_id        BIGINT        REFERENCES erp_employees(id) ON DELETE SET NULL,
+  next_follow_up  DATE,
+  lost_reason     TEXT,
+  notes           TEXT,
+  client_id       BIGINT        REFERENCES erp_clients(id) ON DELETE SET NULL,
+  contact_submission_id BIGINT  UNIQUE,
+  closed_on       DATE,
+  created_at      TIMESTAMPTZ   NOT NULL DEFAULT NOW(),
+  updated_at      TIMESTAMPTZ   NOT NULL DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS idx_erp_leads_status    ON erp_leads(status);
+CREATE INDEX IF NOT EXISTS idx_erp_leads_follow_up ON erp_leads(next_follow_up);
+
+CREATE TABLE IF NOT EXISTS erp_lead_activities (
+  id          BIGSERIAL   PRIMARY KEY,
+  lead_id     BIGINT      NOT NULL REFERENCES erp_leads(id) ON DELETE CASCADE,
+  kind        TEXT        NOT NULL DEFAULT 'note' CHECK (kind IN ('note','call','whatsapp','email','meeting','status')),
+  body        TEXT        NOT NULL,
+  actor       TEXT,
+  created_at  TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+CREATE INDEX IF NOT EXISTS idx_erp_lead_activities_lead ON erp_lead_activities(lead_id, created_at DESC);
+
+DROP TRIGGER IF EXISTS trg_erp_leads_updated_at ON erp_leads;
+CREATE TRIGGER trg_erp_leads_updated_at BEFORE UPDATE ON erp_leads FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+ALTER TABLE erp_leads           ENABLE ROW LEVEL SECURITY;
+ALTER TABLE erp_lead_activities ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS deny_anon_erp_leads ON erp_leads;
+CREATE POLICY deny_anon_erp_leads ON erp_leads FOR ALL TO anon USING (FALSE);
+DROP POLICY IF EXISTS deny_anon_erp_lead_activities ON erp_lead_activities;
+CREATE POLICY deny_anon_erp_lead_activities ON erp_lead_activities FOR ALL TO anon USING (FALSE);

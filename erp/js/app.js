@@ -7,6 +7,7 @@ import { employeesList, employeeDetail } from './views/employees.js';
 import { attendanceDay, attendanceMonth } from './views/attendance.js';
 import { payrollView, payslipView } from './views/payroll.js';
 import { clientsList, clientDetail } from './views/clients.js';
+import { leadsView, leadDetail } from './views/crm.js';
 import { productsList, productDetail } from './views/products.js';
 import { invoicesList, invoiceEditor, invoiceDetail } from './views/invoices.js';
 import { quotesList, quoteEditor, quoteDetail } from './views/quotes.js';
@@ -36,6 +37,8 @@ const ROUTES = [
   [/^\/products$/, productsList, 'products', 'Products & Apps', 'products'],
   [/^\/products\/(\d+)$/, productDetail, 'products', 'Product', 'products'],
   [/^\/tasks$/, tasksView, 'tasks', 'Tasks', 'tasks'],
+  [/^\/leads$/, leadsView, 'leads', 'Leads & CRM', 'leads'],
+  [/^\/leads\/(\d+)$/, leadDetail, 'leads', 'Lead', 'leads'],
   [/^\/clients$/, clientsList, 'clients', 'Clients', 'clients'],
   [/^\/clients\/(\d+)$/, clientDetail, 'clients', 'Client', 'clients'],
   [/^\/quotes$/, quotesList, 'quotes', 'Quotations', 'quotes'],
@@ -111,12 +114,19 @@ function applyRole() {
 }
 
 async function refreshBadges() {
-  if (!canView('leaves')) return;
-  try {
-    const { leaves } = await api.get('leaves', { status: 'pending' });
-    const b = document.getElementById('navLeaves');
-    b.textContent = leaves.length || '';
-  } catch { /* badge is optional */ }
+  if (canView('leaves')) {
+    try {
+      const { leaves } = await api.get('leaves', { status: 'pending' });
+      document.getElementById('navLeaves').textContent = leaves.length || '';
+    } catch { /* badge is optional */ }
+  }
+  if (canView('leads')) {
+    try {
+      const { leads, today } = await api.get('leads');
+      const due = leads.filter((l) => ['new', 'contacted', 'proposal', 'negotiation'].includes(l.status) && l.next_follow_up && l.next_follow_up <= today).length;
+      document.getElementById('navLeads').textContent = due || '';
+    } catch { /* CRM not set up yet */ }
+  }
 }
 
 async function boot() {

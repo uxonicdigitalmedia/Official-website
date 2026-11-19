@@ -8,6 +8,7 @@
 //   staff (ERP app)   role-checked per resource — see _lib/erp/auth.js
 //   employee portal   me, me-checkin, me-checkout, me-leaves, me-payslip, me-timesheet, me-tasks
 //   client portal     portal, portal-invoice, portal-quote
+//   CRM               leads (+ action=note|convert|import)
 // Every successful change is written to the audit log.
 // ================================================================
 import { getSupabase } from './_lib/supabase.js';
@@ -19,10 +20,11 @@ import { products, members, tasks } from './_lib/erp/work.js';
 import { clients, invoices, payments, quotes, recurring, expenses, runDueRecurring, sendDueReminders } from './_lib/erp/sales.js';
 import { settings, dashboard, reports, gst, users, audit, backup, writeAudit } from './_lib/erp/insights.js';
 import { employeePortal, clientPortal } from './_lib/erp/portal.js';
+import { leads } from './_lib/erp/crm.js';
 
 const STAFF = {
   dashboard, settings, employees, attendance, timesheets, leaves, advances, payroll,
-  products, members, tasks, clients, invoices, payments, quotes, recurring, expenses,
+  products, members, tasks, leads, clients, invoices, payments, quotes, recurring, expenses,
   reports, gst, users, audit, backup,
 };
 const EMPLOYEE = new Set(['me', 'me-checkin', 'me-checkout', 'me-leaves', 'me-payslip', 'me-timesheet', 'me-tasks']);
@@ -94,7 +96,7 @@ export default async function handler(req, res) {
     }
 
     if (method !== 'GET') {
-      const recordId = q.id || data?.invoice?.id || data?.quote?.id || data?.employee?.id || data?.client?.id || data?.product?.id ||
+      const recordId = q.id || data?.invoice?.id || data?.quote?.id || data?.employee?.id || data?.lead?.id || data?.client?.id || data?.product?.id ||
         data?.leave?.id || data?.task?.id || data?.expense?.id || data?.recurring?.id || null;
       await writeAudit(sb, {
         actor: actor.email || actor.name, actor_role: actor.role, action: method + (q.action ? ':' + q.action : ''),
