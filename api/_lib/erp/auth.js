@@ -9,7 +9,7 @@
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import { verifyToken } from '../auth.js';
-import { sendEmail } from '../email.js';
+import { sendEmail, otpEmailHtml, otpEmailText } from '../email.js';
 import { must, bad, HttpError } from './core.js';
 
 const BASE = process.env.ADMIN_JWT_SECRET || 'fallback_dev_secret_change_in_prod';
@@ -143,15 +143,12 @@ export async function authSend({ sb, body, ip }) {
 
   const otp = String(crypto.randomInt(100000, 1000000));
   must(await sb.from('erp_otps').insert({ kind, email, otp_hash: hash(otp), expires_at: new Date(Date.now() + 10 * 60000).toISOString() }));
+  const product = PORTAL_NAME[kind].replace(/^UXONIC /, '');
   const sent = await sendEmail({
     to: email,
     subject: `${otp} is your ${PORTAL_NAME[kind]} login code`,
-    text: `Your login code is ${otp}. It expires in 10 minutes.`,
-    html: `<div style="font-family:Inter,Arial,sans-serif;max-width:440px;margin:auto;padding:28px;border:1px solid #E8E7E1;border-radius:16px">
-      <h2 style="margin:0 0 6px;color:#111114">${PORTAL_NAME[kind]}</h2>
-      <p style="color:#4E4E58;margin:0 0 18px">Hi ${String(acct.name).replace(/</g, '&lt;')}, use this code to sign in:</p>
-      <div style="font-size:32px;font-weight:700;letter-spacing:8px;background:#F0EBFF;color:#111114;padding:16px;border-radius:12px;text-align:center">${otp}</div>
-      <p style="color:#8C8C95;font-size:13px;margin-top:18px">Expires in 10 minutes. If you didn't request this, you can ignore this email.</p></div>`,
+    text: otpEmailText(otp, { product }),
+    html: otpEmailHtml(otp, { product, name: acct.name }),
   });
   if (!sent.ok) console.error('[erp auth] OTP email failed:', sent.error);
   return { message: GENERIC };

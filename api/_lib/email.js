@@ -56,21 +56,83 @@ export async function sendEmail({ to, subject, html, text, reply_to }) {
   }
 }
 
-export function otpEmailHtml(otp) {
-  return `
-  <div style="font-family:Inter,system-ui,sans-serif;background:#070C18;padding:40px 20px;">
-    <div style="max-width:440px;margin:0 auto;background:#0F172A;border:1.5px solid rgba(212,175,55,0.3);border-radius:20px;padding:40px 36px;box-shadow:0 12px 40px rgba(0,0,0,0.5);">
-      <p style="font-family:serif;font-size:1.6rem;font-weight:900;color:#D4AF37;letter-spacing:.12em;margin:0;text-align:center;">UXONIC</p>
-      <p style="font-size:.75rem;color:#64748B;letter-spacing:.1em;text-transform:uppercase;margin:4px 0 28px;text-align:center;">Admin Panel Security</p>
-      <h1 style="font-size:1.15rem;font-weight:700;color:#fff;text-align:center;margin:0 0 8px;">Your Login Verification Code</h1>
-      <p style="font-size:.88rem;color:#94A3B8;text-align:center;margin:0 0 28px;">Use this one-time code to authenticate your session. Valid for 10 minutes.</p>
-      <div style="background:rgba(212,175,55,0.08);border:2px solid rgba(212,175,55,0.4);border-radius:14px;padding:24px;text-align:center;margin-bottom:24px;">
-        <p style="font-size:2.8rem;font-weight:900;letter-spacing:.28em;color:#D4AF37;margin:0;font-family:monospace;">${esc(otp)}</p>
-      </div>
-      <p style="font-size:.75rem;color:#64748B;text-align:center;margin:0;line-height:1.5;">If you did not request this, please ignore this email.<br/>© 2026 UXONIC Digital Solutions</p>
-    </div>
-  </div>`;
+const SITE = 'https://www.uxonicdigital.com';
+
+/**
+ * One-time login code email — light UXONIC design, works on phones and in dark-mode clients.
+ * "Copy code" opens /copy-code/#123456, which copies the code (the #part never reaches a server).
+ */
+export function otpEmailHtml(otp, { product = 'Admin Panel', name = '', minutes = 10 } = {}) {
+  const code = esc(String(otp).replace(/\D/g, '').slice(0, 6));
+  const copyUrl = `${SITE}/copy-code/#${code}`;
+  const hello = name ? `Hi ${esc(name)},` : 'Hi,';
+  return `<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="color-scheme" content="light only"><meta name="supported-color-schemes" content="light only">
+<title>${code} is your UXONIC ${esc(product)} code</title>
+<style>
+  body{margin:0;padding:0;background:#F6F6F2;-webkit-text-size-adjust:100%;}
+  .code{-webkit-user-select:all;user-select:all;}
+  @media (max-width:520px){
+    .wrap{padding:20px 12px !important;}
+    .card{padding:28px 20px !important;border-radius:18px !important;}
+    .code{font-size:34px !important;letter-spacing:8px !important;}
+    .btn a{display:block !important;}
+    h1{font-size:21px !important;}
+  }
+</style></head>
+<body style="margin:0;padding:0;background:#F6F6F2;">
+<div style="display:none;max-height:0;overflow:hidden;opacity:0;">Your code is ${code}. It expires in ${minutes} minutes.&#8199;&#65279;&#847;&#8199;&#65279;&#847;</div>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#F6F6F2;">
+<tr><td class="wrap" align="center" style="padding:40px 16px;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:480px;">
+    <tr><td style="padding:0 4px 18px;">
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>
+        <td style="width:40px;height:40px;">
+          <img src="${SITE}/images/nav-logo-sm.png" width="40" height="40" alt="UX" style="display:block;width:40px;height:40px;border:0;border-radius:12px;background:#111114;">
+        </td>
+        <td style="padding-left:12px;font-family:'Inter Tight',Inter,Arial,sans-serif;">
+          <div style="font-size:15px;font-weight:700;letter-spacing:.14em;color:#111114;">UXONIC</div>
+          <div style="font-size:12px;color:#8C8C95;">${esc(product)}</div>
+        </td>
+      </tr></table>
+    </td></tr>
+
+    <tr><td class="card" style="background:#FFFFFF;border:1px solid #E8E7E1;border-radius:22px;padding:36px 32px;font-family:Inter,Arial,sans-serif;">
+      <div style="display:inline-block;background:#E4FF1A;color:#111114;font-size:12px;font-weight:600;padding:5px 12px;border-radius:999px;margin-bottom:18px;">Login code</div>
+      <h1 style="margin:0 0 8px;font-family:'Inter Tight',Inter,Arial,sans-serif;font-size:24px;line-height:1.25;color:#111114;font-weight:700;letter-spacing:-.02em;">Your sign-in code</h1>
+      <p style="margin:0 0 24px;font-size:15px;line-height:1.55;color:#4E4E58;">${hello} use this code to sign in to UXONIC ${esc(product)}. It works once and expires in <b style="color:#111114;">${minutes} minutes</b>.</p>
+
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr><td align="center" style="background:#F6F6F2;border:1px dashed #D3D1C8;border-radius:16px;padding:22px 12px;">
+          <div class="code" style="font-family:'SF Mono',Menlo,Consolas,'Courier New',monospace;font-size:40px;font-weight:700;letter-spacing:12px;color:#111114;line-height:1.1;padding-left:12px;">${code}</div>
+          <div style="font-size:12px;color:#8C8C95;margin-top:8px;">Tap the code to select it</div>
+        </td></tr>
+      </table>
+
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-top:18px;">
+        <tr><td class="btn" align="center">
+          <a href="${copyUrl}" target="_blank" style="display:inline-block;background:#111114;color:#FFFFFF;text-decoration:none;font-weight:600;font-size:15px;padding:14px 28px;border-radius:999px;font-family:Inter,Arial,sans-serif;">Copy code</a>
+        </td></tr>
+      </table>
+
+      <p style="margin:24px 0 0;padding-top:18px;border-top:1px solid #E8E7E1;font-size:13px;line-height:1.55;color:#8C8C95;">
+        Didn't try to sign in? Ignore this email — nobody can get in without this code. Never share it with anyone, including UXONIC staff.
+      </p>
+    </td></tr>
+
+    <tr><td align="center" style="padding:20px 8px 0;font-family:Inter,Arial,sans-serif;font-size:12px;line-height:1.6;color:#8C8C95;">
+      UXONIC Digital Solutions · Karur, Tamil Nadu<br>
+      <a href="${SITE}" style="color:#8C8C95;text-decoration:underline;">uxonicdigital.com</a>
+    </td></tr>
+  </table>
+</td></tr></table>
+</body></html>`;
 }
+
+export const otpEmailText = (otp, { product = 'Admin Panel', minutes = 10 } = {}) =>
+  `Your UXONIC ${product} sign-in code is ${otp}\n\nIt expires in ${minutes} minutes. Copy it: ${SITE}/copy-code/#${otp}\n\nIf you didn't try to sign in, ignore this email.`;
 
 // ────────────────────────────────────────────────────────────────
 // 1. ADMIN NOTIFICATION: Job / Internship Application

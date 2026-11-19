@@ -12,9 +12,9 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous"/>
   <link rel="stylesheet" href="/admin/assets/admin.css?v=2"/>
   <style>
-    .otp-inputs { display:flex; gap:10px; justify-content:center; margin:24px 0; }
+    .otp-inputs { display:flex; gap:10px; justify-content:center; margin:24px 0 12px; }
     .otp-digit {
-      width:52px; height:60px;
+      flex:1 1 0; min-width:0; max-width:52px; height:60px; padding:0;
       text-align:center; font-size:1.6rem; font-weight:700;
       background:var(--bg-alt);
       border:1.5px solid var(--border);
@@ -28,6 +28,11 @@
       box-shadow:0 0 0 3px rgba(201,182,255,0.45);
     }
     .otp-digit.filled { border-color:var(--ink); background:#fff; }
+
+    .paste-row { text-align:center; margin:0 0 18px; }
+    .paste-btn { display:inline-flex; align-items:center; gap:7px; background:var(--bg-alt); border:1px solid var(--border); color:var(--ink); border-radius:999px; padding:8px 16px; font:600 .84rem/1 inherit; font-family:inherit; cursor:pointer; }
+    .paste-btn:hover { border-color:var(--ink); }
+    @media (max-width:400px) { .otp-inputs { gap:6px; } .otp-digit { height:52px; font-size:1.35rem; border-radius:10px; } }
 
     .step { display:none; }
     .step.active { display:block; }
@@ -106,13 +111,14 @@
 
       <!-- 6 digit OTP boxes -->
       <div class="otp-inputs" id="otpInputs">
-        <input class="otp-digit" maxlength="1" inputmode="numeric" pattern="[0-9]" autocomplete="one-time-code" aria-label="OTP digit 1"/>
-        <input class="otp-digit" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="OTP digit 2"/>
-        <input class="otp-digit" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="OTP digit 3"/>
-        <input class="otp-digit" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="OTP digit 4"/>
-        <input class="otp-digit" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="OTP digit 5"/>
-        <input class="otp-digit" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="OTP digit 6"/>
+        <input class="otp-digit" inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code" aria-label="OTP digit 1"/>
+        <input class="otp-digit" inputmode="numeric" pattern="[0-9]*" autocomplete="off" aria-label="OTP digit 2"/>
+        <input class="otp-digit" inputmode="numeric" pattern="[0-9]*" autocomplete="off" aria-label="OTP digit 3"/>
+        <input class="otp-digit" inputmode="numeric" pattern="[0-9]*" autocomplete="off" aria-label="OTP digit 4"/>
+        <input class="otp-digit" inputmode="numeric" pattern="[0-9]*" autocomplete="off" aria-label="OTP digit 5"/>
+        <input class="otp-digit" inputmode="numeric" pattern="[0-9]*" autocomplete="off" aria-label="OTP digit 6"/>
       </div>
+      <div class="paste-row"><button class="paste-btn" id="pasteBtn" type="button"><i class="fas fa-paste"></i> Paste code</button></div>
 
       <button class="login-btn" id="verifyOtpBtn" disabled>
         <i class="fas fa-right-to-bracket"></i>&nbsp; Verify &amp; Login
@@ -200,9 +206,12 @@
   otpDigits.forEach((input, idx) => {
     input.addEventListener('input', (e) => {
       const val = e.target.value.replace(/\D/g,'');
-      e.target.value = val ? val[0] : '';
-      e.target.classList.toggle('filled', !!val);
-      if (val && idx < 5) otpDigits[idx+1].focus();
+      // Phone autofill / paste can drop the whole code into one box
+      if (val.length > 1 && e.inputType === 'insertText') { e.target.value = val.slice(-1); }
+      else if (val.length > 1) { fillOtp(val, val.length >= 6 ? 0 : idx); return; }
+      else e.target.value = val;
+      e.target.classList.toggle('filled', !!e.target.value);
+      if (e.target.value && idx < 5) otpDigits[idx+1].focus();
       checkOtpComplete();
     });
 
@@ -218,17 +227,30 @@
     // Handle paste
     input.addEventListener('paste', (e) => {
       e.preventDefault();
-      const pasted = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g,'');
-      pasted.split('').slice(0,6).forEach((char, i) => {
-        if (otpDigits[i]) {
-          otpDigits[i].value = char;
-          otpDigits[i].classList.add('filled');
-        }
-      });
-      const nextEmpty = otpDigits.findIndex(d => !d.value);
-      (otpDigits[nextEmpty] || otpDigits[5]).focus();
-      checkOtpComplete();
+      fillOtp((e.clipboardData || window.clipboardData).getData('text'), 0);
     });
+  });
+
+  // Put digits into the boxes; a full 6-digit code signs in straight away
+  function fillOtp(text, start) {
+    const digits = String(text || '').replace(/\D/g,'').slice(0, 6 - start).split('');
+    if (!digits.length) return false;
+    digits.forEach((char, i) => { const d = otpDigits[start + i]; d.value = char; d.classList.add('filled'); });
+    const nextEmpty = otpDigits.findIndex(d => !d.value);
+    (otpDigits[nextEmpty] || otpDigits[5]).focus();
+    checkOtpComplete();
+    if (getOtpValue().length === 6 && !verifyBtn.disabled) verifyBtn.click();
+    return true;
+  }
+  document.getElementById('pasteBtn').addEventListener('click', async () => {
+    try {
+      const text = await navigator.clipboard.readText();
+      if (!/\d{6}/.test(text.replace(/\s/g,''))) { otpDigits[0].focus(); alert('No 6-digit code found on the clipboard. Tap "Copy code" in the email first.'); return; }
+      clearOtp(); fillOtp(text.replace(/\s/g,'').match(/\d{6}/)[0], 0);
+    } catch {
+      otpDigits[0].focus();
+      alert('Your browser blocked reading the clipboard. Tap the first box and choose Paste.');
+    }
   });
 
   function getOtpValue() { return otpDigits.map(d => d.value).join(''); }

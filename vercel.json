@@ -120,6 +120,10 @@
     {
       "source": "/api/cron/daily",
       "destination": "/api/erp?r=cron"
+    },
+    {
+      "source": "/copy-code",
+      "destination": "/copy-code/index.html"
     }
   ],
   "crons": [

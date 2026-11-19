@@ -2,7 +2,7 @@
 // Generates a 6-digit OTP, stores hashed in Supabase, sends via Resend
 import { getSupabase } from '../_lib/supabase.js';
 import { handleOptions, json } from '../_lib/cors.js';
-import { sendEmail, otpEmailHtml, getAdminEmail } from '../_lib/email.js';
+import { sendEmail, otpEmailHtml, otpEmailText, getAdminEmail } from '../_lib/email.js';
 import crypto from 'crypto';
 
 const ADMIN_EMAIL = getAdminEmail();
@@ -61,9 +61,9 @@ export default async function handler(req, res) {
 
     const sent = await sendEmail({
       to: ADMIN_EMAIL,
-      subject: `${otp} is your UXONIC Admin OTP`,
-      html: otpEmailHtml(otp),
-      text: `Your UXONIC Admin OTP is ${otp}. It expires in 10 minutes.`,
+      subject: `${otp} is your UXONIC Admin login code`,
+      html: otpEmailHtml(otp, { product: 'Admin Panel' }),
+      text: otpEmailText(otp, { product: 'Admin Panel' }),
     });
 
     if (!sent.ok) {

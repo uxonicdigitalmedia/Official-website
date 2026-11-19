@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="referrer" content="no-referrer" />
+  <title>Copy your code · UXONIC</title>
+  <link rel="icon" type="image/jpeg" href="/images/fav.jpeg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root { --bg: #F6F6F2; --surface: #fff; --border: #E8E7E1; --ink: #111114; --body: #4E4E58; --muted: #8C8C95; --lime: #E4FF1A; --green: #1E8E4F; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body { font-family: Inter, system-ui, sans-serif; background: var(--bg); color: var(--body); display: grid; place-items: center; padding: 24px 16px; -webkit-font-smoothing: antialiased; }
+    .card { width: 100%; max-width: 420px; background: var(--surface); border: 1px solid var(--border); border-radius: 22px; padding: 32px 24px; text-align: center; }
+    .brand { display: inline-flex; align-items: center; gap: 10px; margin-bottom: 22px; }
+    .brand img { width: 36px; height: 36px; border-radius: 10px; background: #111114; }
+    .brand b { font-family: 'Inter Tight', Inter, sans-serif; letter-spacing: .14em; color: var(--ink); font-size: 14px; }
+    h1 { font-family: 'Inter Tight', Inter, sans-serif; color: var(--ink); font-size: 22px; letter-spacing: -.02em; margin-bottom: 6px; }
+    p { font-size: 14.5px; line-height: 1.55; }
+    .code { margin: 22px 0 18px; background: var(--bg); border: 1px dashed #D3D1C8; border-radius: 16px; padding: 18px 8px; font: 700 38px/1.1 'SF Mono', Menlo, Consolas, monospace; letter-spacing: 10px; padding-left: 18px; color: var(--ink); user-select: all; -webkit-user-select: all; cursor: pointer; }
+    button { width: 100%; height: 52px; border: 0; border-radius: 999px; background: var(--ink); color: #fff; font: 600 16px Inter, sans-serif; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: background .2s, color .2s; }
+    button.done { background: var(--lime); color: var(--ink); }
+    .status { min-height: 22px; margin-top: 14px; font-size: 14px; color: var(--green); font-weight: 500; }
+    .hint { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--border); font-size: 13px; color: var(--muted); }
+    .bad { color: var(--muted); }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <div class="brand"><img src="/images/nav-logo-sm.png" alt="" /><b>UXONIC</b></div>
+    <div id="ok" hidden>
+      <h1>Your sign-in code</h1>
+      <p>Copy it, then go back to the login page and paste it.</p>
+      <div class="code" id="code" title="Tap to select"></div>
+      <button id="copy" type="button">Copy code</button>
+      <div class="status" id="status" role="status" aria-live="polite"></div>
+      <p class="hint">On the login page, tap the code box and choose <b>Paste</b>. Codes expire 10 minutes after the email was sent.</p>
+    </div>
+    <div id="none" hidden>
+      <h1>No code here</h1>
+      <p class="bad">Open this page from the <b>Copy code</b> button in your UXONIC sign-in email.</p>
+    </div>
+  </main>
+  <script>
+    (function () {
+      var code = (location.hash || '').replace(/\D/g, '').slice(0, 6);
+      if (code.length !== 6) { document.getElementById('none').hidden = false; return; }
+      document.getElementById('ok').hidden = false;
+      var codeEl = document.getElementById('code');
+      var btn = document.getElementById('copy');
+      var status = document.getElementById('status');
+      codeEl.textContent = code;
+
+      function fallbackCopy() {
+        var ta = document.createElement('textarea');
+        ta.value = code; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta); ta.select(); ta.setSelectionRange(0, code.length);
+        var ok = false; try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+        document.body.removeChild(ta);
+        return ok;
+      }
+      function done() {
+        btn.textContent = '✓ Copied'; btn.classList.add('done');
+        status.textContent = 'Code copied. Go back and paste it.';
+      }
+      function copy(fromClick) {
+        if (navigator.clipboard && window.isSecureContext) {
+          return navigator.clipboard.writeText(code).then(done, function () {
+            if (fromClick && fallbackCopy()) done();
+            else if (fromClick) status.textContent = 'Press and hold the code to copy it.';
+          });
+        }
+        if (fallbackCopy()) done(); else if (fromClick) status.textContent = 'Press and hold the code to copy it.';
+      }
+      btn.addEventListener('click', function () { copy(true); });
+      codeEl.addEventListener('click', function () { copy(true); });
+      copy(false); // most browsers allow this right after opening from the email
+    })();
+  </script>
+</body>
+</html>

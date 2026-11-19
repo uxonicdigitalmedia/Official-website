@@ -30,6 +30,7 @@ export function renderLogin(root, { kind, title, subtitle, onSuccess }) {
         <h1>Enter your code</h1><p class="muted">If <b>${esc(email)}</b> has access, a 6-digit code was emailed to it.</p>
         <form id="f2" class="stack mt" novalidate>
           <div class="field"><label for="otp">6-digit code</label><input id="otp" class="otp-in" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="\\d{6}" required placeholder="••••••"></div>
+          <button class="btn btn-ghost btn-block" type="button" id="paste"><i class="fas fa-paste"></i> Paste code</button>
           <button class="btn btn-primary btn-block" type="submit"><i class="fas fa-right-to-bracket"></i> Sign in</button>
           <button class="btn btn-ghost btn-block" type="button" id="back">Use a different email</button>
         </form>
@@ -38,6 +39,13 @@ export function renderLogin(root, { kind, title, subtitle, onSuccess }) {
     const otp = f.querySelector('#otp');
     otp.focus();
     otp.addEventListener('input', () => { otp.value = otp.value.replace(/\D/g, '').slice(0, 6); if (otp.value.length === 6) f.requestSubmit(); });
+    f.querySelector('#paste').addEventListener('click', async () => {
+      try {
+        const m = (await navigator.clipboard.readText()).replace(/\s/g, '').match(/\d{6}/);
+        if (!m) { toast('No 6-digit code on the clipboard. Tap "Copy code" in the email first.', 'err'); otp.focus(); return; }
+        otp.value = m[0]; f.requestSubmit();
+      } catch { otp.focus(); toast('Your browser blocked the clipboard. Tap the code box and choose Paste.', 'err'); }
+    });
     root.querySelector('#back').addEventListener('click', step1);
     f.addEventListener('submit', async (e) => {
       e.preventDefault();
