@@ -255,6 +255,7 @@ function renderOrg(d, allPlans) {
           <div class="form-group"><label class="form-label" for="pNote">Note</label><input class="form-input" id="pNote" maxlength="500"/></div>
         </div>
         <div class="bk-checks"><label><input type="checkbox" id="pExtend" checked/> Start / extend the paid period (adds 1 month or 1 year after the current paid date)</label></div>
+        <div class="bk-checks"><label><input type="checkbox" id="pMail" checked/> Email the invoice (PDF) and a thank-you note to the customer</label></div>
         <p class="bk-err" id="pErr" role="alert"></p>
         <div class="modal-footer"><button type="button" class="btn btn-ghost" data-cancel>Cancel</button><button class="btn btn-primary" type="submit">Save payment</button></div>
       </form>
@@ -333,7 +334,12 @@ function renderOrg(d, allPlans) {
         p_reference: $('pRef').value || null, p_note: $('pNote').value || null,
         p_paid_at: $('pDate').value ? new Date(`${$('pDate').value}T12:00:00+05:30`).toISOString() : null, p_extend: $('pExtend').checked,
       });
-      await refresh(r.current_period_end ? `Payment saved. Paid until ${date(r.current_period_end)}.` : 'Payment saved.');
+      let mailed = '';
+      if ($('pMail').checked && r.payment_id) {
+        try { await rpc('send_invoice', { payment_id: r.payment_id }); mailed = ' Invoice emailed.'; }
+        catch (err) { mailed = ` Invoice not emailed: ${err.message}`; }
+      }
+      await refresh((r.current_period_end ? `Payment saved. Paid until ${date(r.current_period_end)}.` : 'Payment saved.') + mailed);
     } catch (err) { $('pErr').textContent = err.message; btn.disabled = false; }
   });
 
@@ -430,15 +436,22 @@ loaders.payments = async () => {
   const r = await rpc('platform_payments', { p_search: $('paSearch').value || null, p_limit: PAGE, p_offset: pa.page * PAGE });
   $('paSum').textContent = `${r.total} payments · ${rupees(r.sum_paise)} received`;
   $('paRows').innerHTML = r.rows.length ? r.rows.map((x) => `<tr>
-      <td>${date(x.paid_at || x.created_at)}</td>
+      <td>${date(x.paid_at || x.created_at)}${x.invoice_no ? `<div class="text-xs text-muted">${e(x.invoice_no)}</div>` : ''}</td>
       <td><button class="bk-link" data-org="${e(x.org_id)}">${e(x.org_name)}</button></td>
       <td>${e(x.plan_name || x.plan_code || '—')}${x.cycle ? ` <span class="text-xs text-muted">${x.cycle}</span>` : ''}</td>
       <td>${e(METHODS[x.method] || x.method)}</td>
       <td class="muted">${e(x.reference || x.rzp_payment_id || '—')}${x.note ? `<div class="text-xs">${e(x.note)}</div>` : ''}</td>
       <td class="num bold">${rupeesExact(x.amount_paise)}</td>
       <td>${x.status === 'captured' ? '<span class="st st-good">Received</span>' : x.status === 'refunded' ? '<span class="st st-muted">Refunded</span>' : '<span class="st st-bad">Failed</span>'}</td>
-      <td>${x.method !== 'razorpay' ? `<button class="btn btn-ghost btn-sm" data-refund="${e(x.id)}" data-to="${x.status === 'refunded' ? 'captured' : 'refunded'}">${x.status === 'refunded' ? 'Undo refund' : 'Mark refunded'}</button>` : ''}</td></tr>`).join('')
+      <td class="nowrap">${x.invoice_no && x.status === 'captured' ? `<button class="btn btn-ghost btn-sm" data-invoice="${e(x.id)}" data-sent="${x.receipt_sent_at ? '1' : ''}" title="${x.receipt_sent_at ? `Emailed ${date(x.receipt_sent_at)}` : 'Not emailed yet'}"><i class="fas fa-envelope"></i> ${x.receipt_sent_at ? 'Resend' : 'Send'} invoice</button>` : ''}
+        ${x.method !== 'razorpay' ? `<button class="btn btn-ghost btn-sm" data-refund="${e(x.id)}" data-to="${x.status === 'refunded' ? 'captured' : 'refunded'}">${x.status === 'refunded' ? 'Undo refund' : 'Mark refunded'}</button>` : ''}</td></tr>`).join('')
     : '<tr><td colspan="8" class="table-empty">No payments yet.</td></tr>';
+  $('paRows').querySelectorAll('[data-invoice]').forEach((b) => b.addEventListener('click', async () => {
+    if (b.dataset.sent && !window.confirm('This invoice was already emailed. Send it again?')) return;
+    b.disabled = true;
+    try { const r = await rpc('send_invoice', { payment_id: b.dataset.invoice, resend: !!b.dataset.sent }); toast(r?.status === 'already' ? 'The invoice was already emailed.' : 'Invoice emailed.'); loaders.payments().catch(fail); }
+    catch (err) { fail(err); b.disabled = false; }
+  }));
   $('paRows').querySelectorAll('[data-refund]').forEach((b) => b.addEventListener('click', async () => {
     if (b.dataset.to === 'refunded' && !window.confirm('Mark this payment as refunded? It will no longer count as revenue.')) return;
     try { await rpc('platform_set_payment_status', { p_payment: b.dataset.refund, p_status: b.dataset.to }); toast('Payment updated.'); loaders.payments().catch(fail); } catch (err) { fail(err); }

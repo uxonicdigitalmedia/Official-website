@@ -52,6 +52,31 @@ export default async function handler(req, res) {
   }
 
   const { fn, args } = req.body || {};
+
+  // Email the invoice for a payment (UXONIC Books builds the PDF and sends it).
+  if (fn === 'send_invoice') {
+    const id = String(args?.payment_id || '');
+    if (!/^[0-9a-f-]{36}$/i.test(id)) return json(res, 400, { success: false, message: 'Invalid payment.' }, req);
+    try {
+      const r = await fetch(`${url.replace(/\/$/, '')}/functions/v1/account-email`, {
+        method: 'POST',
+        headers: { apikey: anonKey, 'Content-Type': 'application/json', 'x-platform-key': serverKey },
+        body: JSON.stringify({ action: 'receipt', payment_id: id, resend: !!args?.resend }),
+      });
+      const body = await r.json().catch(() => ({}));
+      if (r.status === 404) return json(res, 501, { success: false, message: 'Invoice emails are not deployed yet. Run: npx supabase functions deploy account-email' }, req);
+      if (!r.ok) return json(res, 502, { success: false, message: body?.error || 'Could not send the invoice.' }, req);
+      const msg = {
+        sent: 'Invoice emailed to the customer.', already: 'The invoice was already emailed.', no_recipient: 'This business has no admin email to send to.',
+        not_found: 'Payment not found (only received payments have invoices).', failed: 'Email could not be sent. Check RESEND_API_KEY in UXONIC Books.',
+      }[body?.status] || 'Done.';
+      return json(res, body?.status === 'sent' || body?.status === 'already' ? 200 : 400, { success: body?.status === 'sent' || body?.status === 'already', message: msg, data: body }, req);
+    } catch (err) {
+      console.error('admin/books send_invoice:', err);
+      return json(res, 502, { success: false, message: 'Could not reach UXONIC Books. Please try again.' }, req);
+    }
+  }
+
   if (!ALLOWED.has(fn)) return json(res, 400, { success: false, message: 'Unknown action.' }, req);
   if (args !== undefined && (typeof args !== 'object' || Array.isArray(args) || args === null)) {
     return json(res, 400, { success: false, message: 'Invalid arguments.' }, req);
