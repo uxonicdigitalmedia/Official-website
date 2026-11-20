@@ -34,7 +34,7 @@ async function emailReply(to, info, body) {
 // Only these functions can be reached through the admin panel.
 const ALLOWED = new Set([
   'platform_overview', 'platform_orgs', 'platform_org', 'platform_update_subscription',
-  'platform_record_payment', 'platform_set_payment_status', 'platform_set_org_status',
+  'platform_record_payment', 'platform_set_payment_status', 'platform_set_org_status', 'platform_delete_org',
   'platform_payments', 'platform_plans', 'platform_save_plan', 'platform_save_settings',
   'platform_tickets', 'platform_ticket', 'platform_reply_ticket', 'platform_set_ticket_status',
 ]);

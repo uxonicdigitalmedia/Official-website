@@ -33,6 +33,7 @@ const STATES = {
   expired: ['Expired', 'st-bad'],
   halted: ['Halted', 'st-bad'],
   suspended: ['Suspended', 'st-bad'],
+  blocked: ['Blocked', 'st-bad'],
 };
 const stateBadge = (s) => { const [l, c] = STATES[s] || [s, 'st-muted']; return `<span class="st ${c}">${e(l)}</span>`; };
 const METHODS = { upi: 'UPI', bank: 'Bank transfer', cash: 'Cash', cheque: 'Cheque', other: 'Other', razorpay: 'Online (Razorpay)' };
@@ -236,8 +237,11 @@ function renderOrg(d, allPlans) {
         <button class="btn btn-primary btn-sm" data-act="pay"><i class="fas fa-indian-rupee-sign"></i> Record payment</button>
         <button class="btn btn-ghost btn-sm" data-act="edit"><i class="fas fa-pen"></i> Change plan or dates</button>
         ${s.status === 'trialing' ? '<button class="btn btn-ghost btn-sm" data-act="trial7"><i class="fas fa-clock"></i> Extend trial 7 days</button>' : ''}
-        ${o.status === 'active' ? '<button class="btn btn-danger btn-sm" data-act="suspend"><i class="fas fa-ban"></i> Suspend</button>'
-          : '<button class="btn btn-success btn-sm" data-act="reactivate"><i class="fas fa-rotate-left"></i> Reactivate</button>'}
+        ${o.status === 'active' ? '<button class="btn btn-ghost btn-sm" data-act="suspend" title="Read-only: they can sign in and see data but cannot change anything"><i class="fas fa-pause"></i> Suspend</button>' : ''}
+        ${o.status === 'suspended' ? '<button class="btn btn-success btn-sm" data-act="reactivate"><i class="fas fa-rotate-left"></i> Reactivate</button>' : ''}
+        ${o.status === 'blocked' ? '<button class="btn btn-success btn-sm" data-act="reactivate"><i class="fas fa-unlock"></i> Unblock</button>'
+          : '<button class="btn btn-danger btn-sm" data-act="block" title="Nobody in this business can open the workspace"><i class="fas fa-ban"></i> Block</button>'}
+        <button class="btn btn-danger btn-sm" data-act="delete"><i class="fas fa-trash"></i> Delete</button>
         ${wa ? `<a class="btn btn-ghost btn-sm" href="${e(wa)}" target="_blank" rel="noopener"><i class="fab fa-whatsapp"></i> WhatsApp</a>` : ''}
         ${d.owner?.email ? `<a class="btn btn-ghost btn-sm" href="mailto:${e(d.owner.email)}"><i class="fas fa-envelope"></i> Email</a>` : ''}
       </div>
@@ -258,6 +262,14 @@ function renderOrg(d, allPlans) {
         <div class="bk-checks"><label><input type="checkbox" id="pMail" checked/> Email the invoice (PDF) and a thank-you note to the customer</label></div>
         <p class="bk-err" id="pErr" role="alert"></p>
         <div class="modal-footer"><button type="button" class="btn btn-ghost" data-cancel>Cancel</button><button class="btn btn-primary" type="submit">Save payment</button></div>
+      </form>
+
+      <form class="bk-panel bk-danger" id="delForm" hidden novalidate>
+        <p><b>Delete ${e(o.name)} permanently?</b> Every contact, invoice, product, staff record, payment and file record of this business is deleted. This cannot be undone.</p>
+        <div class="form-group"><label class="form-label" for="dName">Type the business name to confirm: <b>${e(o.name)}</b></label><input class="form-input" id="dName" autocomplete="off"/></div>
+        <div class="bk-checks"><label><input type="checkbox" id="dLogins" checked/> Also delete the logins of people who have no other workspace (${d.members.length} member${d.members.length === 1 ? '' : 's'})</label></div>
+        <p class="bk-err" id="dErr" role="alert"></p>
+        <div class="modal-footer"><button type="button" class="btn btn-ghost" data-cancel>Cancel</button><button class="btn btn-danger" type="submit" id="dGo" disabled><i class="fas fa-trash"></i> Delete forever</button></div>
       </form>
 
       <form class="bk-panel" id="editForm" hidden novalidate>
@@ -295,7 +307,8 @@ function renderOrg(d, allPlans) {
   const priceFor = () => { const p = allPlans.find((x) => x.code === $('pPlan').value); return p ? (($('pCycle').value === 'yearly' ? p.price_yearly_paise : p.price_monthly_paise) / 100) : ''; };
   const fillAmount = () => { $('pAmount').value = priceFor(); };
   $('pPlan').addEventListener('change', fillAmount); $('pCycle').addEventListener('change', fillAmount);
-  body.querySelectorAll('[data-cancel]').forEach((b) => b.addEventListener('click', () => { payForm.hidden = true; editForm.hidden = true; }));
+  const delForm = $('delForm');
+  body.querySelectorAll('[data-cancel]').forEach((b) => b.addEventListener('click', () => { payForm.hidden = true; editForm.hidden = true; delForm.hidden = true; }));
 
   const refresh = async (msg) => {
     toast(msg);
@@ -318,8 +331,26 @@ function renderOrg(d, allPlans) {
     if (!window.confirm(`Suspend ${o.name}? Their team can still sign in and see data, but cannot make changes.`)) return;
     try { await rpc('platform_set_org_status', { p_org: o.id, p_status: 'suspended' }); await refresh('Workspace suspended.'); } catch (err) { fail(err); }
   });
+  body.querySelector('[data-act="block"]')?.addEventListener('click', async () => {
+    if (!window.confirm(`Block ${o.name}? Nobody in this business can open the workspace (not even to read) until you unblock it. Their data is kept.`)) return;
+    try { await rpc('platform_set_org_status', { p_org: o.id, p_status: 'blocked' }); await refresh('Business blocked.'); } catch (err) { fail(err); }
+  });
+  body.querySelector('[data-act="delete"]').addEventListener('click', () => { payForm.hidden = true; editForm.hidden = true; delForm.hidden = false; $('dName').focus(); });
+  $('dName').addEventListener('input', () => { $('dGo').disabled = $('dName').value.trim() !== o.name.trim(); });
+  delForm.addEventListener('submit', async (ev) => {
+    ev.preventDefault();
+    if ($('dName').value.trim() !== o.name.trim()) return;
+    const btn = $('dGo'); btn.disabled = true; $('dErr').textContent = '';
+    try {
+      const r = await rpc('platform_delete_org', { p_org: o.id, p_confirm: $('dName').value.trim(), p_delete_logins: $('dLogins').checked });
+      closeModal('orgModal');
+      toast(`${r.deleted} deleted${r.logins_deleted ? ` · ${r.logins_deleted} login(s) removed` : ''}.`);
+      loaded.clear(); loaded.add(currentTab());
+      loaders[currentTab()]().catch(fail);
+    } catch (err) { $('dErr').textContent = err.message; btn.disabled = false; }
+  });
   body.querySelector('[data-act="reactivate"]')?.addEventListener('click', async () => {
-    try { await rpc('platform_set_org_status', { p_org: o.id, p_status: 'active' }); await refresh('Workspace reactivated.'); } catch (err) { fail(err); }
+    try { await rpc('platform_set_org_status', { p_org: o.id, p_status: 'active' }); await refresh(o.status === 'blocked' ? 'Business unblocked.' : 'Workspace reactivated.'); } catch (err) { fail(err); }
   });
 
   payForm.addEventListener('submit', async (ev) => {

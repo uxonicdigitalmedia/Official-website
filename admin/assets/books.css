@@ -109,3 +109,5 @@ th.num, td.num { text-align: right; font-variant-numeric: tabular-nums; }
 .bk-msg.customer { justify-self: start; background: var(--bg-alt); border: 1px solid var(--border); }
 .bk-msg.uxonic { justify-self: end; background: var(--gold-tint); }
 .bk-tabs .nav-badge { margin-left: 4px; }
+.bk-panel.bk-danger { background: #FFF7F7; border-color: #F3C9CB; }
+.bk-panel.bk-danger p { font-size: .88rem; line-height: 1.5; margin: 0 0 12px; }
