@@ -402,7 +402,7 @@ function renderOrg(d, allPlans) {
 
 // ── BUSINESS TYPES ───────────────────────────────────────────────
 const PRODUCT_FEATURES = {
-  variants: 'Sizes & colours', auto_barcode: 'Create barcodes', labels: 'Barcode labels', mrp: 'MRP',
+  instant_bill: 'Instant bill', variants: 'Sizes & colours', auto_barcode: 'Create barcodes', labels: 'Barcode labels', mrp: 'MRP',
   batch_expiry: 'Batch & expiry', loose_weight: 'Loose / by weight', serial_numbers: 'Serial / IMEI',
   unit_conversion: 'Box ↔ piece', track_stock: 'Track stock',
 };
