@@ -2,7 +2,7 @@
 // Run from the repo root:  node docs/legal/build-legal.mjs
 import { mkdirSync, writeFileSync } from 'node:fs';
 
-const UPDATED = '13 November 2026';
+const UPDATED = '20 November 2026';
 const CONTACT = `<a href="mailto:info@uxonicdigital.com">info@uxonicdigital.com</a>`;
 
 const page = ({ path, title, description, heading, lead, sections }) => `<!DOCTYPE html>
@@ -31,6 +31,8 @@ const page = ({ path, title, description, heading, lead, sections }) => `<!DOCTY
       <nav class="lg-nav" aria-label="Legal">
         <a href="/privacy/"${path === '/privacy/' ? ' aria-current="page"' : ''}>Privacy</a>
         <a href="/terms/"${path === '/terms/' ? ' aria-current="page"' : ''}>Terms</a>
+        <a href="/refund-policy/"${path === '/refund-policy/' ? ' aria-current="page"' : ''}>Refunds</a>
+        <a href="/contact/"${path === '/contact/' ? ' aria-current="page"' : ''}>Contact</a>
         <a href="/books/">UXONIC Books</a>
       </nav>
     </div>
@@ -61,7 +63,7 @@ ${body.trim().split('\n').map((l) => '          ' + l.trim()).join('\n')}
   <footer class="lg-footer">
     <div class="lg-wrap lg-footer-in">
       <p>&copy; 2026 UXONIC Digital Solutions · Trichy · Karur · Tamil Nadu, India</p>
-      <p><a href="/privacy/">Privacy Policy</a> · <a href="/terms/">Terms of Service</a> · ${CONTACT} · <a href="https://wa.me/919843021717">+91 98430 21717</a></p>
+      <p><a href="/privacy/">Privacy</a> · <a href="/terms/">Terms</a> · <a href="/refund-policy/">Cancellation &amp; refunds</a> · <a href="/shipping-policy/">Delivery</a> · <a href="/contact/">Contact</a> · ${CONTACT} · <a href="https://wa.me/919843021717">+91 98430 21717</a></p>
     </div>
   </footer>
 </body>
@@ -191,8 +193,8 @@ const terms = page({
     `],
     ['refunds', 'Cancellation and refunds', `
       <ul>
-        <li>You can stop using UXONIC Books at any time. Simply do not renew; nothing more is charged.</li>
-        <li>Because every plan starts with a free trial, payments for a period that has started are not refundable.</li>
+        <li><strong>No cancellation.</strong> Once you pay for a month or a year, that period cannot be cancelled and the payment is not refunded. Every plan starts with a free trial, so please try it fully before you pay.</li>
+        <li>You can stop at the end of any paid period: simply do not renew. Nothing more is charged.</li>
         <li>If you were charged twice or by mistake, write to ${CONTACT} within 30 days. We refund the extra amount to the original payment method within 7 working days of confirming it.</li>
         <li>If we end the service for reasons other than a breach of these terms, we refund the unused part of your paid period.</li>
       </ul>
@@ -244,7 +246,91 @@ const terms = page({
   ],
 });
 
-for (const [dir, html] of [['privacy', privacy], ['terms', terms]]) {
+// ---------------------------------------------------------------- Cancellation & refunds
+const refunds = page({
+  path: '/refund-policy/',
+  title: 'Cancellation & Refund Policy',
+  description: 'UXONIC Books: free trial first, no cancellation or refund after payment, and refunds only for double or mistaken charges.',
+  heading: 'Cancellation &amp; Refund Policy',
+  lead: 'Simple and clear: try UXONIC Books free first. Once you pay, that month or year cannot be cancelled or refunded.',
+  sections: [
+    ['trial', 'Try it free first', `
+      <p>Every UXONIC Books plan starts with a <strong>free trial</strong>. No card is needed. Use it with your real business before you decide to pay.</p>
+    `],
+    ['no-cancel', 'No cancellation after payment', `
+      <ul>
+        <li>When you pay for <strong>1 month</strong> or <strong>1 year</strong>, that paid period <strong>cannot be cancelled</strong>.</li>
+        <li>We <strong>do not refund</strong> payments for a period that has been paid, fully or partly, including if you stop using the app in the middle.</li>
+        <li>You can change to a bigger plan any time. The new plan starts from your next payment.</li>
+      </ul>
+    `],
+    ['stop', 'How to stop', `
+      <p>We never charge you automatically. To stop, simply <strong>do not renew</strong> when your paid period ends. Your workspace becomes read-only, and you can still see and download your data.</p>
+    `],
+    ['exceptions', 'When we do refund', `
+      <ul>
+        <li><strong>Charged twice or by mistake:</strong> write to ${CONTACT} within 30 days with the payment reference. We refund the extra amount to the same payment method (UPI, card or bank) within 7 working days of checking it.</li>
+        <li><strong>If UXONIC stops the service</strong> for reasons that are not your fault, we refund the unused part of your paid period.</li>
+      </ul>
+    `],
+    ['services', 'Website and app development projects', `
+      <p>For custom websites, apps and software we build for you, the advance and stage payments in your signed quotation apply. Work that has been started is not refundable.</p>
+    `],
+    ['contact', 'Questions', `
+      <p>Email ${CONTACT} or WhatsApp <a href="https://wa.me/919843021717">+91 98430 21717</a>. We reply within one working day.</p>
+    `],
+  ],
+});
+
+// ---------------------------------------------------------------- Delivery (no shipping)
+const shipping = page({
+  path: '/shipping-policy/',
+  title: 'Shipping & Delivery Policy',
+  description: 'UXONIC Books is online software. Nothing is shipped; access starts as soon as you sign up or pay.',
+  heading: 'Shipping &amp; Delivery Policy',
+  lead: 'UXONIC Books is online software. Nothing is posted or shipped to you.',
+  sections: [
+    ['delivery', 'How you get it', `
+      <ul>
+        <li>Your workspace is ready <strong>the moment you sign up</strong> at <a href="https://books.uxonicdigital.com">books.uxonicdigital.com</a>.</li>
+        <li>When you pay online, your plan is active <strong>immediately</strong>. For UPI or bank transfer sent to us directly, we activate it the same working day.</li>
+        <li>Your invoice is emailed to you and is always in Settings → Subscription.</li>
+      </ul>
+    `],
+    ['hardware', 'Printers and scanners', `
+      <p>We do not sell or ship hardware. Barcode scanners, label printers and receipt printers you buy from any shop work with UXONIC Books; we are happy to suggest models.</p>
+    `],
+    ['contact', 'Questions', `
+      <p>Email ${CONTACT} or WhatsApp <a href="https://wa.me/919843021717">+91 98430 21717</a>.</p>
+    `],
+  ],
+});
+
+// ---------------------------------------------------------------- Contact
+const contact = page({
+  path: '/contact/',
+  title: 'Contact us',
+  description: 'Contact UXONIC Digital Solutions — email, WhatsApp and phone. Trichy & Karur, Tamil Nadu.',
+  heading: 'Contact us',
+  lead: 'Questions about UXONIC Books, a payment, or a website or app project? We reply within one working day.',
+  sections: [
+    ['reach', 'Talk to us', `
+      <ul>
+        <li><strong>WhatsApp / phone:</strong> <a href="https://wa.me/919843021717">+91 98430 21717</a> (Monday to Saturday, 10 am – 7 pm)</li>
+        <li><strong>Email:</strong> ${CONTACT}</li>
+        <li><strong>Inside the app:</strong> Help → Send us a message</li>
+      </ul>
+    `],
+    ['company', 'Business details', `
+      <p><strong>UXONIC Digital Solutions</strong><br />Karur, Tamil Nadu, India<br />Also serving Trichy and all of Tamil Nadu.</p>
+    `],
+    ['policies', 'Policies', `
+      <p><a href="/terms/">Terms of Service</a> · <a href="/privacy/">Privacy Policy</a> · <a href="/refund-policy/">Cancellation &amp; Refund Policy</a> · <a href="/shipping-policy/">Shipping &amp; Delivery Policy</a></p>
+    `],
+  ],
+});
+
+for (const [dir, html] of [['privacy', privacy], ['terms', terms], ['refund-policy', refunds], ['shipping-policy', shipping], ['contact', contact]]) {
   mkdirSync(dir, { recursive: true });
   writeFileSync(`${dir}/index.html`, html);
 }

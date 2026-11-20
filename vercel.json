@@ -124,6 +124,18 @@
     {
       "source": "/copy-code",
       "destination": "/copy-code/index.html"
+    },
+    {
+      "source": "/refund-policy",
+      "destination": "/refund-policy/index.html"
+    },
+    {
+      "source": "/shipping-policy",
+      "destination": "/shipping-policy/index.html"
+    },
+    {
+      "source": "/contact",
+      "destination": "/contact/index.html"
     }
   ],
   "crons": [

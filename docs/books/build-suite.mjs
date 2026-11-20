@@ -165,7 +165,7 @@ const footer = () => `
       </div>
       <div class="footer-bottom">
         <p>&copy; 2026 UXONIC Digital Solutions. All rights reserved.</p>
-        <p><a href="/privacy/">Privacy Policy</a> · <a href="/terms/">Terms of Service</a> · Trichy · Tamil Nadu · India</p>
+        <p><a href="/privacy/">Privacy</a> · <a href="/terms/">Terms</a> · <a href="/refund-policy/">Cancellation &amp; refunds</a> · <a href="/shipping-policy/">Delivery</a> · <a href="/contact/">Contact</a> · Trichy · Karur · Tamil Nadu</p>
       </div>
     </div>
   </footer>
@@ -436,16 +436,53 @@ const suite = head({ title: 'UXONIC Books | GST Billing, CRM, Inventory & HR Sof
             <span class="line line-1">Manage your business.</span>
             <span class="line line-2">Grow smarter.</span>
           </h1>
-          <p class="hero-sub" data-hero="sub">Leads, customers, quotations, invoices and payments — in one workspace your whole team can use. One login. One subscription. Made for small businesses in India.</p>
+          <p class="hero-sub" data-hero="sub">Billing, stock, customers and staff — in one simple app. Scan, bill and print at the counter, or send GST invoices on WhatsApp. Made in Tamil Nadu for shops and small businesses.</p>
           <div class="hero-ctas" data-hero="ctas">
             <a href="${SIGNUP}" class="btn btn-lime">Start free trial <i class="fas fa-arrow-right"></i></a>
             <a href="#pricing" class="btn btn-ghost">See pricing</a>
           </div>
-          <p class="hero-note" data-hero="sub">14-day free trial · no card needed · prices from ₹399/month</p>
+          <p class="hero-note" data-hero="sub">14-day free trial · no card needed · from ₹299/month</p>
 ${shot('overview', 'app.uxonicdigital.com', suiteMain)}
         </div>
       </section>
-${strip([['fa-user-plus', 'Leads &amp; contacts'], ['fa-table-columns', 'Sales pipeline'], ['fa-list-check', 'Tasks &amp; reminders'], ['fa-file-lines', 'Quotations'], ['fa-file-invoice', 'GST invoices'], ['fa-indian-rupee-sign', 'Payments &amp; UPI'], ['fa-boxes-stacked', 'Stock &amp; godowns'], ['fa-truck', 'Purchase orders'], ['fa-chart-line', 'Reports']])}
+${strip([['fa-bolt', 'Instant bill'], ['fa-barcode', 'Barcode scan'], ['fa-receipt', 'Shop receipts'], ['fa-file-invoice', 'GST invoices'], ['fa-indian-rupee-sign', 'UPI · cash · card'], ['fa-boxes-stacked', 'Stock &amp; godowns'], ['fa-user-plus', 'Leads &amp; customers'], ['fa-id-badge', 'Staff &amp; attendance'], ['fa-chart-line', 'Reports']])}
+
+      <section class="section" data-glow>
+        <div class="container">
+${secHead('Made for <em>your kind of business</em>', 'Tell us what you sell when you sign up. We switch on the right features — nothing extra to learn.')}
+${fCards([
+  ['fa-shirt', 'Clothing &amp; footwear', 'One product in every size and colour, each with its own stock and barcode.', ['Sizes &amp; colours in one go', 'Price tags with MRP', 'Scan and bill at the counter']],
+  ['fa-cart-shopping', 'Supermarket &amp; kirana', 'Fast counter billing with the barcode on the pack — or your own.', ['Scan maker barcodes', 'Loose items by kg / litre', 'Expiry alerts']],
+  ['fa-pills', 'Pharmacy &amp; medicals', 'Know which batch expires when, and sell the oldest first.', ['Batch no. and expiry date', 'Expiring in 30 / 60 / 90 days', 'MRP on labels']],
+  ['fa-mobile-screen', 'Mobiles &amp; electronics', 'Put the serial or IMEI on the bill and find it later for warranty.', ['Serial / IMEI on every bill', 'Warranty lookup in seconds', 'Stock by model']],
+  ['fa-screwdriver-wrench', 'Hardware &amp; building', 'Buy in boxes, sell in pieces — stock stays right.', ['Box ↔ piece units', 'Sell by kg or metre', 'Godowns and branches']],
+  ['fa-briefcase', 'Services &amp; agencies', 'Leads, quotations, GST invoices and payments — no stock needed.', ['CRM and follow-ups', 'Quote → invoice in one click', 'UPI QR on every invoice']],
+])}
+        </div>
+      </section>
+
+      <section class="section" data-glow>
+        <div class="container">
+${secHead('Counter billing in <em>3 steps</em>', 'Instant bill is made for the shop counter. No long forms.')}
+          <div class="mod-grid" data-stagger>
+            <div class="card mod-card lift">
+              <span class="mod-ic"><i class="fas fa-barcode"></i></span>
+              <h3><small>Step 1</small>Scan</h3>
+              <p>Use a barcode scanner, your phone camera, or type a few letters of the name. Scan again to add one more.</p>
+            </div>
+            <div class="card mod-card is-ink lift">
+              <span class="mod-ic"><i class="fas fa-indian-rupee-sign"></i></span>
+              <h3><small>Step 2</small>Take payment</h3>
+              <p>Cash, UPI or card. Enter the cash given and it shows the change to return.</p>
+            </div>
+            <div class="card mod-card lift">
+              <span class="mod-ic"><i class="fas fa-print"></i></span>
+              <h3><small>Step 3</small>Print</h3>
+              <p>A clean shop receipt on a 3-inch or 2-inch roll printer, or A5. Stock and accounts update on their own.</p>
+            </div>
+          </div>
+        </div>
+      </section>
 
       <section class="section" data-glow>
         <div class="container">
@@ -539,13 +576,13 @@ ${secHead('Still running sales on <em>spreadsheets and WhatsApp?</em>', '', 'h-l
         <div class="container">
 ${secHead('Built for businesses <em>like yours</em>', 'From a one-person studio in Trichy to a 15-member team across Tamil Nadu.', 'h-lg')}
           <div class="aud" data-stagger>
-            <span><i class="fas fa-bullhorn"></i> Digital &amp; web agencies</span>
-            <span><i class="fas fa-laptop"></i> Freelancers &amp; consultants</span>
-            <span><i class="fas fa-couch"></i> Interior designers</span>
-            <span><i class="fas fa-helmet-safety"></i> Contractors</span>
-            <span><i class="fas fa-store"></i> Local businesses</span>
-            <span><i class="fas fa-briefcase"></i> Small B2B companies</span>
-            <span><i class="fas fa-screwdriver-wrench"></i> Service businesses</span>
+            <span><i class="fas fa-shirt"></i> Textiles &amp; boutiques</span>
+            <span><i class="fas fa-cart-shopping"></i> Supermarkets &amp; kirana</span>
+            <span><i class="fas fa-pills"></i> Pharmacies</span>
+            <span><i class="fas fa-mobile-screen"></i> Mobile &amp; electronics shops</span>
+            <span><i class="fas fa-screwdriver-wrench"></i> Hardware stores</span>
+            <span><i class="fas fa-bullhorn"></i> Agencies &amp; freelancers</span>
+            <span><i class="fas fa-briefcase"></i> Service businesses</span>
           </div>
         </div>
       </section>
@@ -565,7 +602,9 @@ ${faq([
   ['What is UXONIC Books?', 'One online workspace for running a small business: a CRM for leads and deals, Billing for quotations, invoices, payments and expenses, ERP for products, stock and purchases, and HR for employees, attendance and leave — all in the same workspace.'],
   ['Do I need a separate login for each module?', 'No. One account, one workspace and one subscription. Modules are switched on inside your workspace based on your plan.'],
   ['Is there a free trial?', 'Yes — 14 days with Growth plan features, no payment details needed. If you do not subscribe, your workspace becomes read-only; your data is kept and you can still export it.'],
-  ['How do I pay?', 'Monthly or yearly through Razorpay (UPI, cards, net banking). Yearly plans cost 10 months — two months free. Prices exclude GST.'],
+  ['How do I pay?', 'Monthly or yearly online (UPI, cards, net banking). Yearly plans cost 10 months — two months free. Prices exclude GST. Your invoice is emailed to you right away.'],
+  ['Can I cancel after paying?', 'No. Once a month or a year is paid, it cannot be cancelled or refunded — that is why every plan starts with a 14-day free trial. To stop, simply do not renew. See our Cancellation &amp; Refund Policy.'],
+  ['Do I need a barcode scanner or a special printer?', 'No. You can scan with your phone camera and print on any printer. If you bill a lot at the counter, any USB or Bluetooth scanner and any 3-inch or 2-inch receipt printer will work.'],
   ['Can my team use it?', 'Yes. Growth includes 5 users and Business 15. Invite them by email and give each person the Admin, Manager or Employee role.'],
   ['When can I start?', 'Right now. Create your account, confirm your email and your workspace is ready in a minute — or sign up with your Google account. Prefer help? Message us on WhatsApp and we will set it up with you.'],
 ])}
@@ -776,6 +815,8 @@ ${strip([['fa-file-lines', 'Quotations'], ['fa-file-invoice', 'Tax invoices'], [
         <div class="container">
 ${secHead('Billing without the <em>busywork</em>', 'Everything from the first quote to the last rupee — connected to your CRM.')}
 ${fCards([
+  ['fa-bolt', 'Instant bill', 'Counter billing for shops: scan, take cash / UPI / card, print. Invoice, payment and stock in one step.', ['Scanner or phone camera', 'Change to return, worked out', 'Customer name &amp; phone only']],
+  ['fa-receipt', 'Shop receipts', 'A clean receipt for your roll printer — or A5 for a normal printer.', ['3-inch and 2-inch rolls, A5', 'Your shop name, GSTIN and phone', 'Coloured side strips on every bill']],
   ['fa-file-lines', 'Quotations', 'Line items with HSN/SAC, discount and tax. Send it, track it, convert it.', ['Draft, Sent, Accepted, Rejected, Expired', 'Share link and email', 'One click to invoice']],
   ['fa-file-invoice', 'Invoices', 'The same line-item engine, with a due date from your payment terms.', ['Automatic numbering per year', 'Partially paid, Paid, Overdue', 'Void keeps the number and history']],
   ['fa-indian-rupee-sign', 'Payments', 'Record UPI, cash, bank transfer, card or cheque — full or in parts.', ['Multiple partial payments', 'Reference on every payment', 'Customer statement and balance']],
@@ -921,7 +962,11 @@ ${fCards([
   ['fa-file-invoice', 'Linked to invoices', 'Issue a GST invoice and the items leave stock automatically. Void it and they come back.', ['Pick products on the invoice', 'Choose which godown it ships from', 'No double entry']],
   ['fa-clipboard-list', 'Suppliers &amp; purchase orders', 'Raise a PO, mark it ordered, then receive goods — all at once or in parts.', ['Automatic PO numbers per year', 'Partly received tracking', 'Received stock costed at the PO rate']],
   ['fa-triangle-exclamation', 'Low-stock alerts', 'Set a reorder level per product and see what to buy before you run out.', ['Low and out-of-stock lists', 'On your dashboard every morning', 'Stock value at cost']],
-  ['fa-barcode', 'Barcode labels', 'Print Code 128 labels with name and price; scan to find a product instantly.', ['A4 sheets, 3 labels per row', 'Works with any USB barcode scanner', 'Your own codes or SKUs']],
+  ['fa-barcode', 'Barcodes &amp; labels', 'We create a barcode for every product without one. Print price tags and scan to bill.', ['A4 sheets or 50 × 25 mm label printer', 'MRP and offer price on the tag', 'Scan with a scanner or phone camera']],
+  ['fa-shirt', 'Sizes &amp; colours', 'One product in every size and colour, each with its own stock, price and barcode.', ['S–XXL, 28–38 or your own', 'Add colours in one tap', 'Labels for all sizes at once']],
+  ['fa-calendar-xmark', 'Batch &amp; expiry', 'Record the batch and expiry when stock comes in. We sell the oldest first and warn you before it expires.', ['Expired and expiring lists', 'Batches on every product page', 'Works with purchase orders']],
+  ['fa-scale-balanced', 'Loose items &amp; units', 'Sell by kg, litre or metre with decimals. Buy in boxes, sell in pieces.', ['1.250 kg on the bill', 'Price per kg on the label', 'Box of 12 → 12 pieces in stock']],
+  ['fa-fingerprint', 'Serial / IMEI', 'Put the serial or IMEI on the bill and find the sale later for warranty.', ['Printed on the invoice', 'Search by any part of the number', 'Customer name and date']],
 ])}
         </div>
       </section>
@@ -930,7 +975,7 @@ ${fCards([
         <div class="container">
 ${split({ kicker: '<i class="fas fa-clock-rotate-left"></i> Stock history', title: 'Every piece, <em>accounted for</em>', text: 'Stock only changes through a recorded entry — a sale, a purchase, a count or a transfer — with who did it and why. Entries cannot be edited later, so the numbers always add up.', ticks: ['Linked back to the invoice or purchase order', 'Reason on every manual change', 'Filter by godown, product or type'], stage: ledgerPanel })}
 ${split({ rev: true, kicker: '<i class="fas fa-truck"></i> Purchases', title: 'Order it. Receive it. <em>Done.</em>', text: 'Raise a purchase order to your supplier, mark it ordered, and receive goods as they arrive. Stock goes up the moment you receive — never before, never twice.', ticks: ['Receive in parts; we track what is pending', 'Cannot receive more than you ordered', 'GST input shown on every PO'], stage: poPanel, stageClass: 'lime' })}
-${split({ kicker: '<i class="fas fa-barcode"></i> Labels', title: 'Scan, sell, <em>move on</em>', text: 'Print barcode stickers for your shelves and boxes. At the counter, scan a product into the invoice instead of searching for it.', ticks: ['Code 128 — readable by every scanner', 'Price including GST on the label', 'Print as many copies as you need'], stage: labelsPanel })}
+${split({ kicker: '<i class="fas fa-barcode"></i> Labels', title: 'Scan, sell, <em>move on</em>', text: 'Print barcode stickers for your shelves and boxes. At the counter, scan a product into the bill instead of searching for it — with a scanner or your phone camera.', ticks: ['Readable by every scanner and phone', 'MRP and offer price on the label', 'A4 sheets or a 50 × 25 mm label printer'], stage: labelsPanel })}
         </div>
       </section>
 
@@ -956,8 +1001,9 @@ ${faq([
   ['Does selling on an invoice reduce stock?', 'Yes. When you issue an invoice with products on it, those quantities leave stock from the godown you chose (or your default godown). If you void the invoice, the stock comes back.'],
   ['Can I manage more than one godown or branch?', 'Yes. Add as many godowns as you need, see stock in each, and move stock between them with a transfer entry.'],
   ['How do I enter my current stock?', 'Add your products, then use Update stock → Opening stock for each one. Prefer help? Send us your Excel sheet on WhatsApp and we will help you load it.'],
-  ['Does it work with a barcode scanner?', 'Yes. Any USB or Bluetooth scanner that types the code works — scan into the product search or the invoice product picker. You can also print Code 128 labels from UXONIC ERP.'],
-  ['What about manufacturing, batches and expiry?', 'Not yet. UXONIC ERP covers products, stock, godowns, suppliers and purchase orders today. Tell us what you need next — we build in the order our customers ask.'],
+  ['Does it work with a barcode scanner?', 'Yes. Any USB or Bluetooth scanner works, and so does your phone camera. Products without a barcode get one automatically, and you can print price tags.'],
+  ['Does it handle sizes, batches and expiry?', 'Yes. Clothing shops get sizes and colours; pharmacies and supermarkets get batch numbers, expiry dates and expiry alerts; mobile shops get serial / IMEI on bills. Choose your business type and the right features switch on.'],
+  ['What about manufacturing?', 'Not yet. Tell us what you need — we build in the order our customers ask.'],
 ])}
 ${xlinks('erp')}
 ${startBlock({ title: 'Count less. <em>Sell more.</em>', lead: 'Add your products and opening stock today — your next invoice will update stock for you.', points: ['14-day free trial, no card', 'Stock linked to your GST invoices', 'Works on phone, tablet and laptop'] })}
