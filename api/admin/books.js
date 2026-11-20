@@ -37,6 +37,7 @@ const ALLOWED = new Set([
   'platform_record_payment', 'platform_set_payment_status', 'platform_set_org_status', 'platform_delete_org',
   'platform_payments', 'platform_plans', 'platform_save_plan', 'platform_save_settings',
   'platform_tickets', 'platform_ticket', 'platform_reply_ticket', 'platform_set_ticket_status',
+  'platform_business_types', 'platform_save_business_type', 'platform_org_business', 'platform_set_org_business',
 ]);
 
 export default async function handler(req, res) {

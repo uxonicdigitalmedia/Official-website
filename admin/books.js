@@ -80,15 +80,22 @@ const loaders = {};
 const loaded = new Set();
 function showTab(name, force = false) {
   if (!loaders[name]) name = 'overview';
-  document.querySelectorAll('.bk-tabs [role="tab"]').forEach((t) => {
-    const on = t.dataset.tab === name;
-    t.setAttribute('aria-selected', String(on)); t.tabIndex = on ? 0 : -1;
+  document.querySelectorAll('#bkNav a[data-tab]').forEach((a) => {
+    if (a.dataset.tab === name) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
   });
   document.querySelectorAll('[data-panel]').forEach((p) => { p.hidden = p.dataset.panel !== name; });
-  if (history.replaceState) history.replaceState(null, '', `#${name}`);
+  const label = document.querySelector(`#bkNav a[data-tab="${name}"]`)?.textContent.trim();
+  const sub = document.querySelector('.topbar-subtitle'); if (sub && label) sub.textContent = label;
+  if (history.replaceState && location.hash !== `#${name}`) history.replaceState(null, '', `#${name}`);
   if (force || !loaded.has(name)) { loaded.add(name); loaders[name]().catch(fail); }
+  if (document.getElementById('sidebar')?.classList.contains('open')) {
+    document.getElementById('sidebar').classList.remove('open'); document.getElementById('sidebarOverlay')?.classList.remove('open'); document.body.style.overflow = '';
+  }
+  window.scrollTo(0, 0);
 }
-document.querySelectorAll('.bk-tabs [role="tab"]').forEach((t) => t.addEventListener('click', () => showTab(t.dataset.tab, true)));
+const currentTab = () => document.querySelector('#bkNav a[aria-current="page"]')?.dataset.tab || 'overview';
+document.querySelectorAll('#bkNav a[data-tab]').forEach((a) => a.addEventListener('click', (ev) => { ev.preventDefault(); showTab(a.dataset.tab, true); }));
+window.addEventListener('hashchange', () => showTab(location.hash.slice(1)));
 
 // ── chart (one series; hover/focus tooltip; table view) ──────────
 const tip = $('bkTip');
@@ -232,6 +239,7 @@ function renderOrg(d, allPlans) {
         <div><b>${u.employees}</b><span>Staff (HR)</span></div>
       </div>
     </div>
+    <div class="bk-section"><h3>Business type &amp; features</h3><div id="orgBusiness"><div class="bk-empty">Loading…</div></div></div>
     <div class="bk-section"><h3>Actions</h3>
       <div class="bk-actions">
         <button class="btn btn-primary btn-sm" data-act="pay"><i class="fas fa-indian-rupee-sign"></i> Record payment</button>
@@ -303,6 +311,7 @@ function renderOrg(d, allPlans) {
     </div>`;
 
   const body = $('orgBody');
+  renderOrgBusiness(o.id);
   const payForm = $('payForm'), editForm = $('editForm');
   const priceFor = () => { const p = allPlans.find((x) => x.code === $('pPlan').value); return p ? (($('pCycle').value === 'yearly' ? p.price_yearly_paise : p.price_monthly_paise) / 100) : ''; };
   const fillAmount = () => { $('pAmount').value = priceFor(); };
@@ -390,7 +399,109 @@ function renderOrg(d, allPlans) {
     } catch (err) { $('eErr').textContent = err.message; btn.disabled = false; }
   });
 }
-const currentTab = () => document.querySelector('.bk-tabs [aria-selected="true"]')?.dataset.tab || 'overview';
+
+// ── BUSINESS TYPES ───────────────────────────────────────────────
+const PRODUCT_FEATURES = {
+  variants: 'Sizes & colours', auto_barcode: 'Create barcodes', labels: 'Barcode labels', mrp: 'MRP',
+  batch_expiry: 'Batch & expiry', loose_weight: 'Loose / by weight', serial_numbers: 'Serial / IMEI',
+  unit_conversion: 'Box ↔ piece', track_stock: 'Track stock',
+};
+const BT_ICONS = ['shirt', 'shopping-cart', 'pill', 'smartphone', 'wrench', 'briefcase', 'store', 'cake'];
+const featChips = (f) => { const on = Object.keys(PRODUCT_FEATURES).filter((k) => f && f[k]); return on.length ? `<div class="bk-chips">${on.map((k) => `<span>${e(PRODUCT_FEATURES[k])}</span>`).join('')}</div>` : '<span class="muted">—</span>'; };
+const featChecks = (f, name = 'pf') => `<div class="bk-checks">${Object.entries(PRODUCT_FEATURES).map(([k, l]) => `<label><input type="checkbox" name="${name}" value="${k}" ${f && f[k] ? 'checked' : ''}/> ${e(l)}</label>`).join('')}</div>`;
+const readFeats = (root, name = 'pf') => Object.fromEntries([...root.querySelectorAll(`[name="${name}"]`)].map((i) => [i.value, i.checked]));
+let businessTypes = null;
+async function getBusinessTypes(force = false) { if (!businessTypes || force) businessTypes = await rpc('platform_business_types'); return businessTypes; }
+
+loaders.business = async () => {
+  const list = await getBusinessTypes(true);
+  $('btRows').innerHTML = list.map((x) => x.code ? `<tr>
+      <td><div class="bold">${e(x.name)}</div><div class="text-xs text-muted">${e(x.code)}${x.description ? ` · ${e(x.description)}` : ''}</div></td>
+      <td>${featChips(x.features)}</td>
+      <td class="num">${x.workspaces}</td>
+      <td>${x.is_active ? '<span class="st st-good">Shown</span>' : '<span class="st st-muted">Hidden</span>'}</td>
+      <td><button class="btn btn-ghost btn-sm" data-bt="${e(x.code)}"><i class="fas fa-pen"></i> Edit</button></td></tr>`
+    : `<tr><td><div class="bold muted">${e(x.name)}</div><div class="text-xs text-muted">Workspaces that skipped the question</div></td><td><span class="muted">General features</span></td><td class="num">${x.workspaces}</td><td></td><td></td></tr>`).join('');
+  $('btRows').querySelectorAll('[data-bt]').forEach((b) => b.addEventListener('click', () => editBusinessType(list.find((x) => x.code === b.dataset.bt))));
+};
+$('btNew').addEventListener('click', () => editBusinessType(null));
+
+function editBusinessType(bt) {
+  const isNew = !bt;
+  const x = bt || { code: '', name: '', description: '', icon: 'store', features: { auto_barcode: true, labels: true, track_stock: true }, sort_order: 80, is_active: true };
+  $('btTitle').textContent = isNew ? 'New business type' : `Edit ${x.name}`;
+  const f = $('btForm');
+  f.innerHTML = `
+    <div class="bk-row">
+      <div class="form-group"><label class="form-label" for="btName">Name</label><input class="form-input" id="btName" value="${e(x.name)}" maxlength="60" required placeholder="e.g. Bakery & Sweets"/></div>
+      <div class="form-group"><label class="form-label" for="btCode">Code</label><input class="form-input" id="btCode" value="${e(x.code)}" ${isNew ? '' : 'readonly'} placeholder="e.g. bakery"/>
+        <p class="form-hint">${isNew ? 'Lowercase letters, numbers and _. Cannot change later.' : 'Fixed.'}</p></div>
+    </div>
+    <div class="form-group"><label class="form-label" for="btDesc">Short description (shown under the name)</label><input class="form-input" id="btDesc" value="${e(x.description || '')}" maxlength="200" placeholder="e.g. Cakes, sweets, snacks"/></div>
+    <div class="bk-row">
+      <div class="form-group"><label class="form-label" for="btIcon">Icon</label><select class="form-select" id="btIcon">${BT_ICONS.map((i) => `<option value="${i}" ${i === x.icon ? 'selected' : ''}>${i}</option>`).join('')}</select></div>
+      <div class="form-group"><label class="form-label" for="btSort">Order</label><input class="form-input" id="btSort" type="number" value="${x.sort_order}"/></div>
+    </div>
+    <div class="form-group"><span class="form-label">Features switched on for this type</span>${featChecks(x.features)}</div>
+    <div class="bk-checks"><label><input type="checkbox" id="btActive" ${x.is_active ? 'checked' : ''}/> Shown to customers when they choose their business</label></div>
+    ${!isNew && x.workspaces ? `<p class="form-hint">${x.workspaces} workspace(s) use this type. Those who haven't customised their features get the new defaults.</p>` : ''}
+    <p class="bk-err" id="btErr" role="alert"></p>
+    <div class="modal-footer"><button type="button" class="btn btn-ghost" data-close="btModal">Cancel</button><button class="btn btn-primary" type="submit">${isNew ? 'Create type' : 'Save'}</button></div>`;
+  f.querySelector('[data-close="btModal"]').addEventListener('click', () => closeModal('btModal'));
+  f.onsubmit = async (ev) => {
+    ev.preventDefault();
+    const code = $('btCode').value.trim();
+    const err = !/^[a-z][a-z0-9_]{1,30}$/.test(code) ? 'Code: lowercase letters, numbers and _ (2–31 characters).' : $('btName').value.trim().length < 2 ? 'Enter a name.' : '';
+    if (err) { $('btErr').textContent = err; return; }
+    const btn = f.querySelector('[type="submit"]'); btn.disabled = true;
+    try {
+      await rpc('platform_save_business_type', { p_code: code, p_type: {
+        name: $('btName').value.trim(), description: $('btDesc').value.trim(), icon: $('btIcon').value,
+        sort_order: Math.round(Number($('btSort').value) || 100), is_active: $('btActive').checked, features: readFeats(f),
+      } });
+      closeModal('btModal'); toast(isNew ? 'Business type created.' : 'Business type saved.');
+      loaders.business().catch(fail);
+    } catch (e2) { $('btErr').textContent = e2.message; btn.disabled = false; }
+  };
+  openModal('btModal');
+}
+
+// Customer page: their business type and features
+async function renderOrgBusiness(orgId) {
+  const box = $('orgBusiness'); if (!box) return;
+  try {
+    const [first, list] = await Promise.all([rpc('platform_org_business', { p_org: orgId }), getBusinessTypes()]);
+    let b = first;
+    const types = list.filter((x) => x.code);
+    const draw = () => {
+      box.innerHTML = `
+        <div class="bk-kv"><div><span>Type</span><b>${e(b.business_type_name || 'Not chosen yet')}</b></div>
+          <div><span>Features</span>${featChips(b.features)} ${b.customised ? '<span class="st st-warn">Customised</span>' : ''}</div></div>
+        <button class="btn btn-ghost btn-sm" id="obEdit"><i class="fas fa-pen"></i> Change type or features</button>
+        <form class="bk-panel" id="obForm" hidden novalidate>
+          <div class="form-group"><label class="form-label" for="obType">Business type</label>
+            <select class="form-select" id="obType"><option value="">Not chosen</option>${types.map((t) => `<option value="${e(t.code)}" ${t.code === b.business_type ? 'selected' : ''}>${e(t.name)}</option>`).join('')}</select></div>
+          <div class="bk-checks"><label><input type="checkbox" id="obCustom" ${b.customised ? 'checked' : ''}/> Use my own feature choices for this customer (instead of the type's defaults)</label></div>
+          <div id="obFeats" ${b.customised ? '' : 'hidden'}>${featChecks(b.features, 'obf')}</div>
+          <p class="bk-err" id="obErr" role="alert"></p>
+          <div class="modal-footer"><button type="button" class="btn btn-ghost" id="obCancel">Cancel</button><button class="btn btn-primary" type="submit">Save</button></div>
+        </form>`;
+      const form = $('obForm');
+      $('obEdit').addEventListener('click', () => { form.hidden = false; });
+      $('obCancel').addEventListener('click', () => { form.hidden = true; });
+      $('obCustom').addEventListener('change', () => { $('obFeats').hidden = !$('obCustom').checked; });
+      form.onsubmit = async (ev) => {
+        ev.preventDefault();
+        const btn = form.querySelector('[type="submit"]'); btn.disabled = true;
+        try {
+          b = await rpc('platform_set_org_business', { p_org: orgId, p_type: $('obType').value || null, p_features: $('obCustom').checked ? readFeats(form, 'obf') : null });
+          toast('Business type saved.'); draw();
+        } catch (err) { $('obErr').textContent = err.message; btn.disabled = false; }
+      };
+    };
+    draw();
+  } catch (err) { box.innerHTML = `<div class="bk-empty">${e(err.message)}</div>`; }
+}
 
 // ── SUPPORT ──────────────────────────────────────────────────────
 const TICKET = { open: ['Needs reply', 'st-warn'], pending: ['Replied', 'st-trial'], closed: ['Closed', 'st-muted'] };

@@ -111,3 +111,18 @@ th.num, td.num { text-align: right; font-variant-numeric: tabular-nums; }
 .bk-tabs .nav-badge { margin-left: 4px; }
 .bk-panel.bk-danger { background: #FFF7F7; border-color: #F3C9CB; }
 .bk-panel.bk-danger p { font-size: .88rem; line-height: 1.5; margin: 0 0 12px; }
+
+/* UXONIC Books sections in the left sidebar */
+.nav-sub { display: grid; gap: 2px; margin: 2px 0 6px 20px; padding-left: 10px; border-left: 1px solid var(--border); }
+.nav-sub a { display: flex; align-items: center; gap: 10px; padding: 7px 10px; border-radius: var(--radius-sm); font-size: .84rem; font-weight: 500; color: var(--text-body); }
+.nav-sub a i { width: 16px; text-align: center; font-size: .82rem; color: var(--text-muted); }
+.nav-sub a:hover { background: var(--bg-alt); color: var(--ink); }
+.nav-sub a[aria-current="page"] { background: var(--ink); color: #fff; }
+.nav-sub a[aria-current="page"] i { color: var(--lime); }
+.nav-sub .nav-badge { margin-left: auto; }
+.bk-chips { display: flex; flex-wrap: wrap; gap: 4px; }
+.bk-chips span { font-size: .72rem; background: var(--bg-alt); border: 1px solid var(--border); border-radius: 999px; padding: 2px 8px; color: var(--text-body); }
+.bk-kv { display: grid; grid-template-columns: 1fr 2fr; gap: 10px 20px; margin-bottom: 12px; }
+.bk-kv span { display: block; font-size: .74rem; color: var(--text-muted); margin-bottom: 4px; }
+@media (max-width: 600px) { .bk-kv { grid-template-columns: 1fr; } }
+.bk-kv .st { display: inline-block; margin-top: 6px; }
